@@ -9,7 +9,8 @@ const initialState = {
     genes: [],
     lifeStages: [],
     anatomyTerms: [],
-    isLoading: false
+    isLoading: false,
+    error: null
 };
 
 export default function(state = initialState, action) {
@@ -20,7 +21,28 @@ export default function(state = initialState, action) {
                 genes: state.genes,
                 lifeStages: state.lifeStages,
                 anatomyTerms: state.anatomyTerms,
-                isLoading: true
+                isLoading: true,
+                error: state.error
+            };
+        }
+        case FETCH_ENTITIES_SUCCESS: {
+            return {
+                ...state,
+                genes: action.payload.entities.genes,
+                lifeStages: action.payload.entities.lifeStages,
+                anatomyTerms: action.payload.entities.anatomyTerms,
+                isLoading: false,
+                error: state.error
+            };
+        }
+        case FETCH_ENTITIES_ERROR: {
+            return {
+                ...state,
+                genes: state.genes,
+                lifeStages: state.lifeStages,
+                anatomyTerms: state.anatomyTerms,
+                isLoading: false,
+                error: action.payload.error
             };
         }
         default:

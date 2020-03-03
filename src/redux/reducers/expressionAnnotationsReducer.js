@@ -1,20 +1,46 @@
 import {
     ADD_EXPR_ANNOT,
     ADD_WHEN_EXPRESSED_EXPR_ANNOT, ADD_WHERE_EXPRESSED_EXPR_ANNOT,
-    DELETE_EXPR_ANNOT,
+    DELETE_EXPR_ANNOT, FETCH_EXPR_ANNOTS_ERROR, FETCH_EXPR_ANNOTS_REQUEST, FETCH_EXPR_ANNOTS_SUCCESS,
     REMOVE_WHEN_EXPRESSED_EXPR_ANNOT, REMOVE_WHERE_EXPRESSED_EXPR_ANNOT,
     SET_ASSAY_EXPR_ANNOT,
     SET_EVIDENCE_EXPR_ANNOT,
     SET_GENE_EXPR_ANNOT
-} from "../actions/expressionActions";
+} from "../actions/expressionAnnotationsActions";
 
 
 const initialState = {
     annotations: [],
+    isLoading: false,
+    error: null
 };
 
 export default function(state = initialState, action) {
     switch (action.type) {
+        case FETCH_EXPR_ANNOTS_REQUEST: {
+            return {
+                ...state,
+                annotations: state.annotations,
+                isLoading: true,
+                error: state.error
+            };
+        }
+        case FETCH_EXPR_ANNOTS_SUCCESS: {
+            return {
+                ...state,
+                annotations: action.payload.annotations,
+                isLoading: false,
+                error: null
+            };
+        }
+        case FETCH_EXPR_ANNOTS_ERROR: {
+            return {
+                ...state,
+                annotations: state.annotations,
+                isLoading: false,
+                error: action.payload.error
+            };
+        }
         case ADD_EXPR_ANNOT: {
             return {
                 ...state,
@@ -25,13 +51,17 @@ export default function(state = initialState, action) {
                     assay: undefined,
                     evidence: undefined,
                     whereExpressed: []
-                }]
+                }],
+                isLoading: state.isLoading,
+                error: state.error
             };
         }
         case DELETE_EXPR_ANNOT: {
             return {
                 ...state,
-                annotations: state.annotations.filter(a => a.annotationId !== action.payload.annotationId)
+                annotations: state.annotations.filter(a => a.annotationId !== action.payload.annotationId),
+                isLoading: state.isLoading,
+                error: state.error
             };
         }
         case SET_GENE_EXPR_ANNOT: {
@@ -44,7 +74,9 @@ export default function(state = initialState, action) {
                     } else {
                         return true
                     }
-                })
+                }),
+                isLoading: state.isLoading,
+                error: state.error
             }
         }
         case ADD_WHEN_EXPRESSED_EXPR_ANNOT: {
@@ -57,7 +89,9 @@ export default function(state = initialState, action) {
                     } else {
                         return true
                     }
-                })
+                }),
+                isLoading: state.isLoading,
+                error: state.error
             }
         }
         case REMOVE_WHEN_EXPRESSED_EXPR_ANNOT: {
@@ -72,7 +106,9 @@ export default function(state = initialState, action) {
                     } else {
                         return true
                     }
-                })
+                }),
+                isLoading: state.isLoading,
+                error: state.error
             }
         }
         case SET_ASSAY_EXPR_ANNOT: {
@@ -85,7 +121,9 @@ export default function(state = initialState, action) {
                     } else {
                         return true
                     }
-                })
+                }),
+                isLoading: state.isLoading,
+                error: state.error
             }
         }
         case SET_EVIDENCE_EXPR_ANNOT: {
@@ -98,7 +136,9 @@ export default function(state = initialState, action) {
                     } else {
                         return true
                     }
-                })
+                }),
+                isLoading: state.isLoading,
+                error: state.error
             }
         }
         case ADD_WHERE_EXPRESSED_EXPR_ANNOT: {
@@ -111,7 +151,9 @@ export default function(state = initialState, action) {
                     } else {
                         return true
                     }
-                })
+                }),
+                isLoading: state.isLoading,
+                error: state.error
             }
         }
         case REMOVE_WHERE_EXPRESSED_EXPR_ANNOT: {
@@ -126,7 +168,9 @@ export default function(state = initialState, action) {
                     } else {
                         return true
                     }
-                })
+                }),
+                isLoading: state.isLoading,
+                error: state.error
             }
         }
         default:
