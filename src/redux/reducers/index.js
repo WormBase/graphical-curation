@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import expressionAnnotationsReducer from "./expressionAnnotationsReducer";
-import textMinedEntities from "./textMinedEntitiesReducer";
+import {expressionAnnotationsReducer} from "./expressionAnnotationsReducer";
+import {textMinedEntitiesReducer} from "./textMinedEntitiesReducer";
 
-export default combineReducers({expressionAnnotationsReducer, textMinedEntities});
+export default combineReducers({expressionAnnotationsReducer, textMinedEntitiesReducer});

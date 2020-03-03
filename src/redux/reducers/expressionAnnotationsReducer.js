@@ -6,7 +6,7 @@ const initialState = {
     error: null
 };
 
-const expressionAnnotationsReducer = createReducer(initialState, {
+export const expressionAnnotationsReducer = createReducer(initialState, {
     FETCH_EXPR_ANNOTS_REQUEST: (state, action) => {state.isLoading = true},
     FETCH_EXPR_ANNOTS_SUCCESS: (state, action) => {state.annotations = action.payload.annotations},
     FETCH_EXPR_ANNOTS_ERROR: (state, action) => {
@@ -101,5 +101,3 @@ const expressionAnnotationsReducer = createReducer(initialState, {
         })
     }
 });
-
-export default expressionAnnotationsReducer;

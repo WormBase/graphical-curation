@@ -1,14 +1,20 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {getExpressionAnnotations} from "./redux/selectors/expressionSelector";
+import connect from "react-redux/lib/connect/connect";
 
 class App extends Component{
 
   render() {
-  return (
-    <div></div>
-  );
+    let annotations = this.props.expressionAnnotations.forEach((a) => {return a.gene});
+    return (
+        {annotations}
+    );
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+    expressionAnnotations: getExpressionAnnotations(state)
+});
+
+export default connect(mapStateToProps, {})(App);

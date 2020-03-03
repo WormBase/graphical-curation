@@ -13,39 +13,13 @@ const initialState = {
     error: null
 };
 
-export default function(state = initialState, action) {
-    switch (action.type) {
-        case FETCH_ENTITIES_REQUEST: {
-            return {
-                ...state,
-                genes: state.genes,
-                lifeStages: state.lifeStages,
-                anatomyTerms: state.anatomyTerms,
-                isLoading: true,
-                error: state.error
-            };
-        }
-        case FETCH_ENTITIES_SUCCESS: {
-            return {
-                ...state,
-                genes: action.payload.entities.genes,
-                lifeStages: action.payload.entities.lifeStages,
-                anatomyTerms: action.payload.entities.anatomyTerms,
-                isLoading: false,
-                error: state.error
-            };
-        }
-        case FETCH_ENTITIES_ERROR: {
-            return {
-                ...state,
-                genes: state.genes,
-                lifeStages: state.lifeStages,
-                anatomyTerms: state.anatomyTerms,
-                isLoading: false,
-                error: action.payload.error
-            };
-        }
-        default:
-            return state;
-    }
-}
+export const textMinedEntitiesReducer = (initialState, {
+    FETCH_ENTITIES_REQUEST: (state, action) => {state.isLoading = true},
+    FETCH_ENTITIES_SUCCESS: (state, action) => {
+        state.genes = action.payload.entities.genes;
+        state.lifeStages = action.payload.entities.lifeStages;
+        state.anatomyTerms = action.payload.entities.anatomyTerms;
+        state.isLoading = false
+    },
+    FETCH_ENTITIES_ERROR: (state, action) => {state.error = action.payload.error},
+});
