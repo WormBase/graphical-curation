@@ -1,150 +1,135 @@
 import {
-  SET_EXPRESSION,
-  TOGGLE_EXPRESSION,
-  SET_SITE_OF_ACTION,
-  TOGGLE_SITE_OF_ACTION,
-  SET_TIME_OF_ACTION,
-  TOGGLE_TIME_OF_ACTION,
-  SET_RNASEQ,
-  TOGGLE_RNASEQ,
-  SET_ADDITIONAL_EXPR, SET_IS_EXPRESSION_SAVED_TO_DB
+    ADD_EXPR_ANNOT,
+    ADD_WHEN_EXPRESSED_EXPR_ANNOT, ADD_WHERE_EXPRESSED_EXPR_ANNOT,
+    DELETE_EXPR_ANNOT,
+    REMOVE_WHEN_EXPRESSED_EXPR_ANNOT, REMOVE_WHERE_EXPRESSED_EXPR_ANNOT,
+    SET_ASSAY_EXPR_ANNOT,
+    SET_EVIDENCE_EXPR_ANNOT,
+    SET_GENE_EXPR_ANNOT
 } from "../actions/expressionActions";
 
 
 const initialState = {
-  expression: {
-    checked: false,
-    details: ''
-  },
-  siteOfAction: {
-    checked: false,
-    details: ''
-  },
-  timeOfAction: {
-    checked: false,
-    details: ''
-  },
-  rnaseq: {
-    checked: false,
-    details: ''
-  },
-  additionalExpr: "",
-  isSavedToDB: false
+    annotations: [],
 };
 
 export default function(state = initialState, action) {
-  switch (action.type) {
-    case SET_EXPRESSION: {
-      return {
-        ...state,
-        expression: action.payload,
-        siteOfAction: state.siteOfAction,
-        timeOfAction: state.timeOfAction,
-        rnaseq: state.rnaseq,
-        additionalExpr: state.additionalExpr,
-        isSavedToDB: false
-      };
+    switch (action.type) {
+        case ADD_EXPR_ANNOT: {
+            return {
+                ...state,
+                annotations: [...state.annotations, {
+                    annotationId: Math.max(...state.annotations.map(a => a.annotationId), 1),
+                    gene: undefined,
+                    whenExpressed: [],
+                    assay: undefined,
+                    evidence: undefined,
+                    whereExpressed: []
+                }]
+            };
+        }
+        case DELETE_EXPR_ANNOT: {
+            return {
+                ...state,
+                annotations: state.annotations.filter(a => a.annotationId !== action.payload.annotationId)
+            };
+        }
+        case SET_GENE_EXPR_ANNOT: {
+            return {
+                ...state,
+                annotations: state.annotations.every(a => {
+                    if (a.annotationId === action.payload.annotationId) {
+                        a.gene = action.payload.gene;
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+        }
+        case ADD_WHEN_EXPRESSED_EXPR_ANNOT: {
+            return {
+                ...state,
+                annotations: state.annotations.every(a => {
+                    if (a.annotationId === action.payload.annotationId) {
+                        a.whenExpressed = [...new Set([...a.whenExpressed, action.payload.whenExpressed])];
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+        }
+        case REMOVE_WHEN_EXPRESSED_EXPR_ANNOT: {
+            return {
+                ...state,
+                annotations: state.annotations.every(a => {
+                    if (a.annotationId === action.payload.annotationId) {
+                        let newWhenExpressed = new Set(a.whenExpressed);
+                        newWhenExpressed.delete(action.payload.whenExpressed);
+                        a.whenExpressed = [...newWhenExpressed];
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+        }
+        case SET_ASSAY_EXPR_ANNOT: {
+            return {
+                ...state,
+                annotations: state.annotations.every(a => {
+                    if (a.annotationId === action.payload.annotationId) {
+                        a.assay = action.payload.assay;
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+        }
+        case SET_EVIDENCE_EXPR_ANNOT: {
+            return {
+                ...state,
+                annotations: state.annotations.every(a => {
+                    if (a.annotationId === action.payload.annotationId) {
+                        a.evidence = action.payload.evidence;
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+        }
+        case ADD_WHERE_EXPRESSED_EXPR_ANNOT: {
+            return {
+                ...state,
+                annotations: state.annotations.every(a => {
+                    if (a.annotationId === action.payload.annotationId) {
+                        a.whereExpressed = [...new Set([...a.whereExpressed, action.payload.whereExpressed])];
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+        }
+        case REMOVE_WHERE_EXPRESSED_EXPR_ANNOT: {
+            return {
+                ...state,
+                annotations: state.annotations.every(a => {
+                    if (a.annotationId === action.payload.annotationId) {
+                        let newWhereExpressed = new Set(a.whereExpressed);
+                        newWhereExpressed.delete(action.payload.whereExpressed);
+                        a.whereExpressed = [...newWhereExpressed];
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+        }
+        default:
+            return state;
     }
-    case TOGGLE_EXPRESSION: {
-      return {
-        ...state,
-        expression: {checked: !state.expression.checked, details: ''},
-        siteOfAction: state.siteOfAction,
-        timeOfAction: state.timeOfAction,
-        rnaseq: state.rnaseq,
-        additionalExpr: state.additionalExpr,
-        isSavedToDB: false
-      };
-    }
-    case SET_SITE_OF_ACTION: {
-      return {
-        ...state,
-        expression: state.expression,
-        siteOfAction: action.payload,
-        timeOfAction: state.timeOfAction,
-        rnaseq: state.rnaseq,
-        additionalExpr: state.additionalExpr,
-        isSavedToDB: false
-      };
-    }
-    case TOGGLE_SITE_OF_ACTION: {
-      return {
-        ...state,
-        expression: state.expression,
-        siteOfAction: {checked: !state.siteOfAction.checked, details: ''},
-        timeOfAction: state.timeOfAction,
-        rnaseq: state.rnaseq,
-        additionalExpr: state.additionalExpr,
-        isSavedToDB: false
-      };
-    }
-    case SET_TIME_OF_ACTION: {
-      return {
-        ...state,
-        expression: state.expression,
-        siteOfAction: state.siteOfAction,
-        timeOfAction: action.payload,
-        rnaseq: state.rnaseq,
-        additionalExpr: state.additionalExpr,
-        isSavedToDB: false
-      };
-    }
-    case TOGGLE_TIME_OF_ACTION: {
-      return {
-        ...state,
-        expression: state.expression,
-        siteOfAction: state.siteOfAction,
-        timeOfAction: {checked: !state.timeOfAction.checked, details: ''},
-        rnaseq: state.rnaseq,
-        additionalExpr: state.additionalExpr,
-        isSavedToDB: false
-      };
-    }
-    case SET_RNASEQ: {
-      return {
-        ...state,
-        expression: state.expression,
-        siteOfAction: state.siteOfAction,
-        timeOfAction: state.timeOfAction,
-        rnaseq: action.payload,
-        additionalExpr: state.additionalExpr,
-        isSavedToDB: false
-      };
-    }
-    case TOGGLE_RNASEQ: {
-      return {
-        ...state,
-        expression: state.expression,
-        siteOfAction: state.siteOfAction,
-        timeOfAction: state.timeOfAction,
-        rnaseq: {checked: !state.rnaseq.checked, details: ''},
-        additionalExpr: state.additionalExpr,
-        isSavedToDB: false
-      };
-    }
-    case SET_ADDITIONAL_EXPR: {
-      return {
-        ...state,
-        expression: state.expression,
-        siteOfAction: state.siteOfAction,
-        timeOfAction: state.timeOfAction,
-        rnaseq: state.rnaseq,
-        additionalExpr: action.payload.details,
-        isSavedToDB: false
-      };
-    }
-    case SET_IS_EXPRESSION_SAVED_TO_DB: {
-      return {
-        ...state,
-        expression: state.expression,
-        siteOfAction: state.siteOfAction,
-        timeOfAction: state.timeOfAction,
-        rnaseq: state.rnaseq,
-        additionalExpr: state.additionalExpr,
-        isSavedToDB: true
-      };
-    }
-    default:
-      return state;
-  }
 }

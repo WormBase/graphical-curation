@@ -35,53 +35,42 @@ export const addWhenExpressedToExpressionAnnotation = (annotationId, whenExpress
     }
 });
 
-export const setSiteOfAction = (checked, details) => ({
-    type: SET_SITE_OF_ACTION,
+export const removeWhenExpressedToExpressionAnnotation = (annotationId, whenExpressed) => ({
+    type: REMOVE_WHEN_EXPRESSED_EXPR_ANNOT,
     payload: {
-        checked: checked,
-        details: details
+        annotationId: annotationId,
+        whenExpressed: whenExpressed
     }
 });
 
-export const toggleSiteOfAction = () => ({
-    type: TOGGLE_SITE_OF_ACTION,
-    payload: {}
-});
-
-export const setTimeOfAction = (checked, details) => ({
-    type: SET_TIME_OF_ACTION,
+export const setAssayInExpressionAnnotation = (annotationId, assay) => ({
+    type: SET_ASSAY_EXPR_ANNOT,
     payload: {
-        checked: checked,
-        details: details
+        annotationId: annotationId,
+        gene: assay
     }
 });
 
-export const toggleTimeOfAction = () => ({
-    type: TOGGLE_TIME_OF_ACTION,
-    payload: {}
-});
-
-export const setRnaseq = (checked, details) => ({
-    type: SET_RNASEQ,
+export const setEvidenceInExpressionAnnotation = (annotationId, evidence) => ({
+    type: SET_EVIDENCE_EXPR_ANNOT,
     payload: {
-        checked: checked,
-        details: details
+        annotationId: annotationId,
+        gene: evidence
     }
 });
 
-export const toggleRnaseq = () => ({
-    type: TOGGLE_RNASEQ,
-    payload: {}
-});
-
-export const setAdditionalExpr = details => ({
-    type: SET_ADDITIONAL_EXPR,
+export const addWhereExpressedToExpressionAnnotation = (annotationId, whereExpressed) => ({
+    type: ADD_WHERE_EXPRESSED_EXPR_ANNOT,
     payload: {
-        details
+        annotationId: annotationId,
+        whenExpressed: whereExpressed
     }
 });
 
-export const setIsExpressionSavedToDB = () => ({
-    type: SET_IS_EXPRESSION_SAVED_TO_DB,
-    payload: {}
+export const removeWhereExpressedToExpressionAnnotation = (annotationId, whereExpressed) => ({
+    type: REMOVE_WHERE_EXPRESSED_EXPR_ANNOT,
+    payload: {
+        annotationId: annotationId,
+        whenExpressed: whereExpressed
+    }
 });
