@@ -7,7 +7,6 @@ export const FETCH_ENTITIES_ERROR = "FETCH_ENTITIES_ERROR";
 export const fetchEntities = apiEndpoint => {
   return dispatch => {
     dispatch(fetchEntitiesRequest());
-
     let testEntities = {
       genes: ['lin-12', 'daf-16'],
       anatomyTerms: ['tail', 'head'],
