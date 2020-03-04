@@ -1,6 +1,6 @@
 import {expressionAnnotationIsValid} from "./constraints";
 
-export const getExpressionState = store => store.expression;
+export const getExpressionState = store => store.expressionAnnotations;
 
 export const getExpressionAnnotations = store => getExpressionState(store) ? getExpressionState(store).annotations : [];
 

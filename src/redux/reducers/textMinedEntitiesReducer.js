@@ -1,9 +1,4 @@
-import {
-    FETCH_ENTITIES_REQUEST,
-    FETCH_ENTITIES_SUCCESS,
-    FETCH_ENTITIES_ERROR
-} from "../actions/textMinedEntitiesAction";
-
+import {createReducer} from '@reduxjs/toolkit';
 
 const initialState = {
     genes: [],
@@ -13,7 +8,7 @@ const initialState = {
     error: null
 };
 
-export const textMinedEntitiesReducer = (initialState, {
+export const textMinedEntities = createReducer(initialState, {
     FETCH_ENTITIES_REQUEST: (state, action) => {state.isLoading = true},
     FETCH_ENTITIES_SUCCESS: (state, action) => {
         state.genes = action.payload.entities.genes;

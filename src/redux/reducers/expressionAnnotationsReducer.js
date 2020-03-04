@@ -6,7 +6,7 @@ const initialState = {
     error: null
 };
 
-export const expressionAnnotationsReducer = createReducer(initialState, {
+export const expressionAnnotations = createReducer(initialState, {
     FETCH_EXPR_ANNOTS_REQUEST: (state, action) => {state.isLoading = true},
     FETCH_EXPR_ANNOTS_SUCCESS: (state, action) => {state.annotations = action.payload.annotations},
     FETCH_EXPR_ANNOTS_ERROR: (state, action) => {
@@ -15,7 +15,7 @@ export const expressionAnnotationsReducer = createReducer(initialState, {
     },
     ADD_EXPR_ANNOT: (state, action) => {
         state.annotations.push({
-            annotationId: Math.max(...state.annotations.map(a => a.annotationId), 1),
+            annotationId: action.payload.annotationId,
             gene: undefined,
             whenExpressed: [],
             assay: undefined,
