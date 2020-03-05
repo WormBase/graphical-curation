@@ -1,0 +1,59 @@
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import {getExpressionAnnotations} from "../redux/selectors/expressionSelector";
+import Badge from "react-bootstrap/Badge";
+import Button from "react-bootstrap/Button";
+import { IoIosRemoveCircleOutline } from 'react-icons/io';
+import {deleteExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
+
+class ExpressionAnnotationsViewer extends Component{
+
+    render() {
+        return (
+            <Container>
+                <Row style={{
+                    backgroundColor: 'lightgray',
+                }}>
+                    <Col>Gene</Col>
+                    <Col>Where Expressed</Col>
+                    <Col>When Expressed</Col>
+                    <Col>Method</Col>
+                    <Col>Date Assigned</Col>
+                    <Col>&nbsp;</Col>
+                </Row>
+                {this.props.expressionAnnotations.length === 0 ? <Row><Col sm={12}>No Annotations</Col></Row> :
+                    this.props.expressionAnnotations.map(a =>
+                    <Row>
+                        <Col>{a.gene}</Col>
+                        <Col>
+                            {a.whereExpressed.map(e => <span><Badge variant="secondary">{e}</Badge>&nbsp;</span>)}
+                        </Col>
+                        <Col>
+                            {a.whenExpressed.map(e => <span><Badge variant="secondary">{e}</Badge>&nbsp;</span>)}
+                        </Col>
+                        <Col>
+                            {a.assay}
+                        </Col>
+                        <Col>
+                            {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())(new Date(a.dateAssigned))}
+                        </Col>
+                        <Col>
+                            <Button variant="light" onClick={() => {
+                                this.props.deleteExpressionAnnotation(a.annotationId);
+                            }}><IoIosRemoveCircleOutline /></Button>
+                        </Col>
+                    </Row>)}
+            </Container>
+
+        );
+    }
+}
+
+const mapStateToProps = state => ({
+    expressionAnnotations: getExpressionAnnotations(state)
+});
+
+export default connect(mapStateToProps, {deleteExpressionAnnotation})(ExpressionAnnotationsViewer);

@@ -66,16 +66,18 @@ export const fetchExpressionAnnotationsError = () => ({
 });
 
 
-export const addExpressionAnnotation = (annotationId) => ({
+export const addExpressionAnnotation = (annotation) => ({
     type: ADD_EXPR_ANNOT,
     payload: {
-        annotationId
+        annotation
     }
 });
 
 export const deleteExpressionAnnotation = (annotationId) => ({
     type: DELETE_EXPR_ANNOT,
-    payload: annotationId
+    payload: {
+        annotationId
+    }
 });
 
 export const setGeneInExpressionAnnotation = (annotationId, gene) => ({

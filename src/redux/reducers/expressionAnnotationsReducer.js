@@ -15,12 +15,13 @@ export const expressionAnnotations = createReducer(initialState, {
     },
     ADD_EXPR_ANNOT: (state, action) => {
         state.annotations.push({
-            annotationId: action.payload.annotationId,
-            gene: undefined,
-            whenExpressed: [],
-            assay: undefined,
-            evidence: undefined,
-            whereExpressed: []
+            annotationId: Math.max(...state.annotations.map(a => a.annotationId), 0) + 1,
+            gene: action.payload.annotation.gene,
+            whenExpressed: action.payload.annotation.whenExpressed,
+            assay: action.payload.annotation.assay,
+            evidence: action.payload.annotation.evidence,
+            whereExpressed: action.payload.annotation.whereExpressed,
+            dateAssigned: Date.now()
         })
     },
     DELETE_EXPR_ANNOT: (state, action) => {

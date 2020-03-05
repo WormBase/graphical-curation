@@ -7,7 +7,13 @@ class EntityPicker extends Component{
         super(props, context);
         this.state = {
             selectedEntities: new Set()
-        }
+        };
+
+        this.reset = this.reset.bind(this);
+    }
+
+    reset() {
+        this.setState({selectedEntities: new Set()});
     }
 
     render() {
@@ -27,6 +33,7 @@ class EntityPicker extends Component{
                             } else {
                                 selectedEntities = new Set([entity]);
                             }
+                            this.props.selectedItemsCallback([...selectedEntities]);
                             this.setState({selectedEntities: selectedEntities});
                         }}>
                         {entity}
