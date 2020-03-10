@@ -19,6 +19,7 @@ export const textMinedEntities = createReducer(initialState, {
         state.genesLoading = false;
     },
     FETCH_GENES_ERROR: (state, action) => {state.genesError = action.payload.error},
+    ADD_GENE: (state, action) => {state.genes = [...state.genes, action.payload.gene].sort()},
 
     FETCH_ANATOMY_TERMS_REQUEST: (state, action) => {state.anatomyTermsLoading = true},
     FETCH_ANATOMY_TERMS_SUCCESS: (state, action) => {
@@ -26,11 +27,13 @@ export const textMinedEntities = createReducer(initialState, {
         state.anatomyTermsLoading = false
     },
     FETCH_ANATOMY_TERMS_ERROR: (state, action) => {state.lifeStagesError = action.payload.error},
+    ADD_ANATOMY_TERM: (state, action) => {state.anatomyTerms = [...state.anatomyTerms, action.payload.anatomyTerm].sort()},
 
     FETCH_LIFE_STAGES_REQUEST: (state, action) => {state.lifeStagesLoading = true},
     FETCH_LIFE_STAGES_SUCCESS: (state, action) => {
         state.lifeStages = action.payload.lifeStages.sort();
         state.lifeStagesLoading = false
     },
-    FETCH_LIFE_STAGES_ERROR: (state, action) => {state.lifeStagesError = action.payload.error}
+    FETCH_LIFE_STAGES_ERROR: (state, action) => {state.lifeStagesError = action.payload.error},
+    ADD_LIFE_STAGE: (state, action) => {state.lifeStages = [...state.lifeStages, action.payload.lifeStage].sort()},
 });

@@ -6,3 +6,5 @@ export const expressionAnnotationHasSubject = annotation => annotation.gene !== 
 export const expressionAnnotationIsValid = annotation =>
     expressionAnnotationHasSubject(annotation) && expressionAnnotationHasObject(annotation) &&
     annotation.assay !== undefined && annotation.evidence !== undefined;
+
+export const expressionAnnotationNtoN = annotation => annotation.whenExpressed.length > 1 && annotation.whereExpressed.length > 1;

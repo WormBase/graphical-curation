@@ -3,21 +3,24 @@
 export const FETCH_GENES_REQUEST = "FETCH_GENES_REQUEST";
 export const FETCH_GENES_SUCCESS = "FETCH_GENES_SUCCESS";
 export const FETCH_GENES_ERROR = "FETCH_GENES_ERROR";
+export const ADD_GENE = "ADD_GENE";
 
 export const FETCH_ANATOMY_TERMS_REQUEST = "FETCH_ANATOMY_TERMS_REQUEST";
 export const FETCH_ANATOMY_TERMS_SUCCESS = "FETCH_ANATOMY_TERMS_SUCCESS";
 export const FETCH_ANATOMY_TERMS_ERROR = "FETCH_ANATOMY_TERMS_ERROR";
+export const ADD_ANATOMY_TERM = "ADD_ANATOMY_TERM";
 
 export const FETCH_LIFE_STAGES_REQUEST = "FETCH_LIFE_STAGES_REQUEST";
 export const FETCH_LIFE_STAGES_SUCCESS = "FETCH_LIFE_STAGES_SUCCESS";
 export const FETCH_LIFE_STAGES_ERROR = "FETCH_LIFE_STAGES_ERROR";
+export const ADD_LIFE_STAGE = "ADD_LIFE_STAGE";
 
 export const fetchGenes = apiEndpoint => {
   return dispatch => {
     dispatch(fetchGenesRequest());
     let genes = ['lin-12', 'daf-16', 'lin-2', 'daf-12', 'unc-119'];
 
-   dispatch(fetchGenesSuccess(genes));
+    dispatch(fetchGenesSuccess(genes));
 
     // TODO uncomment this code and comment above when ready to fetch entities from API
     // axios
@@ -47,6 +50,11 @@ const fetchGenesError = error => ({
   payload: {
     error
   }
+});
+
+export const addGene = gene => ({
+  type: ADD_GENE,
+  payload: { gene }
 });
 
 export const fetchAnatomyTerms = apiEndpoint => {
@@ -86,6 +94,11 @@ const fetchAnatomyTermsError = error => ({
   }
 });
 
+export const addAnatomyTerm = anatomyTerm => ({
+  type: ADD_ANATOMY_TERM,
+  payload: { anatomyTerm }
+});
+
 export const fetchLifeStages = (apiEndpoint) => {
   return dispatch => {
     dispatch(fetchLifeStagesRequest());
@@ -121,5 +134,10 @@ const fetchLifeStagesError = error => ({
   payload: {
     error
   }
+});
+
+export const addLifeStage = lifeStage => ({
+  type: ADD_LIFE_STAGE,
+  payload: { lifeStage }
 });
 

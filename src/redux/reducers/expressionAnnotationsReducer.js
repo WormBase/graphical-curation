@@ -6,6 +6,16 @@ const initialState = {
     error: null
 };
 
+function annotationExists(annotation, storedAnnotations) {
+    return storedAnnotations.some(a => {
+        return annotation.gene === a.gene &&
+            arraysContainSameElements(annotation.whereExpressed, a.whereExpressed) &&
+            arraysContainSameElements(annotation.whenExpressed, a.whenExpressed);
+    })
+}
+
+const arraysContainSameElements = (array1, array2) => array1.sort().join(',') === array2.sort().join(',');
+
 export const expressionAnnotations = createReducer(initialState, {
     FETCH_EXPR_ANNOTS_REQUEST: (state, action) => {state.isLoading = true},
     FETCH_EXPR_ANNOTS_SUCCESS: (state, action) => {state.annotations = action.payload.annotations},
@@ -14,7 +24,7 @@ export const expressionAnnotations = createReducer(initialState, {
         state.error = action.payload.error
     },
     ADD_EXPR_ANNOT: (state, action) => {
-        state.annotations.push({
+        let newAnnotation = {
             annotationId: Math.max(...state.annotations.map(a => a.annotationId), 0) + 1,
             gene: action.payload.annotation.gene,
             whenExpressed: action.payload.annotation.whenExpressed,
@@ -22,7 +32,10 @@ export const expressionAnnotations = createReducer(initialState, {
             evidence: action.payload.annotation.evidence,
             whereExpressed: action.payload.annotation.whereExpressed,
             dateAssigned: Date.now()
-        })
+        };
+        if (!annotationExists(newAnnotation, state.annotations)) {
+            state.annotations.push(newAnnotation);
+        }
     },
     DELETE_EXPR_ANNOT: (state, action) => {
         state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId)

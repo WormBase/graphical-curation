@@ -14,6 +14,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import {addExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
 import {expressionAnnotationIsValid} from "../redux/constraints/annotation";
+import {addGene, addAnatomyTerm, addLifeStage} from "../redux/actions/textMinedEntitiesAction";
 import Modal from "react-bootstrap/Modal";
 import {fetchGenes} from "../redux/actions/textMinedEntitiesAction";
 
@@ -61,6 +62,7 @@ class ExpressionAnnotator extends Component{
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.genesLoading}
+                            addEntity={this.props.addGene}
                         />
                     </Col>
                     <Col>
@@ -72,6 +74,7 @@ class ExpressionAnnotator extends Component{
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.anatomyTermsLoading}
+                            addEntity={this.props.addAnatomyTerm}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -83,6 +86,7 @@ class ExpressionAnnotator extends Component{
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.lifeStagesLoading}
+                            addEntity={this.props.addLifeStage}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -140,7 +144,7 @@ function WrongAnnotationModal(props) {
                 </p>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
+                <Button variant="secondary" onClick={props.onHide}>Close</Button>
             </Modal.Footer>
         </Modal>
     );
@@ -156,4 +160,4 @@ const mapStateToProps = state => ({
     lifeStagesLoading: lifeStagesLoading(state),
 });
 
-export default connect(mapStateToProps, {addExpressionAnnotation, fetchGenes})(ExpressionAnnotator);
+export default connect(mapStateToProps, {addExpressionAnnotation, fetchGenes, addGene, addAnatomyTerm, addLifeStage})(ExpressionAnnotator);

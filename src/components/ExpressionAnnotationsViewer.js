@@ -6,8 +6,11 @@ import Col from "react-bootstrap/Col";
 import {getExpressionAnnotations} from "../redux/selectors/expressionSelector";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
-import { IoIosRemoveCircleOutline } from 'react-icons/io';
+import { IoIosRemoveCircleOutline, IoIosWarning } from 'react-icons/io';
 import {deleteExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
+import {expressionAnnotationNtoN} from "../redux/constraints/annotation";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 class ExpressionAnnotationsViewer extends Component{
 
@@ -27,12 +30,36 @@ class ExpressionAnnotationsViewer extends Component{
                 {this.props.expressionAnnotations.length === 0 ? <Row><Col sm={12}>No Annotations</Col></Row> :
                     this.props.expressionAnnotations.map(a =>
                     <Row>
-                        <Col>{a.gene}</Col>
+                        <Col>
+                            {a.gene}
+                        </Col>
                         <Col>
                             {a.whereExpressed.map(e => <span><Badge variant="secondary">{e}</Badge>&nbsp;</span>)}
+                            {expressionAnnotationNtoN(a) ?
+                                <span>
+                                    <OverlayTrigger
+                                        overlay={
+                                            <Tooltip>
+                                                This annotation contains multiple 'where expressed' and multiple 'when expressed' entries
+                                            </Tooltip>
+                                        }>
+                                        <IoIosWarning />
+                                    </OverlayTrigger>
+                                </span> : ''}
                         </Col>
                         <Col>
                             {a.whenExpressed.map(e => <span><Badge variant="secondary">{e}</Badge>&nbsp;</span>)}
+                            {expressionAnnotationNtoN(a) ?
+                                <span>
+                                    <OverlayTrigger
+                                        overlay={
+                                            <Tooltip>
+                                                This annotation contains multiple 'where expressed' and multiple 'when expressed' entries
+                                            </Tooltip>
+                                        }>
+                                        <IoIosWarning />
+                                    </OverlayTrigger>
+                                </span> : ''}
                         </Col>
                         <Col>
                             {a.assay}
@@ -40,7 +67,7 @@ class ExpressionAnnotationsViewer extends Component{
                         <Col>
                             {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())(new Date(a.dateAssigned))}
                         </Col>
-                        <Col>
+                        <Col align="right">
                             <Button variant="light" onClick={() => {
                                 this.props.deleteExpressionAnnotation(a.annotationId);
                             }}><IoIosRemoveCircleOutline /></Button>
