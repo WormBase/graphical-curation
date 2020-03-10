@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import {getAnatomyTerms, getGenes, getLifeStages} from "../redux/selectors/textMinedEntitiesSelector";
+import {
+    anatomyTermsLoading,
+    genesLoading,
+    getAnatomyTerms,
+    getGenes,
+    getLifeStages, lifeStagesLoading
+} from "../redux/selectors/textMinedEntitiesSelector";
 import EntityPicker from "./EntityPicker";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -9,7 +15,7 @@ import Button from "react-bootstrap/Button";
 import {addExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
 import {expressionAnnotationIsValid} from "../redux/constraints/annotation";
 import Modal from "react-bootstrap/Modal";
-import LoadingOverlay from 'react-loading-overlay';
+import {fetchGenes} from "../redux/actions/textMinedEntitiesAction";
 
 class ExpressionAnnotator extends Component{
     constructor(props) {
@@ -19,8 +25,8 @@ class ExpressionAnnotator extends Component{
         this.lifeStagesPicker = React.createRef();
         this.state = {
             gene: '',
-            anatomyTerms: new Set(),
-            lifeStages: new Set(),
+            anatomyTerms: [],
+            lifeStages: [],
             wrongAnnotationShow: false
         }
     }
@@ -28,65 +34,88 @@ class ExpressionAnnotator extends Component{
     render() {
         return (
             <Container>
-                <LoadingOverlay
-                    active={this.props.isLoading}
-                    spinner
-                    text='Sending data ...'
-                >
-                    <Row>
-                        <Col>
-                            <EntityPicker
-                                entities={this.props.genes}
-                                ref={instance => { this.genePicker = instance; }}
-                                selectedItemsCallback={(genes) => {
-                                    this.setState({gene: genes.length > 0 ? genes[0] : ''});
-                                }}/>
-                        </Col>
-                        <Col>
-                            <EntityPicker
-                                entities={this.props.anatomyTerms}
-                                ref={instance => { this.anatomyTermsPicker = instance; }}
-                                selectedItemsCallback={(anatomyTerms) => {
-                                    this.setState({anatomyTerms: anatomyTerms});
-                                }} multiSelect/>
-                        </Col>
-                        <Col>
-                            <EntityPicker
-                                entities={this.props.lifeStages}
-                                ref={instance => { this.lifeStagesPicker = instance; }}
-                                selectedItemsCallback={(lifeStages) => {
-                                    this.setState({lifeStages: lifeStages});
-                                }} multiSelect/>
-                        </Col>
-                        <Col>
-                            <Button variant="light" onClick={() => {
-                                let annotation = {
-                                    gene: this.state.gene,
-                                    whenExpressed: this.state.lifeStages,
-                                    assay: '',
-                                    evidence: '',
-                                    whereExpressed: this.state.anatomyTerms
-                                };
-                                if (expressionAnnotationIsValid(annotation)) {
-                                    this.props.addExpressionAnnotation(annotation);
-                                    this.setState({
-                                        gene: '',
-                                        anatomyTerms: new Set(),
-                                        lifeStages: new Set()});
-                                    this.genePicker.reset();
-                                    this.anatomyTermsPicker.reset();
-                                    this.lifeStagesPicker.reset();
-                                } else {
-                                    this.setState({wrongAnnotationShow: true});
-                                }
-                            }}>Create Annotation</Button>
-                        </Col>
-                    </Row>
-                    <WrongAnnotationModal
-                        show={this.state.wrongAnnotationShow}
-                        onHide={() => this.setState({wrongAnnotationShow: false})}
-                    />
-                </LoadingOverlay>
+                <Row>
+                    <Col>
+                        <h6 align="center">Gene</h6>
+                    </Col>
+                    <Col>
+                        <h6 align="center">Anatomy terms</h6>
+                    </Col>
+                    <Col>
+                        <h6 align="center">Life stages</h6>
+                    </Col>
+                    <Col>
+                        <h6 align="center">Method</h6>
+                    </Col>
+                    <Col>
+                        &nbsp;
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <EntityPicker
+                            entities={this.props.genes}
+                            ref={instance => { this.genePicker = instance; }}
+                            selectedItemsCallback={(genes) => {
+                                this.setState({gene: genes.length > 0 ? genes[0] : ''});
+                            }}
+                            count={this.props.maxEntities}
+                            isLoading={this.props.genesLoading}
+                        />
+                    </Col>
+                    <Col>
+                        <EntityPicker
+                            entities={this.props.anatomyTerms}
+                            ref={instance => { this.anatomyTermsPicker = instance; }}
+                            selectedItemsCallback={(anatomyTerms) => {
+                                this.setState({anatomyTerms: anatomyTerms});
+                            }}
+                            count={this.props.maxEntities}
+                            isLoading={this.props.anatomyTermsLoading}
+                            multiSelect/>
+                    </Col>
+                    <Col>
+                        <EntityPicker
+                            entities={this.props.lifeStages}
+                            ref={instance => { this.lifeStagesPicker = instance; }}
+                            selectedItemsCallback={(lifeStages) => {
+                                this.setState({lifeStages: lifeStages});
+                            }}
+                            count={this.props.maxEntities}
+                            isLoading={this.props.lifeStagesLoading}
+                            multiSelect/>
+                    </Col>
+                    <Col>
+                        &nbsp;
+                    </Col>
+                    <Col>
+                        <Button variant="light" onClick={() => {
+                            let annotation = {
+                                gene: this.state.gene,
+                                whenExpressed: this.state.lifeStages,
+                                assay: '',
+                                evidence: '',
+                                whereExpressed: this.state.anatomyTerms
+                            };
+                            if (expressionAnnotationIsValid(annotation)) {
+                                this.props.addExpressionAnnotation(annotation);
+                                this.setState({
+                                    gene: '',
+                                    anatomyTerms: [],
+                                    lifeStages: []});
+                                this.genePicker.reset();
+                                this.anatomyTermsPicker.reset();
+                                this.lifeStagesPicker.reset();
+                            } else {
+                                this.setState({wrongAnnotationShow: true});
+                            }
+                        }}>Create Annotation</Button>
+                    </Col>
+                </Row>
+                <WrongAnnotationModal
+                    show={this.state.wrongAnnotationShow}
+                    onHide={() => this.setState({wrongAnnotationShow: false})}
+                />
             </Container>
         );
     }
@@ -107,7 +136,7 @@ function WrongAnnotationModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    At least a gene, and one or more anatomy terms and/or one or more life stage terms must be provided.
+                    A gene, and one or more anatomy terms and/or one or more life stage terms must be provided.
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -122,7 +151,9 @@ const mapStateToProps = state => ({
     genes: getGenes(state),
     anatomyTerms: getAnatomyTerms(state),
     lifeStages: getLifeStages(state),
-    isLoading: areTextMinedEntitiesLoading(state)
+    genesLoading: genesLoading(state),
+    anatomyTermsLoading: anatomyTermsLoading(state),
+    lifeStagesLoading: lifeStagesLoading(state),
 });
 
-export default connect(mapStateToProps, {addExpressionAnnotation})(ExpressionAnnotator);
+export default connect(mapStateToProps, {addExpressionAnnotation, fetchGenes})(ExpressionAnnotator);

@@ -12,6 +12,7 @@ class Main extends Component{
 
   render() {
     return (
+        <div>
         <Accordion defaultActiveKey="0">
             <Card>
                 <Card.Header>
@@ -24,7 +25,7 @@ class Main extends Component{
                         <Container>
                             <Row>
                                 <Col>
-                                    <ExpressionAnnotator/>
+                                    <ExpressionAnnotator maxEntities={3}/>
                                 </Col>
                             </Row>
                             <Row>
@@ -54,6 +55,11 @@ class Main extends Component{
                 </Accordion.Collapse>
             </Card>
         </Accordion>
+            <br/>
+            <br/>
+            <br/>
+            <div align="center"><Button variant="secondary">Save All Annotations</Button></div>
+        </div>
     );
   }
 }
