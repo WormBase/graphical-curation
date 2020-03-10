@@ -66,7 +66,7 @@ class EntityPicker extends Component{
                     <Button variant="light" disabled={this.props.entities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
                         next
                     </Button>
-                    <Button variant="light" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> add</Button>
+                    {this.props.addEntity !== undefined ? <Button variant="light" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> add</Button> : ''}
                 </div>
                 <FormControl size="sm" placeholder="search" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
                     this.setState({filteredEntities: this.props.entities.filter(entity => entity.startsWith(event.target.value))})

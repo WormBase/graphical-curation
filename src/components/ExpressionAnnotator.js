@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {
-    anatomyTermsLoading,
+    anatomyTermsLoading, assaysLoading,
     genesLoading,
-    getAnatomyTerms,
+    getAnatomyTerms, getAssays,
     getGenes,
     getLifeStages, lifeStagesLoading
 } from "../redux/selectors/textMinedEntitiesSelector";
@@ -24,10 +24,12 @@ class ExpressionAnnotator extends Component{
         this.genePicker = React.createRef();
         this.anatomyTermsPicker = React.createRef();
         this.lifeStagesPicker = React.createRef();
+        this.assayPicker = React.createRef();
         this.state = {
             gene: '',
             anatomyTerms: [],
             lifeStages: [],
+            assay: '',
             wrongAnnotationShow: false
         }
     }
@@ -90,14 +92,22 @@ class ExpressionAnnotator extends Component{
                             multiSelect/>
                     </Col>
                     <Col>
-                        &nbsp;
+                        <EntityPicker
+                            entities={this.props.assays}
+                            ref={instance => { this.assayPicker = instance; }}
+                            selectedItemsCallback={(assays) => {
+                                this.setState({assay: assays.length > 0 ? assays[0] : ''});
+                            }}
+                            count={this.props.maxEntities}
+                            isLoading={this.props.assaysLoading}
+                        />
                     </Col>
-                    <Col>
+                    <Col align="center">
                         <Button variant="light" onClick={() => {
                             let annotation = {
                                 gene: this.state.gene,
                                 whenExpressed: this.state.lifeStages,
-                                assay: '',
+                                assay: this.state.assay,
                                 evidence: '',
                                 whereExpressed: this.state.anatomyTerms
                             };
@@ -110,6 +120,7 @@ class ExpressionAnnotator extends Component{
                                 this.genePicker.reset();
                                 this.anatomyTermsPicker.reset();
                                 this.lifeStagesPicker.reset();
+                                this.assayPicker.reset();
                             } else {
                                 this.setState({wrongAnnotationShow: true});
                             }
@@ -140,7 +151,7 @@ function WrongAnnotationModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    A gene, and one or more anatomy terms and/or one or more life stage terms must be provided.
+                    One gene, one or more anatomy terms and/or one or more life stage terms, and one method must be provided.
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -155,9 +166,11 @@ const mapStateToProps = state => ({
     genes: getGenes(state),
     anatomyTerms: getAnatomyTerms(state),
     lifeStages: getLifeStages(state),
+    assays: getAssays(state),
     genesLoading: genesLoading(state),
     anatomyTermsLoading: anatomyTermsLoading(state),
     lifeStagesLoading: lifeStagesLoading(state),
+    assaysLoading: assaysLoading(state)
 });
 
 export default connect(mapStateToProps, {addExpressionAnnotation, fetchGenes, addGene, addAnatomyTerm, addLifeStage})(ExpressionAnnotator);

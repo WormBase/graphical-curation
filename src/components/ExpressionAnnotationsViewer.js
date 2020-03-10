@@ -54,7 +54,7 @@ class ExpressionAnnotationsViewer extends Component{
                                     <OverlayTrigger
                                         overlay={
                                             <Tooltip>
-                                                This annotation contains multiple 'where expressed' and multiple 'when expressed' entries
+                                                Multiple 'where expressed' and 'when expressed' entries. This implies that the gene product is expressed in all tissues specified during all developmental stages specified
                                             </Tooltip>
                                         }>
                                         <IoIosWarning />

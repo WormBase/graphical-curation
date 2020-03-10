@@ -15,6 +15,10 @@ export const FETCH_LIFE_STAGES_SUCCESS = "FETCH_LIFE_STAGES_SUCCESS";
 export const FETCH_LIFE_STAGES_ERROR = "FETCH_LIFE_STAGES_ERROR";
 export const ADD_LIFE_STAGE = "ADD_LIFE_STAGE";
 
+export const FETCH_ASSAYS_REQUEST = "FETCH_ASSAYS_REQUEST";
+export const FETCH_ASSAYS_SUCCESS = "FETCH_ASSAYS_SUCCESS";
+export const FETCH_ASSAYS_ERROR = "FETCH_ASSAYS_ERROR";
+
 export const fetchGenes = apiEndpoint => {
   return dispatch => {
     dispatch(fetchGenesRequest());
@@ -139,5 +143,43 @@ const fetchLifeStagesError = error => ({
 export const addLifeStage = lifeStage => ({
   type: ADD_LIFE_STAGE,
   payload: { lifeStage }
+});
+
+export const fetchAssays = (apiEndpoint) => {
+  return dispatch => {
+    dispatch(fetchAssaysRequest());
+    let assays = ['In situ Hybridization', 'Immunohistochemistry', 'Reporter gene', 'Western Blot', 'Northern blot',
+      'RT-PCR'];
+
+    dispatch(fetchAssaysSuccess(assays));
+
+    // TODO uncomment this code and comment above when ready to fetch entities from API
+    // axios
+    //   .post(apiEndpoint)
+    //   .then(res => {
+    //     dispatch(fetchEntitiesSuccess(res.data));
+    //   })
+    //   .catch(err => {
+    //     dispatch(fetchEntitiesError(err.message));
+    //   });
+  };
+};
+
+const fetchAssaysSuccess = assays => ({
+  type: FETCH_ASSAYS_SUCCESS,
+  payload: {
+    assays
+  }
+});
+
+const fetchAssaysRequest = () => ({
+  type: FETCH_ASSAYS_REQUEST
+});
+
+const fetchAssaysError = error => ({
+  type: FETCH_ASSAYS_ERROR,
+  payload: {
+    error
+  }
 });
 
