@@ -116,7 +116,9 @@ class ExpressionAnnotator extends Component{
                                 this.setState({
                                     gene: '',
                                     anatomyTerms: [],
-                                    lifeStages: []});
+                                    lifeStages: [],
+                                    assay: '',
+                                });
                                 this.genePicker.reset();
                                 this.anatomyTermsPicker.reset();
                                 this.lifeStagesPicker.reset();
