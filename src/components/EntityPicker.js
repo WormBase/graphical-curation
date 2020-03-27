@@ -55,7 +55,7 @@ class EntityPicker extends Component{
                                 this.props.selectedItemsCallback([...selectedEntities]);
                                 this.setState({selectedEntities: selectedEntities});
                             }}>
-                            {entity}
+                            {entity.value}
                         </ListGroup.Item>
                     })}
                 </ListGroup>

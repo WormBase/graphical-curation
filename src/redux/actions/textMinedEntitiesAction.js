@@ -13,11 +13,8 @@ export const fetchEntities = (apiEndpoint, articleId) => {
     axios
       .post(apiEndpoint + articleId)
       .then(res => {
-        res.data.entities.GENE = res.data.entities.GENE.map((entity) => entity.value);
-        res.data.entities.ANATOMY = res.data.entities.ANATOMY.map((entity) => entity.value);
-        res.data.entities.OTHER = res.data.entities.OTHER.map((entity) => entity.value);
-        res.data.entities.assays = ['In situ Hybridization', 'Immunohistochemistry', 'Reporter gene', 'Western Blot',
-          'Northern blot', 'RT-PCR'];
+        res.data.entities.assays = [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistry'},
+          {value: 'Reporter gene'}, {value: 'Western Blot'}, {value: 'Northern blot'}, {value: 'RT-PCR'}];
         dispatch(fetchEntitiesSuccess(res.data.entities));
       })
       .catch(err => {
