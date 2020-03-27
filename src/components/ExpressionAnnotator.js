@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {
-    anatomyTermsLoading, assaysLoading,
-    genesLoading,
-    getAnatomyTerms, getAssays,
-    getGenes,
-    getLifeStages, lifeStagesLoading
+    isLoading, getAnatomyTerms, getAssays, getGenes, getLifeStages
 } from "../redux/selectors/textMinedEntitiesSelector";
 import EntityPicker from "./EntityPicker";
 import Container from "react-bootstrap/Container";
@@ -16,7 +12,6 @@ import {addExpressionAnnotation} from "../redux/actions/expressionAnnotationsAct
 import {expressionAnnotationIsValid} from "../redux/constraints/annotation";
 import {addGene, addAnatomyTerm, addLifeStage} from "../redux/actions/textMinedEntitiesAction";
 import Modal from "react-bootstrap/Modal";
-import {fetchGenes} from "../redux/actions/textMinedEntitiesAction";
 
 class ExpressionAnnotator extends Component{
     constructor(props) {
@@ -63,7 +58,7 @@ class ExpressionAnnotator extends Component{
                                 this.setState({gene: genes.length > 0 ? genes[0] : ''});
                             }}
                             count={this.props.maxEntities}
-                            isLoading={this.props.genesLoading}
+                            isLoading={this.props.isLoading}
                             addEntity={this.props.addGene}
                         />
                     </Col>
@@ -75,7 +70,7 @@ class ExpressionAnnotator extends Component{
                                 this.setState({anatomyTerms: anatomyTerms});
                             }}
                             count={this.props.maxEntities}
-                            isLoading={this.props.anatomyTermsLoading}
+                            isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
                             multiSelect/>
                     </Col>
@@ -87,7 +82,7 @@ class ExpressionAnnotator extends Component{
                                 this.setState({lifeStages: lifeStages});
                             }}
                             count={this.props.maxEntities}
-                            isLoading={this.props.lifeStagesLoading}
+                            isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
                             multiSelect/>
                     </Col>
@@ -99,7 +94,7 @@ class ExpressionAnnotator extends Component{
                                 this.setState({assay: assays.length > 0 ? assays[0] : ''});
                             }}
                             count={this.props.maxEntities}
-                            isLoading={this.props.assaysLoading}
+                            isLoading={this.props.isLoading}
                         />
                     </Col>
                     <Col align="center">
@@ -169,10 +164,7 @@ const mapStateToProps = state => ({
     anatomyTerms: getAnatomyTerms(state),
     lifeStages: getLifeStages(state),
     assays: getAssays(state),
-    genesLoading: genesLoading(state),
-    anatomyTermsLoading: anatomyTermsLoading(state),
-    lifeStagesLoading: lifeStagesLoading(state),
-    assaysLoading: assaysLoading(state)
+    isLoading: isLoading(state)
 });
 
-export default connect(mapStateToProps, {addExpressionAnnotation, fetchGenes, addGene, addAnatomyTerm, addLifeStage})(ExpressionAnnotator);
+export default connect(mapStateToProps, {addExpressionAnnotation, addGene, addAnatomyTerm, addLifeStage})(ExpressionAnnotator);
