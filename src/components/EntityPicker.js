@@ -56,7 +56,7 @@ class EntityPicker extends Component{
                 />
                 <ListGroup>
                     {this.state.filteredEntities.slice(this.state.offset, this.state.offset + this.state.count).map(entity => {
-                        return <ListGroup.Item action variant="light"
+                        return <ListGroup.Item action variant="default"
                             active={this.state.selectedEntities.has(entity)}
                             onClick={() => {
                                 let selectedEntities = this.state.selectedEntities;

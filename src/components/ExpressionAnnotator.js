@@ -30,6 +30,16 @@ class ExpressionAnnotator extends Component{
             annotationCreatedShow: false,
             wrongAnnotationShow: false
         }
+
+        this.resetPickers = this.resetPickers.bind(this);
+    }
+
+    resetPickers() {
+        this.genePicker.reset();
+        this.anatomyTermsPicker.reset();
+        this.lifeStagesPicker.reset();
+        this.assayPicker.reset();
+        this.cellularComponentPicker.reset();
     }
 
     render() {
@@ -120,8 +130,8 @@ class ExpressionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                         />
                     </Col>
-                    <Col align="center">
-                        <Button variant="light" onClick={() => {
+                    <Col align="left">
+                        <Button variant="success" onClick={() => {
                             let annotation = {
                                 gene: this.state.gene,
                                 whenExpressed: this.state.lifeStages,
@@ -137,17 +147,14 @@ class ExpressionAnnotator extends Component{
                                     lifeStages: [],
                                     assay: '',
                                 });
-                                this.genePicker.reset();
-                                this.anatomyTermsPicker.reset();
-                                this.lifeStagesPicker.reset();
-                                this.assayPicker.reset();
-                                this.cellularComponentPicker.reset();
+                                this.resetPickers();
                                 this.setState({annotationCreatedShow: true});
                                 setTimeout(() => this.setState({annotationCreatedShow: false}), 2000);
                             } else {
                                 this.setState({wrongAnnotationShow: true});
                             }
-                        }}>Create Annotation</Button>
+                        }}>Create Annotation</Button><br/><br/>
+                        <Button variant="danger" onClick={()=> this.resetPickers()}>Clear</Button>
                     </Col>
                 </Row>
                 <AnnotationCreatedModal
@@ -179,7 +186,7 @@ function AnnotationCreatedModal(props) {
                 </p>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={props.onHide}>Close</Button>
+                <Button variant="primary" onClick={props.onHide}>Close</Button>
             </Modal.Footer>
         </Modal>
     );
@@ -204,7 +211,7 @@ function WrongAnnotationModal(props) {
                 </p>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={props.onHide}>Close</Button>
+                <Button variant="primary" onClick={props.onHide}>Close</Button>
             </Modal.Footer>
         </Modal>
     );

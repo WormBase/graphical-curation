@@ -61,7 +61,7 @@ class GraphicalCuration extends Component{
                 <br/>
                 <br/>
                 <br/>
-                <div align="center"><Button variant="secondary">Save All Annotations</Button></div>
+                <div align="center"><Button variant="primary">Save All Annotations</Button></div>
             </div>
         );
     }

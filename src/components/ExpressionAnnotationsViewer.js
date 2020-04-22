@@ -39,7 +39,7 @@ class ExpressionAnnotationsViewer extends Component{
                             {a.gene.value}
                         </Col>
                         <Col>
-                            {a.whereExpressed.map(e => <span><Badge variant="secondary">{e.value}</Badge>&nbsp;</span>)}
+                            {a.whereExpressed.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
                             {expressionAnnotationNtoN(a) ?
                                 <span>
                                     <OverlayTrigger
@@ -53,7 +53,7 @@ class ExpressionAnnotationsViewer extends Component{
                                 </span> : ''}
                         </Col>
                         <Col>
-                            {a.whenExpressed.map(e => <span><Badge variant="secondary">{e.value}</Badge>&nbsp;</span>)}
+                            {a.whenExpressed.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
                             {expressionAnnotationNtoN(a) ?
                                 <span>
                                     <OverlayTrigger
@@ -67,7 +67,7 @@ class ExpressionAnnotationsViewer extends Component{
                                 </span> : ''}
                         </Col>
                         <Col>
-                            {a.assay.value}
+                            <Badge variant="primary">{a.assay.value}</Badge>
                         </Col>
                         <Col>
                             {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())(new Date(a.dateAssigned))}
