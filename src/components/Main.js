@@ -11,8 +11,10 @@ import Button from "react-bootstrap/Button";
 import {connect} from "react-redux";
 import queryString from 'query-string';
 import {fetchEntities} from "../redux/actions/textMinedEntitiesAction";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
 
-class Main extends Component{
+class GraphicalCuration extends Component{
 
     componentDidMount() {
         let articleId = queryString.parse(this.props.location.search).articleId;
@@ -32,23 +34,14 @@ class Main extends Component{
                         </Card.Header>
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
-                                <Container>
-                                    <Row>
-                                        <Col>
-                                            <ExpressionAnnotator maxEntities={3}/>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col>
-                                            &nbsp;
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col>
-                                            <ExpressionAnnotationsViewer/>
-                                        </Col>
-                                    </Row>
-                                </Container>
+                                <Tabs defaultActiveKey="annotator">
+                                    <Tab eventKey="annotator" title="Create Annotation">
+                                        <ExpressionAnnotator maxEntities={5}/>
+                                    </Tab>
+                                    <Tab eventKey="viewer" title="View Annotations">
+                                        <ExpressionAnnotationsViewer/>
+                                    </Tab>
+                                </Tabs>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
@@ -74,4 +67,4 @@ class Main extends Component{
     }
 }
 
-export default connect(null, {fetchEntities})(withRouter(Main));
+export default connect(null, {fetchEntities})(withRouter(GraphicalCuration));

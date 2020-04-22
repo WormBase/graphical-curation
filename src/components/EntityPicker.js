@@ -37,6 +37,23 @@ class EntityPicker extends Component{
                 active={this.props.isLoading}
                 spinner
                 text='Loading data ...'>
+                <FormControl size="sm" placeholder="search" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
+                    this.setState({filteredEntities: this.props.entities.filter(entity => entity.value.startsWith(event.target.value))})
+                }/>
+                <div>
+                    <Button variant="light" disabled={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
+                        prev
+                    </Button>
+                    <Button variant="light" disabled={this.props.entities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
+                        next
+                    </Button>
+                    {this.props.addEntity !== undefined ? <Button variant="light" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> add</Button> : ''}
+                </div>
+                <AddEntityModal
+                    show={this.state.showAddEntity}
+                    onHide={() => this.setState({showAddEntity: false})}
+                    addEntity={(entity) => this.props.addEntity(entity)}
+                />
                 <ListGroup>
                     {this.state.filteredEntities.slice(this.state.offset, this.state.offset + this.state.count).map(entity => {
                         return <ListGroup.Item action variant="light"
@@ -59,23 +76,6 @@ class EntityPicker extends Component{
                         </ListGroup.Item>
                     })}
                 </ListGroup>
-                <div>
-                    <Button variant="light" disabled={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
-                        prev
-                    </Button>
-                    <Button variant="light" disabled={this.props.entities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
-                        next
-                    </Button>
-                    {this.props.addEntity !== undefined ? <Button variant="light" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> add</Button> : ''}
-                </div>
-                <FormControl size="sm" placeholder="search" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
-                    this.setState({filteredEntities: this.props.entities.filter(entity => entity.startsWith(event.target.value))})
-                }/>
-                <AddEntityModal
-                    show={this.state.showAddEntity}
-                    onHide={() => this.setState({showAddEntity: false})}
-                    addEntity={(entity) => this.props.addEntity(entity)}
-                />
             </LoadingOverlay>
         );
     }

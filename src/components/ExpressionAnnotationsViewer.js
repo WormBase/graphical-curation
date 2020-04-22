@@ -16,15 +16,20 @@ class ExpressionAnnotationsViewer extends Component{
 
     render() {
         return (
-            <Container>
+            <Container fluid>
+                <Row>
+                    <Col>
+                        &nbsp;
+                    </Col>
+                </Row>
                 <Row style={{
                     backgroundColor: 'lightgray',
                 }}>
-                    <Col>Gene</Col>
-                    <Col>Where Expressed</Col>
-                    <Col>When Expressed</Col>
-                    <Col>Method</Col>
-                    <Col>Date Assigned</Col>
+                    <Col><h6>Gene</h6></Col>
+                    <Col><h6>Where Expressed</h6></Col>
+                    <Col><h6>When Expressed</h6></Col>
+                    <Col><h6>Method</h6></Col>
+                    <Col><h6>Date Assigned</h6></Col>
                     <Col>&nbsp;</Col>
                 </Row>
                 {this.props.expressionAnnotations.length === 0 ? <Row><Col sm={12}>No Annotations</Col></Row> :

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {
-    isLoading, getAnatomyTerms, getAssays, getGenes, getLifeStages
+    isLoading, getAnatomyTerms, getAssays, getGenes, getLifeStages, getCellularComponents
 } from "../redux/selectors/textMinedEntitiesSelector";
 import EntityPicker from "./EntityPicker";
 import Container from "react-bootstrap/Container";
@@ -10,7 +10,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import {addExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
 import {expressionAnnotationIsValid} from "../redux/constraints/annotation";
-import {addGene, addAnatomyTerm, addLifeStage} from "../redux/actions/textMinedEntitiesAction";
+import {addGene, addAnatomyTerm, addLifeStage, addCellularComponent} from "../redux/actions/textMinedEntitiesAction";
 import Modal from "react-bootstrap/Modal";
 
 class ExpressionAnnotator extends Component{
@@ -19,19 +19,27 @@ class ExpressionAnnotator extends Component{
         this.genePicker = React.createRef();
         this.anatomyTermsPicker = React.createRef();
         this.lifeStagesPicker = React.createRef();
+        this.cellularComponentPicker = React.createRef();
         this.assayPicker = React.createRef();
         this.state = {
             gene: '',
             anatomyTerms: [],
             lifeStages: [],
+            cellularComponents: [],
             assay: '',
+            annotationCreatedShow: false,
             wrongAnnotationShow: false
         }
     }
 
     render() {
         return (
-            <Container>
+            <Container fluid>
+                <Row>
+                    <Col>
+                        &nbsp;
+                    </Col>
+                </Row>
                 <Row>
                     <Col>
                         <h6 align="center">Gene</h6>
@@ -41,6 +49,9 @@ class ExpressionAnnotator extends Component{
                     </Col>
                     <Col>
                         <h6 align="center">Life stages</h6>
+                    </Col>
+                    <Col>
+                        <h6 align="center">Cellular Component</h6>
                     </Col>
                     <Col>
                         <h6 align="center">Method</h6>
@@ -88,6 +99,18 @@ class ExpressionAnnotator extends Component{
                     </Col>
                     <Col>
                         <EntityPicker
+                            entities={this.props.cellularComponents}
+                            ref={instance => { this.cellularComponentPicker = instance; }}
+                            selectedItemsCallback={(cellularComponents) => {
+                                this.setState({cellularComponents: cellularComponents});
+                            }}
+                            count={this.props.maxEntities}
+                            isLoading={this.props.isLoading}
+                            addEntity={this.props.addCellularComponent}
+                            multiSelect/>
+                    </Col>
+                    <Col>
+                        <EntityPicker
                             entities={this.props.assays}
                             ref={instance => { this.assayPicker = instance; }}
                             selectedItemsCallback={(assays) => {
@@ -118,12 +141,19 @@ class ExpressionAnnotator extends Component{
                                 this.anatomyTermsPicker.reset();
                                 this.lifeStagesPicker.reset();
                                 this.assayPicker.reset();
+                                this.cellularComponentPicker.reset();
+                                this.setState({annotationCreatedShow: true});
+                                setTimeout(() => this.setState({annotationCreatedShow: false}), 2000);
                             } else {
                                 this.setState({wrongAnnotationShow: true});
                             }
                         }}>Create Annotation</Button>
                     </Col>
                 </Row>
+                <AnnotationCreatedModal
+                    show={this.state.annotationCreatedShow}
+                    onHide={() => this.setState({annotationCreatedShow: false})}
+                />
                 <WrongAnnotationModal
                     show={this.state.wrongAnnotationShow}
                     onHide={() => this.setState({wrongAnnotationShow: false})}
@@ -131,6 +161,28 @@ class ExpressionAnnotator extends Component{
             </Container>
         );
     }
+}
+
+function AnnotationCreatedModal(props) {
+    return (
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+            </Modal.Header>
+            <Modal.Body>
+                <p>
+                    Annotation Successfully Created.
+                </p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={props.onHide}>Close</Button>
+            </Modal.Footer>
+        </Modal>
+    );
 }
 
 function WrongAnnotationModal(props) {
@@ -164,7 +216,8 @@ const mapStateToProps = state => ({
     anatomyTerms: getAnatomyTerms(state),
     lifeStages: getLifeStages(state),
     assays: getAssays(state),
+    cellularComponents: getCellularComponents(state),
     isLoading: isLoading(state)
 });
 
-export default connect(mapStateToProps, {addExpressionAnnotation, addGene, addAnatomyTerm, addLifeStage})(ExpressionAnnotator);
+export default connect(mapStateToProps, {addExpressionAnnotation, addGene, addAnatomyTerm, addLifeStage, addCellularComponent})(ExpressionAnnotator);

@@ -5,6 +5,7 @@ const initialState = {
     lifeStages: [],
     anatomyTerms: [],
     assays: [],
+    cellularComponents: [],
     loading: false,
     error: null
 };
@@ -16,6 +17,7 @@ export const textMinedEntities = createReducer(initialState, {
         state.lifeStages = action.payload.entities.OTHER !== undefined ? action.payload.entities.OTHER.sort() : [];
         state.anatomyTerms = action.payload.entities.ANATOMY !== undefined ? action.payload.entities.ANATOMY.sort() : [];
         state.assays = action.payload.entities.assays !== undefined ? action.payload.entities.assays.sort() : [];
+        state.cellularComponents = action.payload.entities.GENEONTOLOGY !== undefined ? action.payload.entities.GENEONTOLOGY : [];
         state.loading = false;
         state.error = null;
     },
@@ -25,5 +27,6 @@ export const textMinedEntities = createReducer(initialState, {
     },
     ADD_GENE: (state, action) => {state.genes = [...state.genes, action.payload.gene].sort()},
     ADD_ANATOMY_TERM: (state, action) => {state.anatomyTerms = [...state.anatomyTerms, action.payload.anatomyTerm].sort()},
-    ADD_LIFE_STAGE: (state, action) => {state.lifeStages = [...state.lifeStages, action.payload.lifeStage].sort()}
+    ADD_LIFE_STAGE: (state, action) => {state.lifeStages = [...state.lifeStages, action.payload.lifeStage].sort()},
+    ADD_CELLULAR_COMPONENT: (state, action) => {state.cellularComponents = [...state.cellularComponents, action.payload.cellularComponent].sort()},
 });

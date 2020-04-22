@@ -6,6 +6,7 @@ export const FETCH_ENTITIES_ERROR = "FETCH_ENTITIES_ERROR";
 export const ADD_GENE = "ADD_GENE";
 export const ADD_ANATOMY_TERM = "ADD_ANATOMY_TERM";
 export const ADD_LIFE_STAGE = "ADD_LIFE_STAGE";
+export const ADD_CELLULAR_COMPONENT = "ADD_CELLULAR_COMPONENT";
 
 export const fetchEntities = (apiEndpoint, articleId) => {
   return dispatch => {
@@ -55,4 +56,10 @@ export const addLifeStage = lifeStage => ({
   type: ADD_LIFE_STAGE,
   payload: { lifeStage }
 });
+
+export const addCellularComponent = cellularComponent => ({
+  type: ADD_CELLULAR_COMPONENT,
+  payload: { cellularComponent }
+});
+
 
