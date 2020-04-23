@@ -1,7 +1,9 @@
 {
-  "name": "graphical-curation",
-  "version": "0.1.0",
-  "private": true,
+  "name": "wb-graphical-curation-tool",
+  "version": "1.0.0",
+  "description": "Wormbase graphical curation tool",
+  "main": "./lib/App.js",
+  "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^1.2.5",
     "@testing-library/jest-dom": "^4.2.4",
@@ -9,7 +11,6 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
     "immutable": "^4.0.0-rc.12",
-    "paginated-list": "^1.0.7",
     "query-string": "latest",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0-beta.17",
@@ -23,24 +24,24 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "webpack"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "peerDependencies": {
+    "prop-types": "^15.6.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "path": "^0.12.7",
+    "prop-types": "^15.6.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^3.2.1"
   }
 }
