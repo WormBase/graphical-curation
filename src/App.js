@@ -1,13 +1,20 @@
 import React, {Component} from 'react';
-import Main from "./components/Main";
+import store from "./redux/store";
+import GraphicalCuration from "./components/GraphicalCuration";
+import {Provider} from "react-redux";
+import {BrowserRouter as Router} from "react-router-dom";
 
-class App extends Component{
+class Main extends Component{
 
   render() {
     return(
-        <Main/>
+        <Provider store={store}>
+            <Router>
+                <GraphicalCuration/>
+            </Router>
+        </Provider>
     );
   }
 }
 
-export default App;
+export default Main;
