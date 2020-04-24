@@ -1,5 +1,5 @@
 {
-  "name": "wb-graphical-curation-tool",
+  "name": "@valearna/graphical-curation",
   "version": "1.0.0",
   "description": "Wormbase graphical curation tool",
   "main": "./lib/App.js",
@@ -43,5 +43,20 @@
     "react-dom": "^16.13.0",
     "webpack": "^4.5.0",
     "webpack-cli": "^3.2.1"
-  }
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valearna/graphical-curation.git"
+  },
+  "keywords": [
+    "biocuration"
+  ],
+  "author": "Valerio Arnaboldi",
+  "bugs": {
+    "url": "https://github.com/valearna/graphical-curation/issues"
+  },
+  "homepage": "https://github.com/valearna/graphical-curation#readme"
 }

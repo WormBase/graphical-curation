@@ -55,15 +55,9 @@ class Main extends Component{
 
     render() {
         return(
-            <div>
             <GraphicalCuration entities={this.state.entities} loading={this.state.loading} error={this.state.error}
                                expressionAnnotations={this.state.expressionAnnotations}
                                expressionAnnotationsSaved={(annotations) => {console.log("Annotations received")}}/>
-                <EntityPicker entities={[]} selectedItemsCallback={(genes) => {}}
-                            count={3}
-                            isLoading={false}
-                            addEntity={()=>{}} />
-            </div>
         );
     }
 }
