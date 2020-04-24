@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {getExpressionAnnotations} from "../redux/selectors/expressionSelector";
+import {getExpressionAnnotations} from "../redux/selectors/expressionAnnotationsSelector";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import { IoIosRemoveCircleOutline, IoIosWarning } from 'react-icons/io';

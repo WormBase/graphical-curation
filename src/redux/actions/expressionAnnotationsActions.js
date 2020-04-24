@@ -1,6 +1,4 @@
-export const FETCH_EXPR_ANNOTS_REQUEST = "FETCH_EXPR_ANNOTS_REQUEST";
-export const FETCH_EXPR_ANNOTS_SUCCESS = "FETCH_EXPR_ANNOTS_SUCCESS";
-export const FETCH_EXPR_ANNOTS_ERROR = "FETCH_EXPR_ANNOTS_ERROR";
+export const SET_EXPR_ANNOTS = "SET_EXPR_ANNOTS";
 export const ADD_EXPR_ANNOT = "ADD_EXPR_ANNOT";
 export const DELETE_EXPR_ANNOT = "DELETE_EXPR_ANNOT";
 export const SET_GENE_EXPR_ANNOT = "SET_GENE_EXPR_ANNOT";
@@ -12,59 +10,12 @@ export const ADD_WHERE_EXPRESSED_EXPR_ANNOT = "ADD_WHERE_EXPRESSED_EXPR_ANNOT";
 export const REMOVE_WHERE_EXPRESSED_EXPR_ANNOT = "REMOVE_WHERE_EXPRESSED_EXPR_ANNOT";
 
 
-export const fetchExpressionAnnotations = apiEndpoint => {
-  return dispatch => {
-    dispatch(fetchExpressionAnnotationsRequest());
-
-    let testExpressionAnnotations = [
-        {
-            annotationId: 1,
-            gene: 'lin-12',
-            whenExpressed: ['adult'],
-            assay: '',
-            evidence: '',
-            whereExpressed: ['tail']
-        },
-        {
-            annotationId: 2,
-            gene: 'daf-16',
-            whenExpressed: ['embryo'],
-            assay: '',
-            evidence: '',
-            whereExpressed: ['head']
-        }];
-
-    dispatch(fetchExpressionAnnotationsSuccess(testExpressionAnnotations));
-
-    // TODO uncomment this code and comment above when ready to fetch entities from API
-    // axios
-    //   .post(apiEndpoint)
-    //   .then(res => {
-    //     dispatch(fetchEntitiesSuccess(res.data));
-    //   })
-    //   .catch(err => {
-    //     dispatch(fetchEntitiesError(err.message));
-    //   });
-  };
-};
-
-export const fetchExpressionAnnotationsRequest = () => ({
-    type: FETCH_EXPR_ANNOTS_REQUEST,
-    payload: {}
-});
-
-export const fetchExpressionAnnotationsSuccess = annotations => ({
-   type: FETCH_EXPR_ANNOTS_SUCCESS,
+export const setExpressionAnnotations = annotations => ({
+   type: SET_EXPR_ANNOTS,
    payload: {
        annotations
    }
 });
-
-export const fetchExpressionAnnotationsError = () => ({
-   type: FETCH_EXPR_ANNOTS_ERROR,
-   payload: {}
-});
-
 
 export const addExpressionAnnotation = (annotation) => ({
     type: ADD_EXPR_ANNOT,

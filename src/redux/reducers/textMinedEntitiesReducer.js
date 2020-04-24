@@ -16,7 +16,7 @@ export const textMinedEntities = createReducer(initialState, {
         state.genes = action.payload.entities.GENE !== undefined ? action.payload.entities.GENE.sort() : [];
         state.lifeStages = action.payload.entities.OTHER !== undefined ? action.payload.entities.OTHER.sort() : [];
         state.anatomyTerms = action.payload.entities.ANATOMY !== undefined ? action.payload.entities.ANATOMY.sort() : [];
-        state.assays = action.payload.entities.assays !== undefined ? action.payload.entities.assays.sort() : [];
+        state.assays = action.payload.entities.ASSAYS !== undefined ? action.payload.entities.ASSAYS.sort() : [];
         state.cellularComponents = action.payload.entities.GENEONTOLOGY !== undefined ? action.payload.entities.GENEONTOLOGY : [];
         state.loading = false;
         state.error = null;

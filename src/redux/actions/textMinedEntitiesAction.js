@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export const FETCH_ENTITIES_REQUEST = "FETCH_ENTITIES_REQUEST";
 export const FETCH_ENTITIES_SUCCESS = "FETCH_ENTITIES_SUCCESS";
 export const FETCH_ENTITIES_ERROR = "FETCH_ENTITIES_ERROR";
@@ -8,34 +6,19 @@ export const ADD_ANATOMY_TERM = "ADD_ANATOMY_TERM";
 export const ADD_LIFE_STAGE = "ADD_LIFE_STAGE";
 export const ADD_CELLULAR_COMPONENT = "ADD_CELLULAR_COMPONENT";
 
-export const fetchEntities = (apiEndpoint, articleId) => {
-  return dispatch => {
-    dispatch(fetchEntitiesRequest());
-    axios
-      .post(apiEndpoint + articleId)
-      .then(res => {
-        res.data.entities.assays = [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistry'},
-          {value: 'Reporter gene'}, {value: 'Western Blot'}, {value: 'Northern blot'}, {value: 'RT-PCR'}];
-        dispatch(fetchEntitiesSuccess(res.data.entities));
-      })
-      .catch(err => {
-        dispatch(fetchEntitiesError(err.message));
-      });
-  };
-};
 
-const fetchEntitiesSuccess = entities => ({
+export const fetchEntitiesSuccess = entities => ({
   type: FETCH_ENTITIES_SUCCESS,
   payload: {
     entities
   }
 });
 
-const fetchEntitiesRequest = () => ({
+export const fetchEntitiesRequest = () => ({
   type: FETCH_ENTITIES_REQUEST
 });
 
-const fetchEntitiesError = error => ({
+export const fetchEntitiesError = error => ({
   type: FETCH_ENTITIES_ERROR,
   payload: {
     error

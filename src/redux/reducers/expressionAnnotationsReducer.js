@@ -1,9 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit'
 
 const initialState = {
-    annotations: [],
-    isLoading: false,
-    error: null
+    annotations: []
 };
 
 function annotationExists(annotation, storedAnnotations) {
@@ -17,12 +15,7 @@ function annotationExists(annotation, storedAnnotations) {
 const arraysContainSameElements = (array1, array2) => array1.sort().join(',') === array2.sort().join(',');
 
 export const expressionAnnotations = createReducer(initialState, {
-    FETCH_EXPR_ANNOTS_REQUEST: (state, action) => {state.isLoading = true},
-    FETCH_EXPR_ANNOTS_SUCCESS: (state, action) => {state.annotations = action.payload.annotations},
-    FETCH_EXPR_ANNOTS_ERROR: (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload.error
-    },
+    SET_EXPR_ANNOTS: (state, action) => {state.annotations = action.payload.annotations},
     ADD_EXPR_ANNOT: (state, action) => {
         let newAnnotation = {
             annotationId: Math.max(...state.annotations.map(a => a.annotationId), 0) + 1,

@@ -1,22 +1,31 @@
 import React, {Component} from 'react';
-import {withRouter} from "react-router-dom";
 import ExpressionAnnotator from "./ExpressionAnnotator";
 import ExpressionAnnotationsViewer from "./ExpressionAnnotationsViewer";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import {connect} from "react-redux";
-import queryString from 'query-string';
-import {fetchEntities} from "../redux/actions/textMinedEntitiesAction";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
+import {fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError} from "../redux/actions/textMinedEntitiesAction";
+import {getExpressionAnnotations} from "../redux/selectors/expressionAnnotationsSelector";
+import {setExpressionAnnotations} from "../redux/actions/expressionAnnotationsActions";
 
 class GraphicalCuration extends Component{
 
-    componentDidMount() {
-        let articleId = queryString.parse(this.props.location.search).articleId;
-        console.log(articleId);
-        this.props.fetchEntities(process.env.REACT_APP_FETCH_ENTITIES_API_ENDPOINT, articleId);
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.loading !== prevProps.loading && this.props.loading) {
+            this.props.fetchEntitiesRequest();
+        }
+        if (this.props.entities !== prevProps.entities) {
+            this.props.fetchEntitiesSuccess(this.props.entities);
+        }
+        if (this.props.error !== prevProps.error) {
+            this.props.fetchEntitiesError(this.props.error);
+        }
+        if (this.props.expressionAnnotations !== prevProps.expressionAnnotations) {
+            this.props.setExpressionAnnotations(this.props.expressionAnnotations);
+        }
     }
 
     render() {
@@ -58,10 +67,21 @@ class GraphicalCuration extends Component{
                 <br/>
                 <br/>
                 <br/>
-                <div align="center"><Button variant="primary">Save All Annotations</Button></div>
+                <div align="center">
+                    <Button variant="primary" onClick={
+                        () => {this.props.expressionAnnotationsSaved(this.props.expressionAnnotations)}
+                    }>
+                        Save All Annotations
+                    </Button>
+                </div>
             </div>
         );
     }
 }
 
-export default connect(null, {fetchEntities})(withRouter(GraphicalCuration));
+const mapStateToProps = state => ({
+    expressionAnnotations: getExpressionAnnotations(state)
+});
+
+export default connect(mapStateToProps, {
+    fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError, setExpressionAnnotations})(GraphicalCuration);
