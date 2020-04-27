@@ -1,8 +1,8 @@
 {
   "name": "@wormbase/graphical-curation",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Wormbase graphical curation tool",
-  "main": "./lib/App.js",
+  "main": "./lib/main.js",
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^1.2.5",
