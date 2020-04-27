@@ -13,6 +13,17 @@ import {setExpressionAnnotations} from "../redux/actions/expressionAnnotationsAc
 
 class GraphicalCuration extends Component{
 
+    componentDidMount() {
+        if (this.props.loading) {
+            this.props.fetchEntitiesRequest();
+        }
+        this.props.fetchEntitiesSuccess(this.props.entities);
+        if (this.props.error) {
+            this.props.fetchEntitiesError(this.props.error);
+        }
+        this.props.setExpressionAnnotations(this.props.expressionAnnotations);
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.loading !== prevProps.loading && this.props.loading) {
             this.props.fetchEntitiesRequest();
@@ -20,7 +31,7 @@ class GraphicalCuration extends Component{
         if (this.props.entities !== prevProps.entities) {
             this.props.fetchEntitiesSuccess(this.props.entities);
         }
-        if (this.props.error !== prevProps.error) {
+        if (this.props.error !== prevProps.error && this.props.error) {
             this.props.fetchEntitiesError(this.props.error);
         }
         if (this.props.expressionAnnotations !== prevProps.expressionAnnotations) {

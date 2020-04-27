@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import GraphicalCuration from "graphical-curation";
-import {EntityPicker} from "graphical-curation";
+import GraphicalCuration from "../../..";
+import {EntityPicker} from "../../..";
 import queryString from 'query-string';
 import {withRouter} from "react-router-dom";
 import axios from 'axios';

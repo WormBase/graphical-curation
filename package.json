@@ -1,5 +1,5 @@
 {
-  "name": "@valearna/graphical-curation",
+  "name": "@wormbase/graphical-curation",
   "version": "1.0.0",
   "description": "Wormbase graphical curation tool",
   "main": "./lib/App.js",
