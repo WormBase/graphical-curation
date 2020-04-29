@@ -12,6 +12,8 @@ npm install --save @wormbase/graphical-curation
 
 ## Usage
 
+The graphical curation tool needs bootsrap css.
+
 ```jsx
 import React, {Component} from 'react';
 import './App.css';
