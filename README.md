@@ -1,6 +1,6 @@
 # graphical-curation
 
-> Add pagination to a list of React components
+> Graphical curation tool for biocuration
 
 [![NPM](https://img.shields.io/npm/v/@wormbase/graphical-curation.svg)](https://www.npmjs.com/package/@wormbase/graphical-curation) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
