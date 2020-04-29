@@ -57,6 +57,8 @@ class App extends Component{
                 { value: 'cleavage furrow', modId: 'GO:0032154' },
             ],
             VARIANT: [{ value: 'ttTi5605', modId: 'WBVar00254893' }],
+            ASSAYS: [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistry'},
+                    {value: 'Reporter gene'}, {value: 'Western Blot'}, {value: 'Northern blot'}, {value: 'RT-PCR'}]
         }
  
         const annotations = [{
