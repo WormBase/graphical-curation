@@ -1,6 +1,6 @@
 {
   "name": "@wormbase/graphical-curation",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Wormbase graphical curation tool",
   "main": "./lib/main.js",
   "license": "MIT",
@@ -49,14 +49,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/valearna/graphical-curation.git"
+    "url": "git+https://github.com/WormBase/graphical-curation.git"
   },
   "keywords": [
     "biocuration"
   ],
   "author": "Valerio Arnaboldi",
   "bugs": {
-    "url": "https://github.com/valearna/graphical-curation/issues"
+    "url": "https://github.com/WormBase/graphical-curation/issues"
   },
-  "homepage": "https://github.com/valearna/graphical-curation#readme"
+  "homepage": "https://github.com/WormBase/graphical-curation#readme"
 }
