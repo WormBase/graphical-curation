@@ -80,7 +80,7 @@ class GraphicalCuration extends Component{
                 <br/>
                 <div align="center">
                     <Button variant="primary" onClick={
-                        () => {this.props.expressionAnnotationsSaved(this.props.expressionAnnotations)}
+                        () => {this.props.expressionAnnotationsSaved(this.props.storedExpressionAnnotations)}
                     }>
                         Save All Annotations
                     </Button>
@@ -91,7 +91,7 @@ class GraphicalCuration extends Component{
 }
 
 const mapStateToProps = state => ({
-    expressionAnnotations: getExpressionAnnotations(state)
+    storedExpressionAnnotations: getExpressionAnnotations(state)
 });
 
 export default connect(mapStateToProps, {

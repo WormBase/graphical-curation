@@ -42,10 +42,22 @@ class App extends Component{
                 { value: 'cleavage furrow', modId: 'GO:0032154' },
             ],
             VARIANT: [{ value: 'ttTi5605', modId: 'WBVar00254893' }],
+            ASSAYS: [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistry'},
+                    {value: 'Reporter gene'}, {value: 'Western Blot'}, {value: 'Northern blot'}, {value: 'RT-PCR'}]
         }
 
+        const annotations = [{
+            annotationId: 1,
+            gene: { value: 'unc-61', modId: 'WBGene00006795' },
+            whenExpressed: [{ value: 'L3', modId: 'WBls:0000035' }],
+            assay: {value: 'In situ Hybridization'},
+            evidence: '',
+            whereExpressed: [{ value: 'pharynx', modId: 'WBbt:0003681' }],
+            dateAssigned: Date.now()
+        }]
+
         return(
-            <GraphicalCuration entities={entities} error={false} expressionAnnotations={[]}
+            <GraphicalCuration entities={entities} error={false} expressionAnnotations={annotations}
                                expressionAnnotationsSaved={annotations => {console.log('Annotations received')}}
                                loading={false}
             />
