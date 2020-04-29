@@ -58,9 +58,19 @@ class App extends Component{
             ],
             VARIANT: [{ value: 'ttTi5605', modId: 'WBVar00254893' }],
         }
+ 
+        const annotations = [{
+            annotationId: 1,
+            gene: { value: 'unc-61', modId: 'WBGene00006795' },
+            whenExpressed: [{ value: 'L3', modId: 'WBls:0000035' }],
+            assay: {value: 'In situ Hybridization'},
+            evidence: '',
+            whereExpressed: [{ value: 'pharynx', modId: 'WBbt:0003681' }],
+            dateAssigned: Date.now()
+        }]
 
         return(
-            <GraphicalCuration entities={entities} error={false} expressionAnnotations={[]}
+            <GraphicalCuration entities={entities} error={false} expressionAnnotations={annotations}
                                expressionAnnotationsSaved={annotations => {console.log('Annotations received')}}
                                loading={false}
             />
