@@ -27,6 +27,7 @@ class ExpressionAnnotationsViewer extends Component{
                 }}>
                     <Col><h6>Gene</h6></Col>
                     <Col><h6>Where Expressed</h6></Col>
+                    <Col><h6>Cellular Component</h6></Col>
                     <Col><h6>When Expressed</h6></Col>
                     <Col><h6>Method</h6></Col>
                     <Col><h6>Date Assigned</h6></Col>
@@ -37,23 +38,6 @@ class ExpressionAnnotationsViewer extends Component{
                     <Row>
                         <Col>
                             {a.gene.value}
-                        </Col>
-                        <Col>
-                            {a.whereExpressed.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
-                            {expressionAnnotationNtoN(a) ?
-                                <span>
-                                    <OverlayTrigger
-                                        overlay={
-                                            <Tooltip>
-                                                This annotation contains multiple 'where expressed' and multiple 'when expressed' entries
-                                            </Tooltip>
-                                        }>
-                                        <IoIosWarning />
-                                    </OverlayTrigger>
-                                </span> : ''}
-                        </Col>
-                        <Col>
-                            {a.whenExpressed.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
                             {expressionAnnotationNtoN(a) ?
                                 <span>
                                     <OverlayTrigger
@@ -65,6 +49,15 @@ class ExpressionAnnotationsViewer extends Component{
                                         <IoIosWarning />
                                     </OverlayTrigger>
                                 </span> : ''}
+                        </Col>
+                        <Col>
+                            {a.whereExpressed.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
+                        </Col>
+                        <Col>
+                            {a.cellularComponent.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
+                        </Col>
+                        <Col>
+                            {a.whenExpressed.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
                         </Col>
                         <Col>
                             <Badge variant="primary">{a.assay.value}</Badge>

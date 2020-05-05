@@ -137,7 +137,8 @@ class ExpressionAnnotator extends Component{
                                 whenExpressed: this.state.lifeStages,
                                 assay: this.state.assay,
                                 evidence: '',
-                                whereExpressed: this.state.anatomyTerms
+                                whereExpressed: this.state.anatomyTerms,
+                                cellularComponent: this.state.cellularComponents
                             };
                             if (expressionAnnotationIsValid(annotation)) {
                                 this.props.addExpressionAnnotation(annotation);
@@ -146,6 +147,7 @@ class ExpressionAnnotator extends Component{
                                     anatomyTerms: [],
                                     lifeStages: [],
                                     assay: '',
+                                    cellularComponents: []
                                 });
                                 this.resetPickers();
                                 this.setState({annotationCreatedShow: true});
@@ -207,7 +209,7 @@ function WrongAnnotationModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    One gene, one or more anatomy terms and/or one or more life stage terms, and one method must be provided.
+                    At least one gene, one anatomy term, life stage term or cellular component, and one method must be provided.
                 </p>
             </Modal.Body>
             <Modal.Footer>

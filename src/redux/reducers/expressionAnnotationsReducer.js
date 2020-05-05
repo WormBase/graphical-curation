@@ -24,6 +24,7 @@ export const expressionAnnotations = createReducer(initialState, {
             assay: action.payload.annotation.assay,
             evidence: action.payload.annotation.evidence,
             whereExpressed: action.payload.annotation.whereExpressed,
+            cellularComponent: action.payload.annotation.cellularComponent,
             dateAssigned: Date.now()
         };
         if (!annotationExists(newAnnotation, state.annotations)) {
@@ -101,6 +102,28 @@ export const expressionAnnotations = createReducer(initialState, {
                 let newWhereExpressed = new Set(a.whereExpressed);
                 newWhereExpressed.delete(action.payload.whereExpressed);
                 a.whereExpressed = [...newWhereExpressed];
+                return false
+            } else {
+                return true
+            }
+        })
+    },
+    ADD_CC_EXPR_ANNOT: (state, action) => {
+        state.annotations.every(a => {
+            if (a.annotationId === action.payload.annotationId) {
+                a.cellularComponent = [...new Set([...a.cellularComponent, action.payload.cellularComponent])];
+                return false
+            } else {
+                return true
+            }
+        })
+    },
+    REMOVE_CC_EXPR_ANNOT: (state, action) => {
+        state.annotations.every(a => {
+            if (a.annotationId === action.payload.annotationId) {
+                let newCellularComponent = new Set(a.cellularComponent);
+                newCellularComponent.delete(action.payload.cellularComponent);
+                a.cellularComponent = [...newCellularComponent];
                 return false
             } else {
                 return true

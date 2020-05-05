@@ -53,6 +53,7 @@ class App extends Component{
             assay: {value: 'In situ Hybridization'},
             evidence: '',
             whereExpressed: [{ value: 'pharynx', modId: 'WBbt:0003681' }],
+            cellularComponent: [{ value: 'cell', modId: 'GO:0005623'}],
             dateAssigned: Date.now()
         }]
 

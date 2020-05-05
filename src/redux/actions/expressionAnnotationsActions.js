@@ -8,6 +8,8 @@ export const SET_ASSAY_EXPR_ANNOT = "SET_ASSAY_EXPR_ANNOT";
 export const SET_EVIDENCE_EXPR_ANNOT = "SET_EVIDENCE_EXPR_ANNOT";
 export const ADD_WHERE_EXPRESSED_EXPR_ANNOT = "ADD_WHERE_EXPRESSED_EXPR_ANNOT";
 export const REMOVE_WHERE_EXPRESSED_EXPR_ANNOT = "REMOVE_WHERE_EXPRESSED_EXPR_ANNOT";
+export const ADD_CC_EXPR_ANNOT = "ADD_WHERE_EXPRESSED_EXPR_ANNOT";
+export const REMOVE_CC_EXPR_ANNOT = "REMOVE_WHERE_EXPRESSED_EXPR_ANNOT";
 
 
 export const setExpressionAnnotations = annotations => ({
@@ -75,7 +77,7 @@ export const addWhereExpressedToExpressionAnnotation = (annotationId, whereExpre
     type: ADD_WHERE_EXPRESSED_EXPR_ANNOT,
     payload: {
         annotationId: annotationId,
-        whenExpressed: whereExpressed
+        whereExpressed: whereExpressed
     }
 });
 
@@ -83,6 +85,22 @@ export const removeWhereExpressedToExpressionAnnotation = (annotationId, whereEx
     type: REMOVE_WHERE_EXPRESSED_EXPR_ANNOT,
     payload: {
         annotationId: annotationId,
-        whenExpressed: whereExpressed
+        whereExpressed: whereExpressed
+    }
+});
+
+export const addCCToExpressionAnnotation = (annotationId, cellularComponent) => ({
+    type: ADD_CC_EXPR_ANNOT,
+    payload: {
+        annotationId: annotationId,
+        cellularComponent: cellularComponent
+    }
+});
+
+export const removeCCToExpressionAnnotation = (annotationId, cellularComponent) => ({
+    type: REMOVE_CC_EXPR_ANNOT,
+    payload: {
+        annotationId: annotationId,
+        cellularComponent: cellularComponent
     }
 });
