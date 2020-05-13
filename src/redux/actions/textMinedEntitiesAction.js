@@ -5,6 +5,8 @@ export const ADD_GENE = "ADD_GENE";
 export const ADD_ANATOMY_TERM = "ADD_ANATOMY_TERM";
 export const ADD_LIFE_STAGE = "ADD_LIFE_STAGE";
 export const ADD_CELLULAR_COMPONENT = "ADD_CELLULAR_COMPONENT";
+export const ADD_VARIANT = "ADD_VARIANT";
+export const ADD_PHENOTYPE_TERM = "ADD_PHENOTYPE_TERM";
 
 
 export const fetchEntitiesSuccess = entities => ({
@@ -45,4 +47,13 @@ export const addCellularComponent = cellularComponent => ({
   payload: { cellularComponent }
 });
 
+export const addVariant = variant => ({
+  type: ADD_VARIANT,
+  payload: { variant }
+});
+
+export const addPhenotypeTerm = phenotypeTerm => ({
+  type: ADD_PHENOTYPE_TERM,
+  payload: { phenotypeTerm }
+});
 

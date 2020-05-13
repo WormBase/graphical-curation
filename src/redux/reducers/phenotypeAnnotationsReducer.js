@@ -6,128 +6,117 @@ const initialState = {
 
 function annotationExists(annotation, storedAnnotations) {
     return storedAnnotations.some(a => {
-        return annotation.gene === a.gene &&
-            arraysContainSameElements(annotation.whereExpressed, a.whereExpressed) &&
-            arraysContainSameElements(annotation.whenExpressed, a.whenExpressed);
+        return annotation.object === a.object && arraysContainSameElements(annotation.phenoTerms, a.phenoTerms)
     })
 }
 
 const arraysContainSameElements = (array1, array2) => array1.sort().join(',') === array2.sort().join(',');
 
-export const expressionAnnotations = createReducer(initialState, {
-    SET_EXPR_ANNOTS: (state, action) => {
+export const phenotypeAnnotations = createReducer(initialState, {
+    SET_PHENOTYPE_ANNOTS: (state, action) => {
         if (action.payload.annotations !== undefined) {
             state.annotations = action.payload.annotations
         }
     },
-    ADD_EXPR_ANNOT: (state, action) => {
+    ADD_PHENOTYPE_ANNOT: (state, action) => {
         let newAnnotation = {
             annotationId: Math.max(...state.annotations.map(a => a.annotationId), 0) + 1,
-            gene: action.payload.annotation.gene,
-            whenExpressed: action.payload.annotation.whenExpressed,
-            assay: action.payload.annotation.assay,
+            object: action.payload.annotation.object,
+            phenotypeTerms: action.payload.annotation.phenotypeTerms,
+            anatomyTerms: action.payload.annotation.anatomyTerms,
+            lifeStages: action.payload.annotation.lifeStages,
+            geneticEntity: action.payload.annotation.object,
             evidence: action.payload.annotation.evidence,
-            whereExpressed: action.payload.annotation.whereExpressed,
-            cellularComponent: action.payload.annotation.cellularComponent,
+            phenotypeStatement: action.payload.annotation.phenotypeStatement,
             dateAssigned: Date.now()
         };
         if (!annotationExists(newAnnotation, state.annotations)) {
             state.annotations.push(newAnnotation);
         }
     },
-    DELETE_EXPR_ANNOT: (state, action) => {
+    DELETE_PHENOTYPE_ANNOT: (state, action) => {
         state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId)
     },
-    SET_GENE_EXPR_ANNOT: (state, action) => {
+    SET_OBJECT_PHENOTYPE_ANNOT: (state, action) => {
         state.annotations.every(a => {
             if (a.annotationId === action.payload.annotationId) {
-                a.gene = action.payload.gene;
+                a.object = action.payload.object;
                 return false
             } else {
                 return true
             }
         })
     },
-    ADD_WHEN_EXPRESSED_EXPR_ANNOT: (state, action) => {
+    ADD_PHENOTYPE_TERM_PHENOTYPE_ANNOT: (state, action) => {
         state.annotations.every(a => {
             if (a.annotationId === action.payload.annotationId) {
-                a.whenExpressed = [...new Set([...a.whenExpressed, action.payload.whenExpressed])];
+                a.phenotypeTerms = [...new Set([...a.phenotypeTerms, action.payload.phenotypeTerm])];
                 return false
             } else {
                 return true
             }
         })
     },
-    REMOVE_WHEN_EXPRESSED_EXPR_ANNOT: (state, action) => {
+    REMOVE_PHENOTYPE_TERM_PHENOTYPE_ANNOT: (state, action) => {
         state.annotations.every(a => {
             if (a.annotationId === action.payload.annotationId) {
-                let newWhenExpressed = new Set(a.whenExpressed);
-                newWhenExpressed.delete(action.payload.whenExpressed);
-                a.whenExpressed = [...newWhenExpressed];
+                let newPhenotypeTerms = new Set(a.phenotypeTerms);
+                newPhenotypeTerms.delete(action.payload.phenotypeTerm);
+                a.phenotypeTerms = [...newPhenotypeTerms];
                 return false
             } else {
                 return true
             }
         })
     },
-    SET_ASSAY_EXPR_ANNOT: (state, action) => {
+    ADD_ANATOMY_TERM_PHENOTYPE_ANNOT: (state, action) => {
         state.annotations.every(a => {
             if (a.annotationId === action.payload.annotationId) {
-                a.assay = action.payload.assay;
+                a.anatomyTerms = [...new Set([...a.anatomyTerms, action.payload.anatomyTerm])];
                 return false
             } else {
                 return true
             }
         })
     },
-    SET_EVIDENCE_EXPR_ANNOT: (state, action) => {
+    REMOVE_ANATOMY_TERM_PHENOTYPE_ANNOT: (state, action) => {
+        state.annotations.every(a => {
+            if (a.annotationId === action.payload.annotationId) {
+                let newAnatomyTerms = new Set(a.anatomyTerms);
+                newAnatomyTerms.delete(action.payload.anatomyTerm);
+                a.anatomyTerms = [...newAnatomyTerms];
+                return false
+            } else {
+                return true
+            }
+        })
+    },
+    ADD_LIFE_STAGE_PHENOTYPE_ANNOT: (state, action) => {
+        state.annotations.every(a => {
+            if (a.annotationId === action.payload.annotationId) {
+                a.lifeStages = [...new Set([...a.lifeStages, action.payload.lifeStage])];
+                return false
+            } else {
+                return true
+            }
+        })
+    },
+    REMOVE_LIFE_STAGE_PHENOTYPE_ANNOT: (state, action) => {
+        state.annotations.every(a => {
+            if (a.annotationId === action.payload.annotationId) {
+                let newLifeStages = new Set(a.lifeStages);
+                newLifeStages.delete(action.payload.lifeStage);
+                a.lifeStages = [...newLifeStages];
+                return false
+            } else {
+                return true
+            }
+        })
+    },
+    SET_EVIDENCE_PHENOTYPE_ANNOT: (state, action) => {
         state.annotations.every(a => {
             if (a.annotationId === action.payload.annotationId) {
                 a.evidence = action.payload.evidence;
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    ADD_WHERE_EXPRESSED_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.whereExpressed = [...new Set([...a.whereExpressed, action.payload.whereExpressed])];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    REMOVE_WHERE_EXPRESSED_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                let newWhereExpressed = new Set(a.whereExpressed);
-                newWhereExpressed.delete(action.payload.whereExpressed);
-                a.whereExpressed = [...newWhereExpressed];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    ADD_CC_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.cellularComponent = [...new Set([...a.cellularComponent, action.payload.cellularComponent])];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    REMOVE_CC_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                let newCellularComponent = new Set(a.cellularComponent);
-                newCellularComponent.delete(action.payload.cellularComponent);
-                a.cellularComponent = [...newCellularComponent];
                 return false
             } else {
                 return true

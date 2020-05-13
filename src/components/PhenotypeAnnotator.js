@@ -1,32 +1,35 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {
-    isLoading, getAnatomyTerms, getAssays, getGenes, getLifeStages, getCellularComponents
+    isLoading,
+    getPhenotypeTerms,
+    getVariants, getAnatomyTerms, getLifeStages
 } from "../redux/selectors/textMinedEntitiesSelector";
 import EntityPicker from "./EntityPicker";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {addExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
-import {expressionAnnotationIsValid} from "../redux/constraints/annotation";
-import {addGene, addAnatomyTerm, addLifeStage, addCellularComponent} from "../redux/actions/textMinedEntitiesAction";
+import {addPhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
+import {phenotypeAnnotationIsValid} from "../redux/constraints/annotation";
+import {addVariant, addPhenotypeTerm, addLifeStage, addAnatomyTerm} from "../redux/actions/textMinedEntitiesAction";
 import Modal from "react-bootstrap/Modal";
+import FormControl from "react-bootstrap/FormControl";
 
-class ExpressionAnnotator extends Component{
+
+class PhenotypeAnnotator extends Component{
     constructor(props) {
         super(props);
-        this.genePicker = React.createRef();
+        this.variantPicker = React.createRef();
+        this.phenoTermPicker = React.createRef();
         this.anatomyTermsPicker = React.createRef();
         this.lifeStagesPicker = React.createRef();
-        this.cellularComponentPicker = React.createRef();
-        this.assayPicker = React.createRef();
         this.state = {
-            gene: '',
+            variant: '',
+            phenoTerms: [],
             anatomyTerms: [],
             lifeStages: [],
-            cellularComponents: [],
-            assay: '',
+            phenotypeStatement: '',
             annotationCreatedShow: false,
             wrongAnnotationShow: false
         }
@@ -35,12 +38,11 @@ class ExpressionAnnotator extends Component{
     }
 
     resetPickers() {
-        this.genePicker.reset();
+        this.variantPicker.reset();
+        this.phenoTermPicker.reset();
         this.anatomyTermsPicker.reset();
         this.lifeStagesPicker.reset();
-        this.assayPicker.reset();
-        this.cellularComponentPicker.reset();
-        this.setState({gene: '', anatomyTerms: [], lifeStages: [], cellularComponents: [], assay: ''});
+        this.setState({variant: '', phenoTerms: [], anatomyTerms: [], lifeStages: [], phenotypeStatement: ''});
     }
 
     render() {
@@ -53,19 +55,19 @@ class ExpressionAnnotator extends Component{
                 </Row>
                 <Row>
                     <Col>
-                        <h6 align="center">Gene</h6>
+                        <h6 align="center">Variant</h6>
                     </Col>
                     <Col>
-                        <h6 align="center">Anatomy terms</h6>
+                        <h6 align="center">Phenotype Terms</h6>
                     </Col>
                     <Col>
-                        <h6 align="center">Life stages</h6>
+                        <h6 align="center">Anatomy Terms</h6>
                     </Col>
                     <Col>
-                        <h6 align="center">Cellular Component</h6>
+                        <h6 align="center">Life Stages</h6>
                     </Col>
                     <Col>
-                        <h6 align="center">Method</h6>
+                        <h6 align="center">Phenotype Statement</h6>
                     </Col>
                     <Col>
                         &nbsp;
@@ -74,15 +76,27 @@ class ExpressionAnnotator extends Component{
                 <Row>
                     <Col>
                         <EntityPicker
-                            entities={this.props.genes}
-                            ref={instance => { this.genePicker = instance; }}
-                            selectedItemsCallback={(genes) => {
-                                this.setState({gene: genes.length > 0 ? genes[0] : ''});
+                            entities={this.props.variants}
+                            ref={instance => { this.variantPicker = instance; }}
+                            selectedItemsCallback={(variants) => {
+                                this.setState({variant: variants.length > 0 ? variants[0] : ''});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
-                            addEntity={this.props.addGene}
+                            addEntity={this.props.addVariant}
                         />
+                    </Col>
+                    <Col>
+                        <EntityPicker
+                            entities={this.props.phenotypeTerms}
+                            ref={instance => { this.phenoTermPicker = instance; }}
+                            selectedItemsCallback={(phenoTerms) => {
+                                this.setState({phenoTerms: phenoTerms});
+                            }}
+                            count={this.props.maxEntities}
+                            isLoading={this.props.isLoading}
+                            addEntity={this.props.addPhenotypeTerm}
+                            multiSelect/>
                     </Col>
                     <Col>
                         <EntityPicker
@@ -109,47 +123,21 @@ class ExpressionAnnotator extends Component{
                             multiSelect/>
                     </Col>
                     <Col>
-                        <EntityPicker
-                            entities={this.props.cellularComponents}
-                            ref={instance => { this.cellularComponentPicker = instance; }}
-                            selectedItemsCallback={(cellularComponents) => {
-                                this.setState({cellularComponents: cellularComponents});
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addCellularComponent}
-                            multiSelect/>
-                    </Col>
-                    <Col>
-                        <EntityPicker
-                            entities={this.props.assays}
-                            ref={instance => { this.assayPicker = instance; }}
-                            selectedItemsCallback={(assays) => {
-                                this.setState({assay: assays.length > 0 ? assays[0] : ''});
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                        />
+                        <FormControl as="textarea" rows="3" value={this.state.phenotypeStatement} onChange={event =>
+                            this.setState({phenotypeStatement: event.target.value})}/>
                     </Col>
                     <Col align="left">
                         <Button variant="success" onClick={() => {
                             let annotation = {
-                                gene: this.state.gene,
-                                whenExpressed: this.state.lifeStages,
-                                assay: this.state.assay,
-                                evidence: '',
-                                whereExpressed: this.state.anatomyTerms,
-                                cellularComponent: this.state.cellularComponents
+                                object: this.state.variant,
+                                phenotypeTerms: this.state.phenoTerms,
+                                anatomyTerms: this.state.anatomyTerms,
+                                lifeStages: this.state.lifeStages,
+                                phenotypeStatement: this.state.phenotypeStatement,
+                                evidence: ''
                             };
-                            if (expressionAnnotationIsValid(annotation)) {
-                                this.props.addExpressionAnnotation(annotation);
-                                this.setState({
-                                    gene: '',
-                                    anatomyTerms: [],
-                                    lifeStages: [],
-                                    assay: '',
-                                    cellularComponents: []
-                                });
+                            if (phenotypeAnnotationIsValid(annotation)) {
+                                this.props.addPhenotypeAnnotation(annotation);
                                 this.resetPickers();
                                 this.setState({annotationCreatedShow: true});
                                 setTimeout(() => this.setState({annotationCreatedShow: false}), 2000);
@@ -210,7 +198,8 @@ function WrongAnnotationModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    At least one gene, one anatomy term, life stage term or cellular component, and one method must be provided.
+                    At least one variant, one or more phenotype terms, and one or more anatomy terms or life stages
+                    must be provided.
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -222,12 +211,12 @@ function WrongAnnotationModal(props) {
 
 
 const mapStateToProps = state => ({
-    genes: getGenes(state),
+    variants: getVariants(state),
+    phenotypeTerms: getPhenotypeTerms(state),
+    isLoading: isLoading(state),
     anatomyTerms: getAnatomyTerms(state),
-    lifeStages: getLifeStages(state),
-    assays: getAssays(state),
-    cellularComponents: getCellularComponents(state),
-    isLoading: isLoading(state)
+    lifeStages: getLifeStages(state)
 });
 
-export default connect(mapStateToProps, {addExpressionAnnotation, addGene, addAnatomyTerm, addLifeStage, addCellularComponent})(ExpressionAnnotator);
+export default connect(mapStateToProps, {addPhenotypeAnnotation, addVariant, addPhenotypeTerm, addAnatomyTerm,
+    addLifeStage})(PhenotypeAnnotator);

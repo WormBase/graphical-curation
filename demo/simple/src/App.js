@@ -25,7 +25,7 @@ class App extends Component{
                 { value: 'expression', modId: 'expression' },
                 { value: 'detected', modId: 'expression' },
             ],
-            OTHER: [
+            LIFESTAGE: [
                 { value: 'L3', modId: 'WBls:0000035' },
                 { value: 'L1', modId: 'WBls:0000024' },
                 { value: 'L4', modId: 'WBls:0000038' },
@@ -42,11 +42,15 @@ class App extends Component{
                 { value: 'cleavage furrow', modId: 'GO:0032154' },
             ],
             VARIANT: [{ value: 'ttTi5605', modId: 'WBVar00254893' }],
+            PHENOTERMS: [
+                { value: "L1-specific epitope", modId: "WBPhenotype:0001677" },
+                { value: "chemosensory", modId: "WBPhenotype:0001040" }
+            ],
             ASSAYS: [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistry'},
                     {value: 'Reporter gene'}, {value: 'Western Blot'}, {value: 'Northern blot'}, {value: 'RT-PCR'}]
         }
 
-        const annotations = [{
+        const exprAnnotations = [{
             annotationId: 1,
             gene: { value: 'unc-61', modId: 'WBGene00006795' },
             whenExpressed: [{ value: 'L3', modId: 'WBls:0000035' }],
@@ -58,8 +62,8 @@ class App extends Component{
         }]
 
         return(
-            <GraphicalCuration entities={entities} error={false} expressionAnnotations={annotations}
-                               expressionAnnotationsSaved={annotations => {console.log('Annotations received')}}
+            <GraphicalCuration entities={entities} error={false} expressionAnnotations={exprAnnotations}
+                               annotationsSaved={annotations => {console.log('Annotations received')}}
                                loading={false}
             />
         );

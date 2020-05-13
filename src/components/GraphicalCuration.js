@@ -10,6 +10,9 @@ import Tab from "react-bootstrap/Tab";
 import {fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError} from "../redux/actions/textMinedEntitiesAction";
 import {getExpressionAnnotations} from "../redux/selectors/expressionAnnotationsSelector";
 import {setExpressionAnnotations} from "../redux/actions/expressionAnnotationsActions";
+import PhenotypeAnnotator from "./PhenotypeAnnotator";
+import PhenotypeAnnotationsViewer from "./PhenotypeAnnotationsViewer";
+import {setPhenotypeAnnotations} from "../redux/actions/phenotypeAnnotationsActions";
 
 class GraphicalCuration extends Component{
 
@@ -22,6 +25,7 @@ class GraphicalCuration extends Component{
             this.props.fetchEntitiesError(this.props.error);
         }
         this.props.setExpressionAnnotations(this.props.expressionAnnotations);
+        this.props.setPhenotypeAnnotations(this.props.phenotypeAnnotations);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -36,6 +40,9 @@ class GraphicalCuration extends Component{
         }
         if (this.props.expressionAnnotations !== prevProps.expressionAnnotations) {
             this.props.setExpressionAnnotations(this.props.expressionAnnotations);
+        }
+        if (this.props.phenotypeAnnotations !== prevProps.phenotypeAnnotations) {
+            this.props.setPhenotypeAnnotations(this.props.phenotypeAnnotations);
         }
     }
 
@@ -70,7 +77,14 @@ class GraphicalCuration extends Component{
                         </Card.Header>
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
-                                Phenotype annotations not available
+                                <Tabs defaultActiveKey="annotator">
+                                    <Tab eventKey="annotator" title="Create Annotation">
+                                        <PhenotypeAnnotator maxEntities={5}/>
+                                    </Tab>
+                                    <Tab eventKey="viewer" title="View Annotations">
+                                        <PhenotypeAnnotationsViewer/>
+                                    </Tab>
+                                </Tabs>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
@@ -80,8 +94,8 @@ class GraphicalCuration extends Component{
                 <br/>
                 <div align="center">
                     <Button variant="primary" onClick={
-                        () => {this.props.expressionAnnotationsSaved(this.props.storedExpressionAnnotations)}
-                    }>
+                        () => this.props.annotationsSaved({expression: this.props.storedExpressionAnnotations,
+                            phenotype: this.props.phenotypeAnnotations })}>
                         Save All Annotations
                     </Button>
                 </div>
@@ -95,4 +109,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-    fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError, setExpressionAnnotations})(GraphicalCuration);
+    fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError, setExpressionAnnotations,
+    setPhenotypeAnnotations})(GraphicalCuration);
