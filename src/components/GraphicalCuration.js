@@ -13,8 +13,19 @@ import {setExpressionAnnotations} from "../redux/actions/expressionAnnotationsAc
 import PhenotypeAnnotator from "./PhenotypeAnnotator";
 import PhenotypeAnnotationsViewer from "./PhenotypeAnnotationsViewer";
 import {setPhenotypeAnnotations} from "../redux/actions/phenotypeAnnotationsActions";
+import AnatomyFunctionAnnotator from "./AnatomyFunctionAnnotator";
 
 class GraphicalCuration extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            showExpressionCuration: true,
+            showPhenotypeCuration: true,
+            showAnatomyFunctionCuration: true,
+            maxEntities: 5
+        };
+    }
 
     componentDidMount() {
         if (this.props.loading) {
@@ -26,6 +37,15 @@ class GraphicalCuration extends Component{
         }
         this.props.setExpressionAnnotations(this.props.expressionAnnotations);
         this.props.setPhenotypeAnnotations(this.props.phenotypeAnnotations);
+        if (this.props.showExpressionCuration !== undefined) {
+            this.setState({showExpressionCuration: this.props.showExpressionCuration})
+        }
+        if (this.props.showPhenotypeCuration !== undefined) {
+            this.setState({showPhenotypeCuration: this.props.showPhenotypeCuration})
+        }
+        if (this.props.showAnatomyFunctionCuration !== undefined) {
+            this.setState({showAnatomyFunctionCuration: this.props.showAnatomyFunctionCuration})
+        }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -50,6 +70,7 @@ class GraphicalCuration extends Component{
         return (
             <div>
                 <Accordion defaultActiveKey="0">
+                    {this.state.showExpressionCuration ?
                     <Card>
                         <Card.Header>
                             <Accordion.Toggle as={Button} variant="" eventKey="0">
@@ -60,7 +81,7 @@ class GraphicalCuration extends Component{
                             <Card.Body>
                                 <Tabs defaultActiveKey="annotator">
                                     <Tab eventKey="annotator" title="Create Annotation">
-                                        <ExpressionAnnotator maxEntities={5}/>
+                                        <ExpressionAnnotator maxEntities={this.state.maxEntities}/>
                                     </Tab>
                                     <Tab eventKey="viewer" title="View Annotations">
                                         <ExpressionAnnotationsViewer/>
@@ -68,7 +89,8 @@ class GraphicalCuration extends Component{
                                 </Tabs>
                             </Card.Body>
                         </Accordion.Collapse>
-                    </Card>
+                    </Card> : ''}
+                    {this.state.showPhenotypeCuration ?
                     <Card>
                         <Card.Header>
                             <Accordion.Toggle as={Button} variant="" eventKey="1">
@@ -79,7 +101,7 @@ class GraphicalCuration extends Component{
                             <Card.Body>
                                 <Tabs defaultActiveKey="annotator">
                                     <Tab eventKey="annotator" title="Create Annotation">
-                                        <PhenotypeAnnotator maxEntities={5}/>
+                                        <PhenotypeAnnotator maxEntities={this.state.maxEntities}/>
                                     </Tab>
                                     <Tab eventKey="viewer" title="View Annotations">
                                         <PhenotypeAnnotationsViewer/>
@@ -87,7 +109,27 @@ class GraphicalCuration extends Component{
                                 </Tabs>
                             </Card.Body>
                         </Accordion.Collapse>
-                    </Card>
+                    </Card> : ''}
+                    {this.state.showAnatomyFunctionCuration ?
+                    <Card>
+                        <Card.Header>
+                            <Accordion.Toggle as={Button} variant="" eventKey="2">
+                                Anatomy Function Annotations
+                            </Accordion.Toggle>
+                        </Card.Header>
+                        <Accordion.Collapse eventKey="2">
+                            <Card.Body>
+                                <Tabs defaultActiveKey="annotator">
+                                    <Tab eventKey="annotator" title="Create Annotation">
+                                        <AnatomyFunctionAnnotator maxEntities={this.state.maxEntities}/>
+                                    </Tab>
+                                    <Tab eventKey="viewer" title="View Annotations">
+                                        <PhenotypeAnnotationsViewer/>
+                                    </Tab>
+                                </Tabs>
+                            </Card.Body>
+                        </Accordion.Collapse>
+                    </Card> : ''}
                 </Accordion>
                 <br/>
                 <br/>

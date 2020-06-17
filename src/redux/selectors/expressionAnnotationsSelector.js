@@ -1,4 +1,4 @@
-import {expressionAnnotationIsValid} from "../constraints/annotation";
+import {expressionAnnotationIsValid} from "../constraints/expression";
 
 export const getExpressionState = store => store.expressionAnnotations;
 

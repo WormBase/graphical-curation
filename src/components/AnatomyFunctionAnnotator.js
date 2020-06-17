@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {
     isLoading,
     getPhenotypeTerms,
-    getVariants, getAnatomyTerms, getLifeStages
+    getVariants, getAnatomyTerms, getLifeStages, getGenes
 } from "../redux/selectors/textMinedEntitiesSelector";
 import EntityPicker from "./EntityPicker";
 import Container from "react-bootstrap/Container";
@@ -11,25 +11,32 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import {addPhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
-import {phenotypeAnnotationIsValid} from "../redux/constraints/phenotype";
-import {addVariant, addPhenotypeTerm, addLifeStage, addAnatomyTerm} from "../redux/actions/textMinedEntitiesAction";
+import {phenotypeAnnotationIsValid} from "../redux/constraints/expression";
+import {
+    addVariant,
+    addPhenotypeTerm,
+    addLifeStage,
+    addAnatomyTerm,
+    addGene
+} from "../redux/actions/textMinedEntitiesAction";
 import Modal from "react-bootstrap/Modal";
 import FormControl from "react-bootstrap/FormControl";
 
 
-class PhenotypeAnnotator extends Component{
+class AnatomyFunctionAnnotator extends Component{
     constructor(props) {
         super(props);
-        this.variantPicker = React.createRef();
+        this.genePicker = React.createRef();
         this.phenoTermPicker = React.createRef();
         this.anatomyTermsPicker = React.createRef();
-        this.lifeStagesPicker = React.createRef();
         this.state = {
-            variant: '',
             phenoTerms: [],
+            gene: '',
+            involvedOption: 1,
             anatomyTerms: [],
-            lifeStages: [],
-            phenotypeStatement: '',
+            remark: '',
+            noctuaModel: '',
+            genotype: '',
             annotationCreatedShow: false,
             wrongAnnotationShow: false
         }
@@ -38,11 +45,10 @@ class PhenotypeAnnotator extends Component{
     }
 
     resetPickers() {
-        this.variantPicker.reset();
+        this.genePicker.reset()
         this.phenoTermPicker.reset();
         this.anatomyTermsPicker.reset();
-        this.lifeStagesPicker.reset();
-        this.setState({variant: '', phenoTerms: [], anatomyTerms: [], lifeStages: [], phenotypeStatement: ''});
+        this.setState({gene: '', phenoTerms: [], anatomyTerms: []});
     }
 
     render() {
@@ -55,37 +61,25 @@ class PhenotypeAnnotator extends Component{
                 </Row>
                 <Row>
                     <Col>
-                        <h6 align="center">Variant</h6>
+                        <h6 align="center">Phenotype</h6>
                     </Col>
                     <Col>
-                        <h6 align="center">Phenotype Terms</h6>
+                        <h6 align="center">Gene</h6>
                     </Col>
                     <Col>
-                        <h6 align="center">Anatomy Terms</h6>
+                        <h6 align="center">Involved/Not Involved</h6>
+                    </Col>
+                    <Col sm={4}>
+                        <h6 align="center">{this.state.involvedOption === 2 ? 'Not ' : ''}Involved Tissue</h6>
                     </Col>
                     <Col>
-                        <h6 align="center">Life Stages</h6>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Phenotype Statement</h6>
+                        <h6 align="center">Remarks</h6>
                     </Col>
                     <Col>
                         &nbsp;
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
-                        <EntityPicker
-                            entities={this.props.variants}
-                            ref={instance => { this.variantPicker = instance; }}
-                            selectedItemsCallback={(variants) => {
-                                this.setState({variant: variants.length > 0 ? variants[0] : ''});
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addVariant}
-                        />
-                    </Col>
                     <Col>
                         <EntityPicker
                             entities={this.props.phenotypeTerms}
@@ -96,9 +90,27 @@ class PhenotypeAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addPhenotypeTerm}
-                            multiSelect/>
+                        />
                     </Col>
                     <Col>
+                        <EntityPicker
+                            entities={this.props.genes}
+                            ref={instance => { this.genePicker = instance; }}
+                            selectedItemsCallback={(genes) => {
+                                this.setState({gene: genes.length > 0 ? genes[0] : ''});
+                            }}
+                            count={this.props.maxEntities}
+                            isLoading={this.props.isLoading}
+                            addEntity={this.props.addGene}
+                        />
+                    </Col>
+                    <Col>
+                        <FormControl as="select" value={this.state.involvedOption} onChange={(e) => {this.setState({involvedOption: parseInt(e.target.value)})}}>
+                            <option value="1" selected>Involved</option>
+                            <option value="2">Not Involved</option>
+                        </FormControl>
+                    </Col>
+                    <Col sm={4}>
                         <EntityPicker
                             entities={this.props.anatomyTerms}
                             ref={instance => { this.anatomyTermsPicker = instance; }}
@@ -108,32 +120,62 @@ class PhenotypeAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
+                            checkboxes={this.state.involvedOption === 1 ? ["Sufficient", "Necessary"] : ["Insufficient", "Unnecessary"]}
                             multiSelect/>
                     </Col>
                     <Col>
-                        <EntityPicker
-                            entities={this.props.lifeStages}
-                            ref={instance => { this.lifeStagesPicker = instance; }}
-                            selectedItemsCallback={(lifeStages) => {
-                                this.setState({lifeStages: lifeStages});
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addLifeStage}
-                            multiSelect/>
-                    </Col>
-                    <Col>
-                        <FormControl as="textarea" rows="3" value={this.state.phenotypeStatement} onChange={event =>
-                            this.setState({phenotypeStatement: event.target.value})}/>
+                        <Container fluid>
+                            <Row>
+                                <Col>
+                                    <h7 align="center">Remark</h7>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <FormControl as="textarea" rows="3" value={this.state.remark} onChange={event =>
+                                        this.setState({remark: event.target.value})}/>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    &nbsp;
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <h7 align="center">Noctua Model</h7>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <FormControl as="textarea" rows="3" value={this.state.noctuaModel} onChange={event =>
+                                        this.setState({noctuaModel: event.target.value})}/>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    &nbsp;
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <h7 align="center">Genotype</h7>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <FormControl as="textarea" rows="3" value={this.state.genotype} onChange={event =>
+                                        this.setState({genotype: event.target.value})}/>
+                                </Col>
+                            </Row>
+                        </Container>
                     </Col>
                     <Col align="left">
                         <Button variant="success" onClick={() => {
                             let annotation = {
-                                object: this.state.variant,
+                                gene: this.state.gene,
                                 phenotypeTerms: this.state.phenoTerms,
                                 anatomyTerms: this.state.anatomyTerms,
-                                lifeStages: this.state.lifeStages,
-                                phenotypeStatement: this.state.phenotypeStatement,
                                 evidence: ''
                             };
                             if (phenotypeAnnotationIsValid(annotation)) {
@@ -211,12 +253,10 @@ function WrongAnnotationModal(props) {
 
 
 const mapStateToProps = state => ({
-    variants: getVariants(state),
+    genes: getGenes(state),
     phenotypeTerms: getPhenotypeTerms(state),
     isLoading: isLoading(state),
-    anatomyTerms: getAnatomyTerms(state),
-    lifeStages: getLifeStages(state)
+    anatomyTerms: getAnatomyTerms(state)
 });
 
-export default connect(mapStateToProps, {addPhenotypeAnnotation, addVariant, addPhenotypeTerm, addAnatomyTerm,
-    addLifeStage})(PhenotypeAnnotator);
+export default connect(mapStateToProps, {addPhenotypeTerm, addAnatomyTerm, addGene})(AnatomyFunctionAnnotator);

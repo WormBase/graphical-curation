@@ -1,4 +1,4 @@
-import {phenotypeAnnotationIsValid} from "../constraints/annotation";
+import {phenotypeAnnotationIsValid} from "../constraints/expression";
 
 export const getPhenotypeState = store => store.phenotypeAnnotations;
 

@@ -17,7 +17,7 @@ The graphical curation tool needs bootsrap css.
 ```jsx
 import React, {Component} from 'react';
 import './App.css';
-import GraphicalCuration from "graphical-curation";
+import GraphicalCuration from "@wormbase/graphical-curation";
 
 class App extends Component{
 

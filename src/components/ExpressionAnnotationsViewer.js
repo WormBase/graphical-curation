@@ -8,7 +8,7 @@ import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import { IoIosRemoveCircleOutline, IoIosWarning } from 'react-icons/io';
 import {deleteExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
-import {expressionAnnotationNtoN} from "../redux/constraints/annotation";
+import {expressionAnnotationNtoN} from "../redux/constraints/expression";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
