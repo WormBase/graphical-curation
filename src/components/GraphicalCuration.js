@@ -14,6 +14,7 @@ import PhenotypeAnnotator from "./PhenotypeAnnotator";
 import PhenotypeAnnotationsViewer from "./PhenotypeAnnotationsViewer";
 import {setPhenotypeAnnotations} from "../redux/actions/phenotypeAnnotationsActions";
 import AnatomyFunctionAnnotator from "./AnatomyFunctionAnnotator";
+import AnatomyFunctionAnnotationsViewer from "./AnatomyFunctionAnnotationsViewer";
 
 class GraphicalCuration extends Component{
 
@@ -124,7 +125,7 @@ class GraphicalCuration extends Component{
                                         <AnatomyFunctionAnnotator maxEntities={this.state.maxEntities}/>
                                     </Tab>
                                     <Tab eventKey="viewer" title="View Annotations">
-                                        <PhenotypeAnnotationsViewer/>
+                                        <AnatomyFunctionAnnotationsViewer/>
                                     </Tab>
                                 </Tabs>
                             </Card.Body>

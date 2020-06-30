@@ -3,24 +3,22 @@ import {connect} from "react-redux";
 import {
     isLoading,
     getPhenotypeTerms,
-    getVariants, getAnatomyTerms, getLifeStages, getGenes
+    getAnatomyTerms, getGenes
 } from "../redux/selectors/textMinedEntitiesSelector";
 import EntityPicker from "./EntityPicker";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {addPhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
-import {phenotypeAnnotationIsValid} from "../redux/constraints/expression";
 import {
-    addVariant,
     addPhenotypeTerm,
-    addLifeStage,
     addAnatomyTerm,
     addGene
 } from "../redux/actions/textMinedEntitiesAction";
 import Modal from "react-bootstrap/Modal";
 import FormControl from "react-bootstrap/FormControl";
+import {anatomyFunctionAnnotationIsValid} from "../redux/constraints/anatomyFunction";
+import {addAnatomyFunctionAnnotation} from "../redux/actions/anatomyFunctionAnnotationsActions";
 
 
 class AnatomyFunctionAnnotator extends Component{
@@ -30,9 +28,9 @@ class AnatomyFunctionAnnotator extends Component{
         this.phenoTermPicker = React.createRef();
         this.anatomyTermsPicker = React.createRef();
         this.state = {
-            phenoTerms: [],
+            phenoTerm: '',
             gene: '',
-            involvedOption: 1,
+            involvedOption: 'involved',
             anatomyTerms: [],
             remark: '',
             noctuaModel: '',
@@ -48,7 +46,7 @@ class AnatomyFunctionAnnotator extends Component{
         this.genePicker.reset()
         this.phenoTermPicker.reset();
         this.anatomyTermsPicker.reset();
-        this.setState({gene: '', phenoTerms: [], anatomyTerms: []});
+        this.setState({gene: '', phenoTerm: [], anatomyTerms: [], involvedOption: 'involved', remark: '', noctuaModel: '', genotype: ''});
     }
 
     render() {
@@ -85,7 +83,7 @@ class AnatomyFunctionAnnotator extends Component{
                             entities={this.props.phenotypeTerms}
                             ref={instance => { this.phenoTermPicker = instance; }}
                             selectedItemsCallback={(phenoTerms) => {
-                                this.setState({phenoTerms: phenoTerms});
+                                this.setState({phenoTerm: phenoTerms.size > 0 ? phenoTerms.keys().next().value : ''});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -97,7 +95,7 @@ class AnatomyFunctionAnnotator extends Component{
                             entities={this.props.genes}
                             ref={instance => { this.genePicker = instance; }}
                             selectedItemsCallback={(genes) => {
-                                this.setState({gene: genes.length > 0 ? genes[0] : ''});
+                                this.setState({gene: genes.size > 0 ? genes.keys().next().value : ''});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -105,9 +103,12 @@ class AnatomyFunctionAnnotator extends Component{
                         />
                     </Col>
                     <Col>
-                        <FormControl as="select" value={this.state.involvedOption} onChange={(e) => {this.setState({involvedOption: parseInt(e.target.value)})}}>
-                            <option value="1" selected>Involved</option>
-                            <option value="2">Not Involved</option>
+                        <FormControl as="select" value={this.state.involvedOption} onChange={(e) => {
+                            this.setState({involvedOption: e.target.value});
+                            this.anatomyTermsPicker.reset();
+                        }}>
+                            <option value="involved" selected>Involved</option>
+                            <option value="not_involved">Not Involved</option>
                         </FormControl>
                     </Col>
                     <Col sm={4}>
@@ -120,7 +121,7 @@ class AnatomyFunctionAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
-                            checkboxes={this.state.involvedOption === 1 ? ["Sufficient", "Necessary"] : ["Insufficient", "Unnecessary"]}
+                            checkboxes={this.state.involvedOption === "involved" ? ["Sufficient", "Necessary"] : ["Insufficient", "Unnecessary"]}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -173,13 +174,17 @@ class AnatomyFunctionAnnotator extends Component{
                     <Col align="left">
                         <Button variant="success" onClick={() => {
                             let annotation = {
+                                phenotype: this.state.phenoTerm,
                                 gene: this.state.gene,
-                                phenotypeTerms: this.state.phenoTerms,
                                 anatomyTerms: this.state.anatomyTerms,
-                                evidence: ''
+                                evidence: '',
+                                remark: this.state.remark,
+                                noctuamodel: this.state.noctuaModel,
+                                genotype: this.state.genotype,
+                                involved: this.state.involvedOption
                             };
-                            if (phenotypeAnnotationIsValid(annotation)) {
-                                this.props.addPhenotypeAnnotation(annotation);
+                            if (anatomyFunctionAnnotationIsValid(annotation)) {
+                                this.props.addAnatomyFunctionAnnotation(annotation);
                                 this.resetPickers();
                                 this.setState({annotationCreatedShow: true});
                                 setTimeout(() => this.setState({annotationCreatedShow: false}), 2000);
@@ -240,8 +245,7 @@ function WrongAnnotationModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    At least one variant, one or more phenotype terms, and one or more anatomy terms or life stages
-                    must be provided.
+                    Annotation does not meet constraints.
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -259,4 +263,4 @@ const mapStateToProps = state => ({
     anatomyTerms: getAnatomyTerms(state)
 });
 
-export default connect(mapStateToProps, {addPhenotypeTerm, addAnatomyTerm, addGene})(AnatomyFunctionAnnotator);
+export default connect(mapStateToProps, {addPhenotypeTerm, addAnatomyTerm, addGene, addAnatomyFunctionAnnotation})(AnatomyFunctionAnnotator);

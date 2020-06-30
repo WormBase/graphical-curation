@@ -9,7 +9,6 @@ import FormCheck from "react-bootstrap/FormCheck";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {map} from "react-bootstrap/cjs/ElementChildren";
 
 class EntityPicker extends Component{
 
@@ -33,7 +32,7 @@ class EntityPicker extends Component{
     }
 
     reset() {
-        this.setState({selectedEntities: new Set()});
+        this.setState({selectedEntities: new Map()});
     }
 
     render() {
@@ -53,11 +52,11 @@ class EntityPicker extends Component{
                 }/><br/></div> : ''}
                 <ListGroup>
                     {this.state.filteredEntities.slice(this.state.offset, this.state.offset + this.state.count).map(entity => {
-                        let mapEntry = [];
+                        let mapEntry = new Map();
                         if (this.state.selectedEntities.has(entity)) {
-                            mapEntry = this.state.selectedEntities[entity]
+                            mapEntry = this.state.selectedEntities.get(entity)
                         } else if (this.props.checkboxes !== undefined) {
-                            this.props.checkboxes.forEach(c => {mapEntry.push(false)});
+                            this.props.checkboxes.forEach(c => {mapEntry.set(c, false)});
                         }
                         return <ListGroup.Item action variant="default"
                             active={this.state.selectedEntities.has(entity)}>
@@ -75,23 +74,24 @@ class EntityPicker extends Component{
                                             selectedEntities = new Map();
                                             selectedEntities.set(entity, mapEntry);
                                         }
-                                        this.props.selectedItemsCallback([...selectedEntities]);
+                                        this.props.selectedItemsCallback(selectedEntities);
                                         this.setState({selectedEntities: selectedEntities});
                                     }}>
                                         {entity.value}
                                     </Col>
-                                    {this.props.checkboxes !== undefined ? this.props.checkboxes.map((c, i) => {
+                                    {this.props.checkboxes !== undefined ? this.props.checkboxes.map(c => {
                                         return <Col><FormCheck inline type="checkbox" label={c}
                                                                onClick={() => {
                                                                    if (this.state.selectedEntities.has(entity)) {
                                                                        let selectedEntities = this.state.selectedEntities;
                                                                        let mapEntry = selectedEntities.get(entity);
-                                                                       mapEntry[i] = !mapEntry[i]
+                                                                       mapEntry.set(c, !mapEntry.get(c))
                                                                        selectedEntities.set(entity, mapEntry);
+                                                                       this.props.selectedItemsCallback(selectedEntities);
                                                                        this.setState({selectedEntities: selectedEntities});
                                                                    }
                                                                }}
-                                                               checked={this.state.selectedEntities.has(entity) && this.state.selectedEntities.get(entity)[i]}
+                                                               checked={this.state.selectedEntities.has(entity) && this.state.selectedEntities.get(entity).get(c)}
                                         /></Col>}) : ''}
                                 </Row>
                             </Container>

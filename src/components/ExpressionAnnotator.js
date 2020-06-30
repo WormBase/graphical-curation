@@ -77,7 +77,7 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.genes}
                             ref={instance => { this.genePicker = instance; }}
                             selectedItemsCallback={(genes) => {
-                                this.setState({gene: genes.length > 0 ? genes[0] : ''});
+                                this.setState({gene: genes.size > 0 ? genes.keys().next().value : ''});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -89,7 +89,7 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.anatomyTerms}
                             ref={instance => { this.anatomyTermsPicker = instance; }}
                             selectedItemsCallback={(anatomyTerms) => {
-                                this.setState({anatomyTerms: anatomyTerms});
+                                this.setState({anatomyTerms: [...anatomyTerms.keys()]});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -101,7 +101,7 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.lifeStages}
                             ref={instance => { this.lifeStagesPicker = instance; }}
                             selectedItemsCallback={(lifeStages) => {
-                                this.setState({lifeStages: lifeStages});
+                                this.setState({lifeStages: [...lifeStages.keys()]});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -113,7 +113,7 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.cellularComponents}
                             ref={instance => { this.cellularComponentPicker = instance; }}
                             selectedItemsCallback={(cellularComponents) => {
-                                this.setState({cellularComponents: cellularComponents});
+                                this.setState({cellularComponents: [...cellularComponents.keys()]});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -125,7 +125,7 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.assays}
                             ref={instance => { this.assayPicker = instance; }}
                             selectedItemsCallback={(assays) => {
-                                this.setState({assay: assays.length > 0 ? assays[0] : ''});
+                                this.setState({assay: assays.size > 0 ? assays.keys().next().value : ''});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}

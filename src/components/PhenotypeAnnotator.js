@@ -79,7 +79,7 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.variants}
                             ref={instance => { this.variantPicker = instance; }}
                             selectedItemsCallback={(variants) => {
-                                this.setState({variant: variants.length > 0 ? variants[0] : ''});
+                                this.setState({variant: variants.size > 0 ? variants.keys().next().value : ''});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -91,7 +91,7 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.phenotypeTerms}
                             ref={instance => { this.phenoTermPicker = instance; }}
                             selectedItemsCallback={(phenoTerms) => {
-                                this.setState({phenoTerms: phenoTerms});
+                                this.setState({phenoTerms: [...phenoTerms.keys()]});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -103,7 +103,7 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.anatomyTerms}
                             ref={instance => { this.anatomyTermsPicker = instance; }}
                             selectedItemsCallback={(anatomyTerms) => {
-                                this.setState({anatomyTerms: anatomyTerms});
+                                this.setState({anatomyTerms: [...anatomyTerms.keys()]});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -115,7 +115,7 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.lifeStages}
                             ref={instance => { this.lifeStagesPicker = instance; }}
                             selectedItemsCallback={(lifeStages) => {
-                                this.setState({lifeStages: lifeStages});
+                                this.setState({lifeStages: [...lifeStages.keys()]});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
