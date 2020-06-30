@@ -14,7 +14,7 @@ import {
     addPhenotypeTerm,
     addAnatomyTerm,
     addGene
-} from "../redux/actions/textMinedEntitiesAction";
+} from "../redux/actions/textMinedEntitiesActions";
 import Modal from "react-bootstrap/Modal";
 import FormControl from "react-bootstrap/FormControl";
 import {anatomyFunctionAnnotationIsValid} from "../redux/constraints/anatomyFunction";

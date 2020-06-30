@@ -14,11 +14,19 @@ class EntityPicker extends Component{
 
     constructor(props, context) {
         super(props, context);
+        let filteredEntities = [];
+        if (props.entities !== undefined) {
+            filteredEntities.push(...props.entities)
+        }
+        if (props.selectedEntities !== undefined) {
+            filteredEntities.push(...props.selectedEntities)
+        }
+        filteredEntities = [...new Set(filteredEntities)]
         this.state = {
-            selectedEntities: new Map(),
+            selectedEntities: props.selectedEntities !== undefined ? props.selectedEntities : new Map(),
             offset: 0,
             count: props.count !== undefined ? props.count : 3,
-            filteredEntities: props.entities,
+            filteredEntities: filteredEntities,
             showAddEntity: false
         };
 

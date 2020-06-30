@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import {connect} from "react-redux";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
-import {fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError} from "../redux/actions/textMinedEntitiesAction";
+import {fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError} from "../redux/actions/textMinedEntitiesActions";
 import {getExpressionAnnotations} from "../redux/selectors/expressionAnnotationsSelector";
 import {setExpressionAnnotations} from "../redux/actions/expressionAnnotationsActions";
 import PhenotypeAnnotator from "./PhenotypeAnnotator";
@@ -15,6 +15,10 @@ import PhenotypeAnnotationsViewer from "./PhenotypeAnnotationsViewer";
 import {setPhenotypeAnnotations} from "../redux/actions/phenotypeAnnotationsActions";
 import AnatomyFunctionAnnotator from "./AnatomyFunctionAnnotator";
 import AnatomyFunctionAnnotationsViewer from "./AnatomyFunctionAnnotationsViewer";
+import {getPhenotypeAnnotations} from "../redux/selectors/phenotypeAnnotationsSelector";
+import {getActiveAnnotationType, getActiveView} from "../redux/selectors/internalStateSelector";
+import {setActiveAnnotationType, setActiveView} from "../redux/actions/internalStateActions";
+import Nav from "react-bootstrap/Nav";
 
 class GraphicalCuration extends Component{
 
@@ -70,64 +74,94 @@ class GraphicalCuration extends Component{
     render() {
         return (
             <div>
-                <Accordion defaultActiveKey="0">
+                <Accordion activeKey={this.props.activeAnnotationType}>
                     {this.state.showExpressionCuration ?
                     <Card>
                         <Card.Header>
-                            <Accordion.Toggle as={Button} variant="" eventKey="0">
+                            <Accordion.Toggle as={Button} variant="" onClick={() => this.props.setActiveAnnotationType("expression")}>
                                 Expression Annotations
                             </Accordion.Toggle>
                         </Card.Header>
-                        <Accordion.Collapse eventKey="0">
+                        <Accordion.Collapse eventKey="expression">
                             <Card.Body>
-                                <Tabs defaultActiveKey="annotator">
-                                    <Tab eventKey="annotator" title="Create Annotation">
-                                        <ExpressionAnnotator maxEntities={this.state.maxEntities}/>
-                                    </Tab>
-                                    <Tab eventKey="viewer" title="View Annotations">
-                                        <ExpressionAnnotationsViewer/>
-                                    </Tab>
-                                </Tabs>
+                                <Tab.Container activeKey={this.props.activeView}>
+                                    <Nav variant="tabs" defaultActiveKey="references">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>Create Annotation</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey="annotator">
+                                            <ExpressionAnnotator maxEntities={this.state.maxEntities}/>
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="viewer">
+                                            <ExpressionAnnotationsViewer/>
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Tab.Container>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card> : ''}
                     {this.state.showPhenotypeCuration ?
                     <Card>
                         <Card.Header>
-                            <Accordion.Toggle as={Button} variant="" eventKey="1">
+                            <Accordion.Toggle as={Button} variant="" onClick={() => this.props.setActiveAnnotationType("phenotype")}>
                                 Phenotype Annotations
                             </Accordion.Toggle>
                         </Card.Header>
-                        <Accordion.Collapse eventKey="1">
+                        <Accordion.Collapse eventKey="phenotype">
                             <Card.Body>
-                                <Tabs defaultActiveKey="annotator">
-                                    <Tab eventKey="annotator" title="Create Annotation">
-                                        <PhenotypeAnnotator maxEntities={this.state.maxEntities}/>
-                                    </Tab>
-                                    <Tab eventKey="viewer" title="View Annotations">
-                                        <PhenotypeAnnotationsViewer/>
-                                    </Tab>
-                                </Tabs>
+                                <Tab.Container activeKey={this.props.activeView}>
+                                    <Nav variant="tabs" defaultActiveKey="references">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>Create Annotation</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey="annotator">
+                                            <PhenotypeAnnotator maxEntities={this.state.maxEntities}/>
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="viewer">
+                                            <PhenotypeAnnotationsViewer/>
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Tab.Container>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card> : ''}
                     {this.state.showAnatomyFunctionCuration ?
                     <Card>
                         <Card.Header>
-                            <Accordion.Toggle as={Button} variant="" eventKey="2">
+                            <Accordion.Toggle as={Button} variant="" onClick={() => this.props.setActiveAnnotationType("anatomyFunction")}>
                                 Anatomy Function Annotations
                             </Accordion.Toggle>
                         </Card.Header>
-                        <Accordion.Collapse eventKey="2">
+                        <Accordion.Collapse eventKey="anatomyFunction">
                             <Card.Body>
-                                <Tabs defaultActiveKey="annotator">
-                                    <Tab eventKey="annotator" title="Create Annotation">
-                                        <AnatomyFunctionAnnotator maxEntities={this.state.maxEntities}/>
-                                    </Tab>
-                                    <Tab eventKey="viewer" title="View Annotations">
-                                        <AnatomyFunctionAnnotationsViewer/>
-                                    </Tab>
-                                </Tabs>
+                                <Tab.Container activeKey={this.props.activeView}>
+                                    <Nav variant="tabs" defaultActiveKey="references">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>Create Annotation</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey="annotator">
+                                            <AnatomyFunctionAnnotator maxEntities={this.state.maxEntities}/>
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="viewer">
+                                            <AnatomyFunctionAnnotationsViewer/>
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Tab.Container>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card> : ''}
@@ -138,7 +172,7 @@ class GraphicalCuration extends Component{
                 <div align="center">
                     <Button variant="primary" onClick={
                         () => this.props.annotationsSaved({expression: this.props.storedExpressionAnnotations,
-                            phenotype: this.props.phenotypeAnnotations })}>
+                            phenotype: this.props.storedPhenotypeAnnotations })}>
                         Save All Annotations
                     </Button>
                 </div>
@@ -148,9 +182,12 @@ class GraphicalCuration extends Component{
 }
 
 const mapStateToProps = state => ({
-    storedExpressionAnnotations: getExpressionAnnotations(state)
+    storedExpressionAnnotations: getExpressionAnnotations(state),
+    storedPhenotypeAnnotations: getPhenotypeAnnotations(state),
+    activeAnnotationType: getActiveAnnotationType(state),
+    activeView: getActiveView(state)
 });
 
 export default connect(mapStateToProps, {
     fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError, setExpressionAnnotations,
-    setPhenotypeAnnotations})(GraphicalCuration);
+    setPhenotypeAnnotations, setActiveAnnotationType, setActiveView})(GraphicalCuration);

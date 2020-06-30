@@ -10,7 +10,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import {addExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
 import {expressionAnnotationIsValid} from "../redux/constraints/expression";
-import {addGene, addAnatomyTerm, addLifeStage, addCellularComponent} from "../redux/actions/textMinedEntitiesAction";
+import {addGene, addAnatomyTerm, addLifeStage, addCellularComponent} from "../redux/actions/textMinedEntitiesActions";
 import Modal from "react-bootstrap/Modal";
 
 class ExpressionAnnotator extends Component{

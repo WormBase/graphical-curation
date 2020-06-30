@@ -12,7 +12,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import {addPhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
 import {phenotypeAnnotationIsValid} from "../redux/constraints/phenotype";
-import {addVariant, addPhenotypeTerm, addLifeStage, addAnatomyTerm} from "../redux/actions/textMinedEntitiesAction";
+import {addVariant, addPhenotypeTerm, addLifeStage, addAnatomyTerm} from "../redux/actions/textMinedEntitiesActions";
 import Modal from "react-bootstrap/Modal";
 import FormControl from "react-bootstrap/FormControl";
 
