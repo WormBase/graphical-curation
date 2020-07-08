@@ -16,8 +16,16 @@ import {setPhenotypeAnnotations} from "../redux/actions/phenotypeAnnotationsActi
 import AnatomyFunctionAnnotator from "./AnatomyFunctionAnnotator";
 import AnatomyFunctionAnnotationsViewer from "./AnatomyFunctionAnnotationsViewer";
 import {getPhenotypeAnnotations} from "../redux/selectors/phenotypeAnnotationsSelector";
-import {getActiveAnnotationType, getActiveView} from "../redux/selectors/internalStateSelector";
-import {setActiveAnnotationType, setActiveView} from "../redux/actions/internalStateActions";
+import {
+    getActiveAnnotationType,
+    getActiveView, getAnatomyFunctionAnnotationForEditing,
+    getExpressionAnnotationForEditing, getPhenotypeAnnotationForEditing
+} from "../redux/selectors/internalStateSelector";
+import {
+    setActiveAnnotationType,
+    setActiveView,
+    unsetExpressionAnnotationForEditing
+} from "../redux/actions/internalStateActions";
 import Nav from "react-bootstrap/Nav";
 
 class GraphicalCuration extends Component{
@@ -87,7 +95,7 @@ class GraphicalCuration extends Component{
                                 <Tab.Container activeKey={this.props.activeView}>
                                     <Nav variant="tabs" defaultActiveKey="references">
                                         <Nav.Item>
-                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>Create Annotation</Nav.Link>
+                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.expressionAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
                                             <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
@@ -117,7 +125,7 @@ class GraphicalCuration extends Component{
                                 <Tab.Container activeKey={this.props.activeView}>
                                     <Nav variant="tabs" defaultActiveKey="references">
                                         <Nav.Item>
-                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>Create Annotation</Nav.Link>
+                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.phenotypeAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
                                             <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
@@ -147,7 +155,7 @@ class GraphicalCuration extends Component{
                                 <Tab.Container activeKey={this.props.activeView}>
                                     <Nav variant="tabs" defaultActiveKey="references">
                                         <Nav.Item>
-                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>Create Annotation</Nav.Link>
+                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.anatomyFunctionAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
                                             <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
@@ -185,9 +193,12 @@ const mapStateToProps = state => ({
     storedExpressionAnnotations: getExpressionAnnotations(state),
     storedPhenotypeAnnotations: getPhenotypeAnnotations(state),
     activeAnnotationType: getActiveAnnotationType(state),
-    activeView: getActiveView(state)
+    activeView: getActiveView(state),
+    expressionAnnotationForEditing: getExpressionAnnotationForEditing(state),
+    phenotypeAnnotationForEditing: getPhenotypeAnnotationForEditing(state),
+    anatomyFunctionAnnotationForEditing: getAnatomyFunctionAnnotationForEditing(state)
 });
 
 export default connect(mapStateToProps, {
     fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError, setExpressionAnnotations,
-    setPhenotypeAnnotations, setActiveAnnotationType, setActiveView})(GraphicalCuration);
+    setPhenotypeAnnotations, setActiveAnnotationType, setActiveView, unsetExpressionAnnotationForEditing})(GraphicalCuration);

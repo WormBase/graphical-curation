@@ -8,10 +8,12 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {addExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
+import {addExpressionAnnotation, modifyExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
 import {expressionAnnotationIsValid} from "../redux/constraints/expression";
 import {addGene, addAnatomyTerm, addLifeStage, addCellularComponent} from "../redux/actions/textMinedEntitiesActions";
 import Modal from "react-bootstrap/Modal";
+import {getExpressionAnnotationForEditing} from "../redux/selectors/internalStateSelector";
+import {unsetExpressionAnnotationForEditing} from "../redux/actions/internalStateActions";
 
 class ExpressionAnnotator extends Component{
     constructor(props) {
@@ -28,19 +30,61 @@ class ExpressionAnnotator extends Component{
             cellularComponents: [],
             assay: '',
             annotationCreatedShow: false,
-            wrongAnnotationShow: false
+            wrongAnnotationShow: false,
+            preselectedId: undefined,
+            preselectedGene: undefined,
+            preselectedAnatomyTerms: undefined,
+            preselectedLifeStages: undefined,
+            preselectedCellularComponents: undefined,
+            preselectedAssay: undefined,
+            createModify: 'Create'
         }
-
         this.resetPickers = this.resetPickers.bind(this);
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.expressionAnnotationForEditing !== prevProps.expressionAnnotationForEditing) {
+            let preselectedGene = undefined;
+            let preselectedAssay = undefined;
+            let preselectedAnatomyTerms = undefined;
+            let preselectedCellularComponents = undefined;
+            let preselectedLifeStages = undefined;
+            if (this.props.expressionAnnotationForEditing !== null) {
+                preselectedGene = new Map();
+                preselectedAssay = new Map();
+                preselectedAnatomyTerms = new Map();
+                preselectedCellularComponents = new Map();
+                preselectedLifeStages = new Map();
+                preselectedGene.set(this.props.expressionAnnotationForEditing.gene, new Map());
+                preselectedAssay.set(this.props.expressionAnnotationForEditing.assay, new Map());
+                this.props.expressionAnnotationForEditing.whereExpressed.forEach(a => preselectedAnatomyTerms.set(a, new Map()));
+                this.props.expressionAnnotationForEditing.cellularComponent.forEach(a => preselectedCellularComponents.set(a, new Map()));
+                this.props.expressionAnnotationForEditing.whenExpressed.forEach(a => preselectedLifeStages.set(a, new Map()));
+            }
+            this.setState({
+                preselectedId: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.annotationId : undefined,
+                preselectedGene: preselectedGene,
+                preselectedAnatomyTerms: preselectedAnatomyTerms,
+                preselectedCellularComponents: preselectedCellularComponents,
+                preselectedLifeStages: preselectedLifeStages,
+                preselectedAssay: preselectedAssay,
+                gene: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.gene : '',
+                anatomyTerms: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.whereExpressed : [],
+                lifeStages: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.whenExpressed : [],
+                cellularComponents: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.cellularComponent : [],
+                assay: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.assay : ''
+            });
+        }
+    }
+
     resetPickers() {
+        this.setState({gene: '', anatomyTerms: [], lifeStages: [], cellularComponents: [], assay: ''});
         this.genePicker.reset();
         this.anatomyTermsPicker.reset();
         this.lifeStagesPicker.reset();
         this.assayPicker.reset();
         this.cellularComponentPicker.reset();
-        this.setState({gene: '', anatomyTerms: [], lifeStages: [], cellularComponents: [], assay: ''});
+        this.props.unsetExpressionAnnotationForEditing();
     }
 
     render() {
@@ -82,6 +126,7 @@ class ExpressionAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addGene}
+                            selectedEntities={this.state.preselectedGene}
                         />
                     </Col>
                     <Col>
@@ -94,6 +139,7 @@ class ExpressionAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
+                            selectedEntities={this.state.preselectedAnatomyTerms}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -106,6 +152,7 @@ class ExpressionAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
+                            selectedEntities={this.state.preselectedLifeStages}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -118,6 +165,7 @@ class ExpressionAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addCellularComponent}
+                            selectedEntities={this.state.preselectedCellularComponents}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -128,6 +176,7 @@ class ExpressionAnnotator extends Component{
                                 this.setState({assay: assays.size > 0 ? assays.keys().next().value : ''});
                             }}
                             count={this.props.maxEntities}
+                            selectedEntities={this.state.preselectedAssay}
                             isLoading={this.props.isLoading}
                         />
                     </Col>
@@ -142,13 +191,14 @@ class ExpressionAnnotator extends Component{
                                 cellularComponent: this.state.cellularComponents
                             };
                             if (expressionAnnotationIsValid(annotation)) {
-                                this.props.addExpressionAnnotation(annotation);
+                                if (this.state.preselectedId !== undefined) {
+                                    annotation.annotationId = this.state.preselectedId;
+                                    this.props.modifyExpressionAnnotation(annotation);
+                                } else {
+                                    this.props.addExpressionAnnotation(annotation);
+                                }
                                 this.setState({
-                                    gene: '',
-                                    anatomyTerms: [],
-                                    lifeStages: [],
-                                    assay: '',
-                                    cellularComponents: []
+                                    createModify: this.props.expressionAnnotationForEditing !== null ? 'Modified' : 'Created'
                                 });
                                 this.resetPickers();
                                 this.setState({annotationCreatedShow: true});
@@ -156,13 +206,14 @@ class ExpressionAnnotator extends Component{
                             } else {
                                 this.setState({wrongAnnotationShow: true});
                             }
-                        }}>Create Annotation</Button><br/><br/>
-                        <Button variant="danger" onClick={()=> this.resetPickers()}>Clear</Button>
+                        }}>{this.state.preselectedId === undefined ? 'Create' : 'Modify'} Annotation</Button><br/><br/>
+                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.state.preselectedId === undefined ? 'Clear' : 'Cancel'}</Button>
                     </Col>
                 </Row>
                 <AnnotationCreatedModal
                     show={this.state.annotationCreatedShow}
                     onHide={() => this.setState({annotationCreatedShow: false})}
+                    create_modify={this.state.createModify}
                 />
                 <WrongAnnotationModal
                     show={this.state.wrongAnnotationShow}
@@ -185,7 +236,7 @@ function AnnotationCreatedModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    Annotation Successfully Created.
+                    Annotation Successfully {props.create_modify}
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -227,7 +278,9 @@ const mapStateToProps = state => ({
     lifeStages: getLifeStages(state),
     assays: getAssays(state),
     cellularComponents: getCellularComponents(state),
-    isLoading: isLoading(state)
+    isLoading: isLoading(state),
+    expressionAnnotationForEditing: getExpressionAnnotationForEditing(state)
 });
 
-export default connect(mapStateToProps, {addExpressionAnnotation, addGene, addAnatomyTerm, addLifeStage, addCellularComponent})(ExpressionAnnotator);
+export default connect(mapStateToProps, {addExpressionAnnotation, addGene, addAnatomyTerm, addLifeStage,
+    addCellularComponent, unsetExpressionAnnotationForEditing, modifyExpressionAnnotation})(ExpressionAnnotator);

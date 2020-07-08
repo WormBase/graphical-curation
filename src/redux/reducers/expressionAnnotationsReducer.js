@@ -38,100 +38,13 @@ export const expressionAnnotations = createReducer(initialState, {
     DELETE_EXPR_ANNOT: (state, action) => {
         state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId)
     },
-    SET_GENE_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.gene = action.payload.gene;
-                return false
-            } else {
-                return true
+    MODIFY_EXPR_ANNOT: (state, action) => {
+        let modAnnotation = action.payload.annotation;
+        modAnnotation.dateAssigned = Date.now();
+        state.annotations.forEach((annotation, idx, object) => {
+            if (annotation.annotationId === modAnnotation.annotationId) {
+                object[idx] = modAnnotation;
             }
-        })
-    },
-    ADD_WHEN_EXPRESSED_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.whenExpressed = [...new Set([...a.whenExpressed, action.payload.whenExpressed])];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    REMOVE_WHEN_EXPRESSED_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                let newWhenExpressed = new Set(a.whenExpressed);
-                newWhenExpressed.delete(action.payload.whenExpressed);
-                a.whenExpressed = [...newWhenExpressed];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    SET_ASSAY_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.assay = action.payload.assay;
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    SET_EVIDENCE_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.evidence = action.payload.evidence;
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    ADD_WHERE_EXPRESSED_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.whereExpressed = [...new Set([...a.whereExpressed, action.payload.whereExpressed])];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    REMOVE_WHERE_EXPRESSED_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                let newWhereExpressed = new Set(a.whereExpressed);
-                newWhereExpressed.delete(action.payload.whereExpressed);
-                a.whereExpressed = [...newWhereExpressed];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    ADD_CC_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.cellularComponent = [...new Set([...a.cellularComponent, action.payload.cellularComponent])];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    REMOVE_CC_EXPR_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                let newCellularComponent = new Set(a.cellularComponent);
-                newCellularComponent.delete(action.payload.cellularComponent);
-                a.cellularComponent = [...newCellularComponent];
-                return false
-            } else {
-                return true
-            }
-        })
+        });
     }
 });

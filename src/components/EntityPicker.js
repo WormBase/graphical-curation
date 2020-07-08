@@ -14,19 +14,12 @@ class EntityPicker extends Component{
 
     constructor(props, context) {
         super(props, context);
-        let filteredEntities = [];
-        if (props.entities !== undefined) {
-            filteredEntities.push(...props.entities)
-        }
-        if (props.selectedEntities !== undefined) {
-            filteredEntities.push(...props.selectedEntities)
-        }
-        filteredEntities = [...new Set(filteredEntities)]
         this.state = {
             selectedEntities: props.selectedEntities !== undefined ? props.selectedEntities : new Map(),
             offset: 0,
             count: props.count !== undefined ? props.count : 3,
-            filteredEntities: filteredEntities,
+            filteredEntities: [],
+            allEntities: props.entities,
             showAddEntity: false
         };
 
@@ -34,8 +27,29 @@ class EntityPicker extends Component{
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.entities !== prevProps.entities) {
-            this.setState({filteredEntities: this.props.entities});
+        if (this.props.entities !== prevProps.entities || this.props.selectedEntities !== prevProps.selectedEntities) {
+            let filteredEntities = [];
+            if (this.props.entities !== undefined) {
+                this.props.entities.forEach(e => filteredEntities.push(e));
+            }
+            if (this.props.selectedEntities !== undefined) {
+                this.props.selectedEntities.forEach((v, k) => {
+                    filteredEntities.forEach((item, index, object) => {
+                        if (k.value === item.value) {
+                            object.splice(index, 1)
+                        }
+                    })
+                    filteredEntities.push(k);
+                });
+            }
+            filteredEntities.sort((a, b) => (a.value > b.value) ? 1 : -1);
+            this.setState({
+                selectedEntities: this.props.selectedEntities !== undefined ? this.props.selectedEntities : new Map(),
+                offset: 0,
+                count: this.props.count !== undefined ? this.props.count : 3,
+                filteredEntities: filteredEntities,
+                allEntities: filteredEntities,
+                showAddEntity: false});
         }
     }
 
@@ -55,8 +69,8 @@ class EntityPicker extends Component{
                     onHide={() => this.setState({showAddEntity: false})}
                     addEntity={(entity) => this.props.addEntity(entity)}
                 />
-                {this.props.entities.length > 0 ? <div><FormControl size="sm" placeholder="filter" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
-                    this.setState({filteredEntities: this.props.entities.filter(entity => entity.value.startsWith(event.target.value))})
+                {this.state.allEntities.length > 0 ? <div><FormControl size="sm" placeholder="filter" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
+                    this.setState({filteredEntities: this.state.allEntities.filter(entity => entity.value.startsWith(event.target.value))})
                 }/><br/></div> : ''}
                 <ListGroup>
                     {this.state.filteredEntities.slice(this.state.offset, this.state.offset + this.state.count).map(entity => {
@@ -111,7 +125,7 @@ class EntityPicker extends Component{
                     <Button variant="outline-primary" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
                         prev
                     </Button>
-                    <Button variant="outline-primary" hidden={this.props.entities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
+                    <Button variant="outline-primary" hidden={this.state.allEntities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
                         next
                     </Button>
                 </div>

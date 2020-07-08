@@ -18,7 +18,12 @@ import {
 import Modal from "react-bootstrap/Modal";
 import FormControl from "react-bootstrap/FormControl";
 import {anatomyFunctionAnnotationIsValid} from "../redux/constraints/anatomyFunction";
-import {addAnatomyFunctionAnnotation} from "../redux/actions/anatomyFunctionAnnotationsActions";
+import {
+    addAnatomyFunctionAnnotation,
+    modifyAnatomyFunctionAnnotation
+} from "../redux/actions/anatomyFunctionAnnotationsActions";
+import {getAnatomyFunctionAnnotationForEditing} from "../redux/selectors/internalStateSelector";
+import {unsetAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
 
 
 class AnatomyFunctionAnnotator extends Component{
@@ -36,16 +41,51 @@ class AnatomyFunctionAnnotator extends Component{
             noctuaModel: '',
             genotype: '',
             annotationCreatedShow: false,
-            wrongAnnotationShow: false
+            wrongAnnotationShow: false,
+            preselectedId: undefined,
+            preselectedPhenoTerm: undefined,
+            preselectedGene: undefined,
+            preselectedAnatomyTerms: undefined,
+            createModify: 'Create'
         }
 
         this.resetPickers = this.resetPickers.bind(this);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.anatomyFunctionAnnotationForEditing !== prevProps.anatomyFunctionAnnotationForEditing) {
+            let preselectedPhenoTerm = undefined;
+            let preselectedGene = undefined;
+            let preselectedAnatomyTerms = undefined;
+            if (this.props.anatomyFunctionAnnotationForEditing !== null) {
+                preselectedGene = new Map();
+                preselectedPhenoTerm = new Map();
+                preselectedAnatomyTerms = new Map();
+                preselectedPhenoTerm.set(this.props.anatomyFunctionAnnotationForEditing.phenotype, new Map());
+                preselectedGene.set(this.props.anatomyFunctionAnnotationForEditing.gene, new Map());
+                this.props.anatomyFunctionAnnotationForEditing.anatomyTerms.forEach(a => preselectedAnatomyTerms.set(a, new Map()));
+            }
+            this.setState({
+                preselectedId: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.annotationId : undefined,
+                preselectedGene: preselectedGene,
+                preselectedAnatomyTerms: preselectedAnatomyTerms,
+                preselectedPhenoTerm: preselectedPhenoTerm,
+                gene: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.gene : '',
+                phenoTerm: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.phenotype : '',
+                anatomyTerms: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.anatomyTerms : [],
+                remark: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.remark : '',
+                noctuaModel: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.noctuaModel : '',
+                genotype: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.genotype : '',
+                involvedOption: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.involved : 'involved'
+            });
+        }
     }
 
     resetPickers() {
         this.genePicker.reset()
         this.phenoTermPicker.reset();
         this.anatomyTermsPicker.reset();
+        this.props.unseAnatomyFunctionAnnotationForEditing();
         this.setState({gene: '', phenoTerm: [], anatomyTerms: [], involvedOption: 'involved', remark: '', noctuaModel: '', genotype: ''});
     }
 
@@ -88,6 +128,7 @@ class AnatomyFunctionAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addPhenotypeTerm}
+                            selectedEntities={this.state.preselectedPhenoTerm}
                         />
                     </Col>
                     <Col>
@@ -100,6 +141,7 @@ class AnatomyFunctionAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addGene}
+                            selectedEntities={this.state.preselectedGene}
                         />
                     </Col>
                     <Col>
@@ -122,6 +164,7 @@ class AnatomyFunctionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
                             checkboxes={this.state.involvedOption === "involved" ? ["Sufficient", "Necessary"] : ["Insufficient", "Unnecessary"]}
+                            selectedEntities={this.state.preselectedAnatomyTerms}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -184,15 +227,23 @@ class AnatomyFunctionAnnotator extends Component{
                                 involved: this.state.involvedOption
                             };
                             if (anatomyFunctionAnnotationIsValid(annotation)) {
-                                this.props.addAnatomyFunctionAnnotation(annotation);
+                                if (this.state.preselectedId !== undefined) {
+                                    annotation.annotationId = this.state.preselectedId;
+                                    this.props.modifyAnatomyFunctionAnnotation(annotation);
+                                } else {
+                                    this.props.addAnatomyFunctionAnnotation(annotation);
+                                }
+                                this.setState({
+                                    createModify: this.props.expressionAnnotationForEditing !== null ? 'Modified' : 'Created'
+                                });
                                 this.resetPickers();
                                 this.setState({annotationCreatedShow: true});
                                 setTimeout(() => this.setState({annotationCreatedShow: false}), 2000);
                             } else {
                                 this.setState({wrongAnnotationShow: true});
                             }
-                        }}>Create Annotation</Button><br/><br/>
-                        <Button variant="danger" onClick={()=> this.resetPickers()}>Clear</Button>
+                        }}>{this.state.preselectedId === undefined ? 'Create' : 'Modify'} Annotation</Button><br/><br/>
+                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.state.preselectedId === undefined ? 'Clear' : 'Cancel'}</Button>
                     </Col>
                 </Row>
                 <AnnotationCreatedModal
@@ -220,7 +271,7 @@ function AnnotationCreatedModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    Annotation Successfully Created.
+                    Annotation Successfully {props.create_modify}.
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -260,7 +311,9 @@ const mapStateToProps = state => ({
     genes: getGenes(state),
     phenotypeTerms: getPhenotypeTerms(state),
     isLoading: isLoading(state),
-    anatomyTerms: getAnatomyTerms(state)
+    anatomyTerms: getAnatomyTerms(state),
+    anatomyFunctionAnnotationForEditing: getAnatomyFunctionAnnotationForEditing(state)
 });
 
-export default connect(mapStateToProps, {addPhenotypeTerm, addAnatomyTerm, addGene, addAnatomyFunctionAnnotation})(AnatomyFunctionAnnotator);
+export default connect(mapStateToProps, {addPhenotypeTerm, addAnatomyTerm, addGene, addAnatomyFunctionAnnotation,
+    modifyAnatomyFunctionAnnotation, unsetAnatomyFunctionAnnotationForEditing})(AnatomyFunctionAnnotator);

@@ -10,11 +10,13 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {addPhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
+import {addPhenotypeAnnotation, modifyPhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
 import {phenotypeAnnotationIsValid} from "../redux/constraints/phenotype";
 import {addVariant, addPhenotypeTerm, addLifeStage, addAnatomyTerm} from "../redux/actions/textMinedEntitiesActions";
 import Modal from "react-bootstrap/Modal";
 import FormControl from "react-bootstrap/FormControl";
+import {getPhenotypeAnnotationForEditing} from "../redux/selectors/internalStateSelector";
+import {unsetPhenotypeAnnotationForEditing} from "../redux/actions/internalStateActions";
 
 
 class PhenotypeAnnotator extends Component{
@@ -31,18 +33,56 @@ class PhenotypeAnnotator extends Component{
             lifeStages: [],
             phenotypeStatement: '',
             annotationCreatedShow: false,
-            wrongAnnotationShow: false
+            wrongAnnotationShow: false,
+            preselectedId: undefined,
+            preselectedVariant: undefined,
+            preselectedPhenoTerms: undefined,
+            preselectedAnatomyTerms: undefined,
+            preselectedLifeStages: undefined,
+            createModify: 'Create'
         }
 
         this.resetPickers = this.resetPickers.bind(this);
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.phenotypeAnnotationForEditing !== prevProps.phenotypeAnnotationForEditing) {
+            let preselectedVariant = undefined;
+            let preselectedPhenoTerms = undefined;
+            let preselectedAnatomyTerms = undefined;
+            let preselectedLifeStages = undefined;
+            if (this.props.phenotypeAnnotationForEditing !== null) {
+                preselectedVariant = new Map();
+                preselectedAnatomyTerms = new Map();
+                preselectedPhenoTerms = new Map();
+                preselectedLifeStages = new Map();
+                preselectedVariant.set(this.props.phenotypeAnnotationForEditing.object, new Map());
+                this.props.phenotypeAnnotationForEditing.phenotypeTerms.forEach(a => preselectedPhenoTerms.set(a, new Map()));
+                this.props.phenotypeAnnotationForEditing.lifeStages.forEach(a => preselectedLifeStages.set(a, new Map()));
+                this.props.phenotypeAnnotationForEditing.anatomyTerms.forEach(a => preselectedAnatomyTerms.set(a, new Map()));
+            }
+            this.setState({
+                preselectedId: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.annotationId : undefined,
+                preselectedVariant: preselectedVariant,
+                preselectedAnatomyTerms: preselectedAnatomyTerms,
+                preselectedPhenoTerms: preselectedPhenoTerms,
+                preselectedLifeStages: preselectedLifeStages,
+                variant: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.object : '',
+                anatomyTerms: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.anatomyTerms : [],
+                lifeStages: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.lifeStages : [],
+                phenoTerms: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.phenotypeTerms : [],
+                phenotypeStatement: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.phenotypeStatement : ''
+            });
+        }
+    }
+
     resetPickers() {
+        this.setState({variant: '', phenoTerms: [], anatomyTerms: [], lifeStages: [], phenotypeStatement: ''});
         this.variantPicker.reset();
         this.phenoTermPicker.reset();
         this.anatomyTermsPicker.reset();
         this.lifeStagesPicker.reset();
-        this.setState({variant: '', phenoTerms: [], anatomyTerms: [], lifeStages: [], phenotypeStatement: ''});
+        this.props.unsetPhenotypeAnnotationForEditing();
     }
 
     render() {
@@ -84,6 +124,7 @@ class PhenotypeAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addVariant}
+                            selectedEntities={this.state.preselectedVariant}
                         />
                     </Col>
                     <Col>
@@ -96,6 +137,7 @@ class PhenotypeAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addPhenotypeTerm}
+                            selectedEntities={this.state.preselectedPhenoTerms}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -108,6 +150,7 @@ class PhenotypeAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
+                            selectedEntities={this.state.preselectedAnatomyTerms}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -120,6 +163,7 @@ class PhenotypeAnnotator extends Component{
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
+                            selectedEntities={this.state.preselectedLifeStages}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -137,20 +181,29 @@ class PhenotypeAnnotator extends Component{
                                 evidence: ''
                             };
                             if (phenotypeAnnotationIsValid(annotation)) {
-                                this.props.addPhenotypeAnnotation(annotation);
+                                if (this.state.preselectedId !== undefined) {
+                                    annotation.annotationId = this.state.preselectedId;
+                                    this.props.modifyPhenotypeAnnotation(annotation);
+                                } else {
+                                    this.props.addPhenotypeAnnotation(annotation);
+                                }
+                                this.setState({
+                                    createModify: this.props.phenotypeAnnotationForEditing !== null ? 'Modified' : 'Created'
+                                });
                                 this.resetPickers();
                                 this.setState({annotationCreatedShow: true});
                                 setTimeout(() => this.setState({annotationCreatedShow: false}), 2000);
                             } else {
                                 this.setState({wrongAnnotationShow: true});
                             }
-                        }}>Create Annotation</Button><br/><br/>
-                        <Button variant="danger" onClick={()=> this.resetPickers()}>Clear</Button>
+                        }}>{this.state.preselectedId === undefined ? 'Create' : 'Modify'} Annotation</Button><br/><br/>
+                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.state.preselectedId === undefined ? 'Clear' : 'Cancel'}</Button>
                     </Col>
                 </Row>
                 <AnnotationCreatedModal
                     show={this.state.annotationCreatedShow}
                     onHide={() => this.setState({annotationCreatedShow: false})}
+                    create_modify={this.state.createModify}
                 />
                 <WrongAnnotationModal
                     show={this.state.wrongAnnotationShow}
@@ -173,7 +226,7 @@ function AnnotationCreatedModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    Annotation Successfully Created.
+                    Annotation Successfully {props.create_modify}.
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -215,8 +268,9 @@ const mapStateToProps = state => ({
     phenotypeTerms: getPhenotypeTerms(state),
     isLoading: isLoading(state),
     anatomyTerms: getAnatomyTerms(state),
-    lifeStages: getLifeStages(state)
+    lifeStages: getLifeStages(state),
+    phenotypeAnnotationForEditing: getPhenotypeAnnotationForEditing(state)
 });
 
 export default connect(mapStateToProps, {addPhenotypeAnnotation, addVariant, addPhenotypeTerm, addAnatomyTerm,
-    addLifeStage})(PhenotypeAnnotator);
+    addLifeStage, unsetPhenotypeAnnotationForEditing, modifyPhenotypeAnnotation})(PhenotypeAnnotator);

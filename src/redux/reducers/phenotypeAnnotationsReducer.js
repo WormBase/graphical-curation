@@ -37,90 +37,13 @@ export const phenotypeAnnotations = createReducer(initialState, {
     DELETE_PHENOTYPE_ANNOT: (state, action) => {
         state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId)
     },
-    SET_OBJECT_PHENOTYPE_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.object = action.payload.object;
-                return false
-            } else {
-                return true
+    MODIFY_PHENOTYPE_ANNOT: (state, action) => {
+        let modAnnotation = action.payload.annotation;
+        modAnnotation.dateAssigned = Date.now();
+        state.annotations.forEach((annotation, idx, object) => {
+            if (annotation.annotationId === modAnnotation.annotationId) {
+                object[idx] = modAnnotation;
             }
-        })
+        });
     },
-    ADD_PHENOTYPE_TERM_PHENOTYPE_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.phenotypeTerms = [...new Set([...a.phenotypeTerms, action.payload.phenotypeTerm])];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    REMOVE_PHENOTYPE_TERM_PHENOTYPE_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                let newPhenotypeTerms = new Set(a.phenotypeTerms);
-                newPhenotypeTerms.delete(action.payload.phenotypeTerm);
-                a.phenotypeTerms = [...newPhenotypeTerms];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    ADD_ANATOMY_TERM_PHENOTYPE_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.anatomyTerms = [...new Set([...a.anatomyTerms, action.payload.anatomyTerm])];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    REMOVE_ANATOMY_TERM_PHENOTYPE_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                let newAnatomyTerms = new Set(a.anatomyTerms);
-                newAnatomyTerms.delete(action.payload.anatomyTerm);
-                a.anatomyTerms = [...newAnatomyTerms];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    ADD_LIFE_STAGE_PHENOTYPE_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.lifeStages = [...new Set([...a.lifeStages, action.payload.lifeStage])];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    REMOVE_LIFE_STAGE_PHENOTYPE_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                let newLifeStages = new Set(a.lifeStages);
-                newLifeStages.delete(action.payload.lifeStage);
-                a.lifeStages = [...newLifeStages];
-                return false
-            } else {
-                return true
-            }
-        })
-    },
-    SET_EVIDENCE_PHENOTYPE_ANNOT: (state, action) => {
-        state.annotations.every(a => {
-            if (a.annotationId === action.payload.annotationId) {
-                a.evidence = action.payload.evidence;
-                return false
-            } else {
-                return true
-            }
-        })
-    }
 });

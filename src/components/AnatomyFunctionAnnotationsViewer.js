@@ -5,9 +5,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
-import { IoIosRemoveCircleOutline, IoIosWarning } from 'react-icons/io';
-import {deleteExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import {getAnatomyFunctionAnnotations} from "../redux/selectors/anatomyFunctionAnnotationsSelector";
+import {deleteAnatomyFunctionAnnotation} from "../redux/actions/anatomyFunctionAnnotationsActions";
+import {setActiveView, setAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
 
 class ExpressionAnnotationsViewer extends Component{
 
@@ -57,12 +58,16 @@ class ExpressionAnnotationsViewer extends Component{
                             {a.genotype}
                         </Col>
                         <Col>
-                            {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())(new Date(a.dateAssigned))}
+                            {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}
                         </Col>
                         <Col align="right">
                             <Button variant="light" onClick={() => {
-                                this.props.deleteExpressionAnnotation(a.annotationId);
-                            }}><IoIosRemoveCircleOutline /></Button>
+                                this.props.setAnatomyFunctionAnnotationForEditing(a);
+                                this.props.setActiveView("annotator");
+                            }}><FaEdit /></Button>
+                            <Button variant="light" onClick={() => {
+                                this.props.deleteAnatomyFunctionAnnotation(a.annotationId);
+                            }}><FaTrash /></Button>
                         </Col>
                     </Row>)}
             </Container>
@@ -75,4 +80,4 @@ const mapStateToProps = state => ({
     anatomyFunctionAnnotations: getAnatomyFunctionAnnotations(state)
 });
 
-export default connect(mapStateToProps, {deleteExpressionAnnotation})(ExpressionAnnotationsViewer);
+export default connect(mapStateToProps, {deleteAnatomyFunctionAnnotation, setAnatomyFunctionAnnotationForEditing, setActiveView})(ExpressionAnnotationsViewer);

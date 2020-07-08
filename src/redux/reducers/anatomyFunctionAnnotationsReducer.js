@@ -38,5 +38,14 @@ export const anatomyFunctionAnnotations = createReducer(initialState, {
     },
     DELETE_ANATOMYFUNCTION_ANNOT: (state, action) => {
         state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId)
+    },
+    MODIFY_ANATOMYFUNCTION_ANNOT: (state, action) => {
+        let modAnnotation = action.payload.annotation;
+        modAnnotation.dateAssigned = Date.now();
+        state.annotations.forEach((annotation, idx, object) => {
+            if (annotation.annotationId === modAnnotation.annotationId) {
+                object[idx] = modAnnotation;
+            }
+        });
     }
 });

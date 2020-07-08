@@ -6,8 +6,9 @@ import Col from "react-bootstrap/Col";
 import {getPhenotypeAnnotations} from "../redux/selectors/phenotypeAnnotationsSelector";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
-import { IoIosRemoveCircleOutline } from 'react-icons/io';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import {deletePhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
+import {setActiveView, setPhenotypeAnnotationForEditing} from "../redux/actions/internalStateActions";
 
 class PhenotypeAnnotationsViewer extends Component{
 
@@ -49,12 +50,16 @@ class PhenotypeAnnotationsViewer extends Component{
                             {a.phenotypeStatement}
                         </Col>
                         <Col>
-                            {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())(new Date(a.dateAssigned))}
+                            {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}
                         </Col>
                         <Col align="right">
                             <Button variant="light" onClick={() => {
+                                this.props.setPhenotypeAnnotationForEditing(a);
+                                this.props.setActiveView("annotator");
+                            }}><FaEdit /></Button>
+                            <Button variant="light" onClick={() => {
                                 this.props.deletePhenotypeAnnotation(a.annotationId);
-                            }}><IoIosRemoveCircleOutline /></Button>
+                            }}><FaTrash /></Button>
                         </Col>
                     </Row>)}
             </Container>
@@ -67,4 +72,4 @@ const mapStateToProps = state => ({
     phenotypeAnnotations: getPhenotypeAnnotations(state)
 });
 
-export default connect(mapStateToProps, {deletePhenotypeAnnotation})(PhenotypeAnnotationsViewer);
+export default connect(mapStateToProps, {deletePhenotypeAnnotation, setActiveView, setPhenotypeAnnotationForEditing})(PhenotypeAnnotationsViewer);
