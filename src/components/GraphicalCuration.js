@@ -27,6 +27,7 @@ import {
     unsetExpressionAnnotationForEditing
 } from "../redux/actions/internalStateActions";
 import Nav from "react-bootstrap/Nav";
+import {setAnatomyFunctionAnnotations} from "../redux/actions/anatomyFunctionAnnotationsActions";
 
 class GraphicalCuration extends Component{
 
@@ -50,6 +51,7 @@ class GraphicalCuration extends Component{
         }
         this.props.setExpressionAnnotations(this.props.expressionAnnotations);
         this.props.setPhenotypeAnnotations(this.props.phenotypeAnnotations);
+        this.props.setAnatomyFunctionAnnotations(this.props.anatomyFunctionAnnotations);
         if (this.props.showExpressionCuration !== undefined) {
             this.setState({showExpressionCuration: this.props.showExpressionCuration})
         }
@@ -76,6 +78,9 @@ class GraphicalCuration extends Component{
         }
         if (this.props.phenotypeAnnotations !== prevProps.phenotypeAnnotations) {
             this.props.setPhenotypeAnnotations(this.props.phenotypeAnnotations);
+        }
+        if (this.props.anatomyFunctionAnnotations !== prevProps.anatomyFunctionAnnotations) {
+            this.props.setAnatomyFunctionAnnotations(this.props.anatomyFunctionAnnotations);
         }
     }
 
@@ -201,4 +206,5 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
     fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError, setExpressionAnnotations,
-    setPhenotypeAnnotations, setActiveAnnotationType, setActiveView, unsetExpressionAnnotationForEditing})(GraphicalCuration);
+    setPhenotypeAnnotations, setAnatomyFunctionAnnotations, setActiveAnnotationType, setActiveView,
+    unsetExpressionAnnotationForEditing})(GraphicalCuration);

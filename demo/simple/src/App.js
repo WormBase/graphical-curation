@@ -61,8 +61,23 @@ class App extends Component{
             dateAssigned: Date.now()
         }]
 
+        const anatomyFuncAnnotations = [{
+            annotationId: 1,
+            phenotype: { value: "L1-specific epitope", modId: "WBPhenotype:0001677" },
+            gene: { value: 'unc-61', modId: 'WBGene00006795' },
+            anatomyTerms: [{ value: 'pharynx', modId: 'WBbt:0003681',  options: {'Insufficient': true, 'Unnecessary': false}}],
+            involved: 'not_involved',
+            assay: {value: 'In situ Hybridization'},
+            evidence: 'WBPaper00045678',
+            remark: '',
+            noctuamodel: '',
+            genotype: '',
+            dateAssigned: Date.now()
+        }]
+
         return(
             <GraphicalCuration entities={entities} error={false} expressionAnnotations={exprAnnotations}
+                               anatomyFunctionAnnotations={anatomyFuncAnnotations}
                                annotationsSaved={annotations => {console.log('Annotations received')}}
                                loading={false}
             />

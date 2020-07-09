@@ -6,6 +6,10 @@ module.exports = {
         'main.js': './src/App.js',
         'expression/annotator.js': './src/components/ExpressionAnnotator.js',
         'expression/viewer.js': './src/components/ExpressionAnnotationsViewer.js',
+        'phenotype/annotator.js': './src/components/PhenotypeAnnotator.js',
+        'phenotype/viewer.js': './src/components/PhenotypeAnnotationsViewer.js',
+        'anatomyFunction/annotator.js': './src/components/AnatomyFunctionAnnotator.js',
+        'anatomyFunction/viewer.js': './src/components/AnatomyFunctionAnnotationsViewer.js',
         'entity-picker.js': './src/components/EntityPicker.js'
     },
     output: {

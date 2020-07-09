@@ -13,6 +13,7 @@ import {setActiveView, setAnatomyFunctionAnnotationForEditing} from "../redux/ac
 class ExpressionAnnotationsViewer extends Component{
 
     render() {
+        console.log(this.props.anatomyFunctionAnnotations);
         return (
             <Container fluid>
                 <Row>
@@ -46,7 +47,7 @@ class ExpressionAnnotationsViewer extends Component{
                             {a.involved}
                         </Col>
                         <Col>
-                            {[...a.anatomyTerms.keys()].map(k => <span><Badge variant="primary">{k.value + ' ' + [...a.anatomyTerms.get(k).keys()].map(k2 => a.anatomyTerms.get(k).get(k2) ? '(' + k2 + ') ' : '').join('')}</Badge>&nbsp;</span>)}
+                            {a.anatomyTerms.map(a => <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>)}
                         </Col>
                         <Col>
                             {a.remark}
