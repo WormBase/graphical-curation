@@ -63,7 +63,7 @@ class AnatomyFunctionAnnotator extends Component{
                 preselectedAnatomyTerms = new Map();
                 preselectedPhenoTerm.set(this.props.anatomyFunctionAnnotationForEditing.phenotype, new Map());
                 preselectedGene.set(this.props.anatomyFunctionAnnotationForEditing.gene, new Map());
-                this.props.anatomyFunctionAnnotationForEditing.anatomyTerms.forEach(a => preselectedAnatomyTerms.set(new Map(Object.entries({value: a.value, modId: a.modId})), new Map(a.options)));
+                this.props.anatomyFunctionAnnotationForEditing.anatomyTerms.forEach(a => preselectedAnatomyTerms.set({value: a.value, modId: a.modId}, new Map(Object.entries(a.options))));
             }
             this.setState({
                 preselectedId: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.annotationId : undefined,
@@ -72,7 +72,7 @@ class AnatomyFunctionAnnotator extends Component{
                 preselectedPhenoTerm: preselectedPhenoTerm,
                 gene: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.gene : '',
                 phenoTerm: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.phenotype : '',
-                anatomyTerms: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.anatomyTerms : [],
+                anatomyTerms: preselectedAnatomyTerms !== undefined ? preselectedAnatomyTerms : new Map(),
                 remark: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.remark : '',
                 noctuaModel: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.noctuaModel : '',
                 genotype: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.genotype : '',
@@ -226,7 +226,6 @@ class AnatomyFunctionAnnotator extends Component{
                                 genotype: this.state.genotype,
                                 involved: this.state.involvedOption
                             };
-                            console.log(annotation);
                             if (anatomyFunctionAnnotationIsValid(annotation)) {
                                 if (this.state.preselectedId !== undefined) {
                                     annotation.annotationId = this.state.preselectedId;

@@ -13,7 +13,6 @@ import {setActiveView, setAnatomyFunctionAnnotationForEditing} from "../redux/ac
 class ExpressionAnnotationsViewer extends Component{
 
     render() {
-        console.log(this.props.anatomyFunctionAnnotations);
         return (
             <Container fluid>
                 <Row>

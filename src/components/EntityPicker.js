@@ -122,10 +122,10 @@ class EntityPicker extends Component{
                 </ListGroup>
                 <div>
                     <br/>
-                    <Button variant="outline-primary" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
+                    <Button variant="outline-primary" size="sm" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
                         prev
                     </Button>
-                    <Button variant="outline-primary" hidden={this.state.allEntities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
+                    <Button variant="outline-primary" size="sm" hidden={this.state.allEntities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
                         next
                     </Button>
                 </div>
