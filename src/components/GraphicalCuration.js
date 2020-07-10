@@ -51,15 +51,26 @@ class GraphicalCuration extends Component{
         this.props.setExpressionAnnotations(this.props.expressionAnnotations);
         this.props.setPhenotypeAnnotations(this.props.phenotypeAnnotations);
         this.props.setAnatomyFunctionAnnotations(this.props.anatomyFunctionAnnotations);
+        let showExpressionCuration = this.state.showExpressionCuration;
+        let showPhenotypeCuration = this.state.showPhenotypeCuration;
+        let showAnatomyFunctionCuration = this.state.showAnatomyFunctionCuration;
         if (this.props.showExpressionCuration !== undefined) {
-            this.setState({showExpressionCuration: this.props.showExpressionCuration})
+            showExpressionCuration = this.props.showExpressionCuration;
         }
         if (this.props.showPhenotypeCuration !== undefined) {
-            this.setState({showPhenotypeCuration: this.props.showPhenotypeCuration})
+            showPhenotypeCuration = this.props.showPhenotypeCuration;
         }
         if (this.props.showAnatomyFunctionCuration !== undefined) {
-            this.setState({showAnatomyFunctionCuration: this.props.showAnatomyFunctionCuration})
+            showAnatomyFunctionCuration = this.props.showAnatomyFunctionCuration;
         }
+        let activeViewArr = [['expression', showExpressionCuration], ['phenotype', showPhenotypeCuration], ['anatomyFunction', showAnatomyFunctionCuration]];
+        console.log(activeViewArr.filter(([viewType, shown]) => shown === true)[0][0]);
+        this.props.setActiveAnnotationType(activeViewArr.filter(([viewType, shown]) => shown)[0][0]);
+        this.setState({
+            showExpressionCuration: showExpressionCuration,
+            showPhenotypeCuration: showPhenotypeCuration,
+            showAnatomyFunctionCuration: showAnatomyFunctionCuration
+        });
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {

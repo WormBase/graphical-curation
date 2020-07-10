@@ -78,6 +78,7 @@ class App extends Component{
         return(
             <GraphicalCuration entities={entities} error={false} expressionAnnotations={exprAnnotations}
                                anatomyFunctionAnnotations={anatomyFuncAnnotations}
+                               showExpressionCuration={false}
                                annotationsSaved={annotations => {console.log('Annotations received')}}
                                loading={false}
             />
