@@ -5,7 +5,6 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import {connect} from "react-redux";
-import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import {fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError} from "../redux/actions/textMinedEntitiesActions";
 import {getExpressionAnnotations} from "../redux/selectors/expressionAnnotationsSelector";

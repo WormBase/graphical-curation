@@ -15,13 +15,15 @@ const initialState = {
 export const textMinedEntities = createReducer(initialState, {
     FETCH_ENTITIES_REQUEST: (state, action) => {state.loading = true},
     FETCH_ENTITIES_SUCCESS: (state, action) => {
-        state.genes = action.payload.entities.GENE !== undefined ? action.payload.entities.GENE.sort() : [];
-        state.lifeStages = action.payload.entities.LIFESTAGE !== undefined ? action.payload.entities.LIFESTAGE.sort() : [];
-        state.anatomyTerms = action.payload.entities.ANATOMY !== undefined ? action.payload.entities.ANATOMY.sort() : [];
-        state.assays = action.payload.entities.ASSAYS !== undefined ? action.payload.entities.ASSAYS.sort() : [];
-        state.cellularComponents = action.payload.entities.GENEONTOLOGY !== undefined ? action.payload.entities.GENEONTOLOGY : [];
-        state.phenotypeTerms = action.payload.entities.PHENOTERMS !== undefined ? action.payload.entities.PHENOTERMS : [];
-        state.variants = action.payload.entities.VARIANT !== undefined ? action.payload.entities.VARIANT : [];
+        if (action.payload.entities !== undefined) {
+            state.genes = action.payload.entities.GENE !== undefined ? action.payload.entities.GENE.sort() : [];
+            state.lifeStages = action.payload.entities.LIFESTAGE !== undefined ? action.payload.entities.LIFESTAGE.sort() : [];
+            state.anatomyTerms = action.payload.entities.ANATOMY !== undefined ? action.payload.entities.ANATOMY.sort() : [];
+            state.assays = action.payload.entities.ASSAYS !== undefined ? action.payload.entities.ASSAYS.sort() : [];
+            state.cellularComponents = action.payload.entities.GENEONTOLOGY !== undefined ? action.payload.entities.GENEONTOLOGY : [];
+            state.phenotypeTerms = action.payload.entities.PHENOTERMS !== undefined ? action.payload.entities.PHENOTERMS : [];
+            state.variants = action.payload.entities.VARIANT !== undefined ? action.payload.entities.VARIANT : [];
+        }
         state.loading = false;
         state.error = null;
     },
