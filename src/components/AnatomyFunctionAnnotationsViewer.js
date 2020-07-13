@@ -23,14 +23,14 @@ class ExpressionAnnotationsViewer extends Component{
                 <Row style={{
                     backgroundColor: 'lightgray',
                 }}>
-                    <Col sm={3}><h6>Phenotype</h6></Col>
+                    <Col sm={2}><h6>Phenotype</h6></Col>
                     <Col sm={1}><h6>Gene</h6></Col>
                     <Col sm={1}><h6>Involved/Not Involved in</h6></Col>
                     <Col sm={2}><h6>Anatomy Terms</h6></Col>
                     <Col sm={1}><h6>Remark</h6></Col>
                     <Col sm={1}><h6>Noctua Model</h6></Col>
                     <Col sm={1}><h6>Genotype</h6></Col>
-                    <Col sm={1}><h6>Date Assigned</h6></Col>
+                    <Col sm={2}><h6>Date Assigned</h6></Col>
                     <Col sm={1}>&nbsp;</Col>
                 </Row>
                 {this.props.anatomyFunctionAnnotations.length === 0 ? <Row><Col sm={12}>No Annotations</Col></Row> :
