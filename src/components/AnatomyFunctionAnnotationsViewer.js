@@ -23,44 +23,44 @@ class ExpressionAnnotationsViewer extends Component{
                 <Row style={{
                     backgroundColor: 'lightgray',
                 }}>
-                    <Col><h6>Phenotype</h6></Col>
-                    <Col><h6>Gene</h6></Col>
-                    <Col><h6>Involved/Not Involved in</h6></Col>
-                    <Col><h6>Anatomy Terms</h6></Col>
-                    <Col><h6>Remark</h6></Col>
-                    <Col><h6>Noctua Model</h6></Col>
-                    <Col><h6>Genotype</h6></Col>
-                    <Col><h6>Date Assigned</h6></Col>
-                    <Col>&nbsp;</Col>
+                    <Col sm={3}><h6>Phenotype</h6></Col>
+                    <Col sm={1}><h6>Gene</h6></Col>
+                    <Col sm={1}><h6>Involved/Not Involved in</h6></Col>
+                    <Col sm={2}><h6>Anatomy Terms</h6></Col>
+                    <Col sm={1}><h6>Remark</h6></Col>
+                    <Col sm={1}><h6>Noctua Model</h6></Col>
+                    <Col sm={1}><h6>Genotype</h6></Col>
+                    <Col sm={1}><h6>Date Assigned</h6></Col>
+                    <Col sm={1}>&nbsp;</Col>
                 </Row>
                 {this.props.anatomyFunctionAnnotations.length === 0 ? <Row><Col sm={12}>No Annotations</Col></Row> :
                     this.props.anatomyFunctionAnnotations.map(a =>
                     <Row>
-                        <Col>
+                        <Col sm={3}>
                             {a.phenotype.value}
                         </Col>
-                        <Col>
+                        <Col sm={1}>
                             {a.gene.value}
                         </Col>
-                        <Col>
+                        <Col sm={1}>
                             {a.involved}
                         </Col>
-                        <Col>
+                        <Col sm={2}>
                             {a.anatomyTerms.map(a => <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>)}
                         </Col>
-                        <Col>
+                        <Col sm={1}>
                             {a.remark}
                         </Col>
-                        <Col>
+                        <Col sm={1}>
                             {a.noctuamodel}
                         </Col>
-                        <Col>
+                        <Col sm={1}>
                             {a.genotype}
                         </Col>
-                        <Col>
+                        <Col sm={1}>
                             {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}
                         </Col>
-                        <Col align="right">
+                        <Col sm={1} align="right">
                             <Button variant="light" onClick={() => {
                                 this.props.setAnatomyFunctionAnnotationForEditing(a);
                                 this.props.setActiveView("annotator");
