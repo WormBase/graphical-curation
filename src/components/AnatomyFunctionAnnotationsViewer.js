@@ -36,7 +36,7 @@ class ExpressionAnnotationsViewer extends Component{
                 {this.props.anatomyFunctionAnnotations.length === 0 ? <Row><Col sm={12}>No Annotations</Col></Row> :
                     this.props.anatomyFunctionAnnotations.map(a =>
                     <Row>
-                        <Col sm={3}>
+                        <Col sm={2}>
                             {a.phenotype.value}
                         </Col>
                         <Col sm={1}>
@@ -57,7 +57,7 @@ class ExpressionAnnotationsViewer extends Component{
                         <Col sm={1}>
                             {a.genotype}
                         </Col>
-                        <Col sm={1}>
+                        <Col sm={2}>
                             {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}
                         </Col>
                         <Col sm={1} align="right">

@@ -98,27 +98,27 @@ class AnatomyFunctionAnnotator extends Component{
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col sm={2}>
                         <h6 align="center">Phenotype</h6>
                     </Col>
-                    <Col>
+                    <Col sm={2}>
                         <h6 align="center">Gene</h6>
                     </Col>
-                    <Col>
+                    <Col sm={1}>
                         <h6 align="center">Involved/Not Involved</h6>
                     </Col>
                     <Col sm={4}>
                         <h6 align="center">{this.state.involvedOption === 2 ? 'Not ' : ''}Involved Tissue</h6>
                     </Col>
-                    <Col>
+                    <Col sm={2}>
                         <h6 align="center">Remarks</h6>
                     </Col>
-                    <Col>
+                    <Col sm={1}>
                         &nbsp;
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col sm={2}>
                         <EntityPicker
                             entities={this.props.phenotypeTerms}
                             ref={instance => { this.phenoTermPicker = instance; }}
@@ -131,7 +131,7 @@ class AnatomyFunctionAnnotator extends Component{
                             selectedEntities={this.state.preselectedPhenoTerm}
                         />
                     </Col>
-                    <Col>
+                    <Col sm={2}>
                         <EntityPicker
                             entities={this.props.genes}
                             ref={instance => { this.genePicker = instance; }}
@@ -144,7 +144,7 @@ class AnatomyFunctionAnnotator extends Component{
                             selectedEntities={this.state.preselectedGene}
                         />
                     </Col>
-                    <Col>
+                    <Col sm={1}>
                         <FormControl as="select" value={this.state.involvedOption} onChange={(e) => {
                             this.setState({involvedOption: e.target.value});
                             this.anatomyTermsPicker.reset();
@@ -167,7 +167,7 @@ class AnatomyFunctionAnnotator extends Component{
                             selectedEntities={this.state.preselectedAnatomyTerms}
                             multiSelect/>
                     </Col>
-                    <Col>
+                    <Col sm={2}>
                         <Container fluid>
                             <Row>
                                 <Col>
@@ -214,7 +214,7 @@ class AnatomyFunctionAnnotator extends Component{
                             </Row>
                         </Container>
                     </Col>
-                    <Col align="left">
+                    <Col sm={1} align="left">
                         <Button variant="success" onClick={() => {
                             let annotation = {
                                 phenotype: this.state.phenoTerm,
