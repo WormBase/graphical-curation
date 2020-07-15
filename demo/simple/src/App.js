@@ -78,6 +78,12 @@ class App extends Component{
         return(
             <GraphicalCuration entities={entities} error={false} expressionAnnotations={exprAnnotations}
                                anatomyFunctionAnnotations={anatomyFuncAnnotations}
+                               autocompleteEndpointGenes={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=gene&userValue='}
+                               autocompleteEndpointPhenotypes={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=phenotype&userValue='}
+                               autocompleteEndpointVariants={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=variation&userValue='}
+                               autocompleteEndpointAnatomyTerms={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=wbbt&userValue='}
+                               autocompleteEndpointLifeStages={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=wbls&userValue='}
+                               autocompleteEndpointCellularComponents={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=gocc&userValue='}
                                showExpressionCuration={false}
                                annotationsSaved={annotations => {console.log('Annotations received')}}
                                loading={false}

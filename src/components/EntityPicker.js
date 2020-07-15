@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux";
 import ListGroup from 'react-bootstrap/ListGroup';
 import LoadingOverlay from 'react-loading-overlay';
 import Button from "react-bootstrap/Button";
@@ -9,6 +10,14 @@ import FormCheck from "react-bootstrap/FormCheck";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import {
+    getAutocompleteEntities,
+    getAutocompleteError,
+    isAutocompleteLoading
+} from "../redux/selectors/autocompleteEntitiesSelector";
+import {fetchAutocompleteEntities} from "../redux/actions/autocompleteEntitiesActions";
+import {isLoading} from "../redux/selectors/textMinedEntitiesSelector";
+
 
 class EntityPicker extends Component{
 
@@ -51,6 +60,7 @@ class EntityPicker extends Component{
                 allEntities: filteredEntities,
                 showAddEntity: false});
         }
+        console.log(this.props.autocompleteEntities);
     }
 
     reset() {
@@ -67,7 +77,10 @@ class EntityPicker extends Component{
                 <AddEntityModal
                     show={this.state.showAddEntity}
                     onHide={() => this.setState({showAddEntity: false})}
-                    addEntity={(entity) => this.props.addEntity(entity)}
+                    addEntity={this.props.addEntity}
+                    autocompleteFunction={this.props.fetchAutocompleteEntities}
+                    autocompleteEndpoint={this.props.autocompleteEndpoint}
+                    autocompleteEntities={this.props.autocompleteEntities}
                 />
                 {this.state.allEntities.length > 0 ? <div><FormControl size="sm" placeholder="filter" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
                     this.setState({filteredEntities: this.state.allEntities.filter(entity => entity.value.startsWith(event.target.value))})
@@ -148,8 +161,20 @@ function AddEntityModal(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <FormControl placeholder="search" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
-                    console.log(event.target.value)}/>
+                <Container fluid>
+                    <Row>
+                        <Col>
+                            <FormControl placeholder="search" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
+                            props.autocompleteFunction(props.autocompleteEndpoint, event.target.value)}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            &nbsp;
+                        </Col>
+                    </Row>
+                    {props.autocompleteEntities.map(e => <Row><Col onDoubleClick={() => props.addEntity(e)}>{e.value} ( {e.modId} )</Col></Row>)}
+                </Container>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={props.onHide}>Close</Button>
@@ -158,4 +183,11 @@ function AddEntityModal(props) {
     );
 }
 
-export default EntityPicker;
+const mapStateToProps = state => ({
+    autocompleteEntities: getAutocompleteEntities(state),
+    isLoading: isLoading(state),
+    autocompleteError: getAutocompleteError(state),
+    isAutocompleteLoading: isAutocompleteLoading(state)
+});
+
+export default connect(mapStateToProps, {fetchAutocompleteEntities})(EntityPicker);

@@ -118,7 +118,12 @@ class GraphicalCuration extends Component{
                                     </Nav>
                                     <Tab.Content>
                                         <Tab.Pane eventKey="annotator">
-                                            <ExpressionAnnotator maxEntities={this.state.maxEntities}/>
+                                            <ExpressionAnnotator maxEntities={this.state.maxEntities}
+                                                                 autocompleteEndpointGenes={this.props.autocompleteEndpointGenes}
+                                                                 autocompleteEndpointAnatomyTerms={this.props.autocompleteEndpointAnatomyTerms}/>
+                                                                 autocompleteEndpointLifeStages={this.props.autocompleteEndpointLifeStages}
+                                                                 autocompleteEndpointCellularComponents={this.props.autocompleteEndpointCellularComponents}
+                                            />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="viewer">
                                             <ExpressionAnnotationsViewer/>
@@ -148,7 +153,11 @@ class GraphicalCuration extends Component{
                                     </Nav>
                                     <Tab.Content>
                                         <Tab.Pane eventKey="annotator">
-                                            <PhenotypeAnnotator maxEntities={this.state.maxEntities}/>
+                                            <PhenotypeAnnotator maxEntities={this.state.maxEntities}
+                                                                autocompleteEndpointVariants={this.props.autocompleteEndpointVariants}
+                                                                autocompleteEndpointPhenotypes={this.props.autocompleteEndpointPhenotypes}
+                                                                autocompleteEndpointAnatomyTerms={this.props.autocompleteEndpointAnatomyTerms}/>
+                                                                autocompleteEndpointLifeStages={this.props.autocompleteEndpointLifeStages}
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="viewer">
                                             <PhenotypeAnnotationsViewer/>
@@ -178,7 +187,10 @@ class GraphicalCuration extends Component{
                                     </Nav>
                                     <Tab.Content>
                                         <Tab.Pane eventKey="annotator">
-                                            <AnatomyFunctionAnnotator maxEntities={this.state.maxEntities}/>
+                                            <AnatomyFunctionAnnotator maxEntities={this.state.maxEntities} autocompleteEndpointGenes={this.props.autocompleteEndpointGenes}
+                                                                      autocompleteEndpointPhenotypes={this.props.autocompleteEndpointPhenotypes}
+                                                                      autocompleteEndpointAnatomyTerms={this.props.autocompleteEndpointAnatomyTerms}
+                                            />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="viewer">
                                             <AnatomyFunctionAnnotationsViewer/>

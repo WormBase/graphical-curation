@@ -12,6 +12,13 @@ const initialState = {
     error: null
 };
 
+export const concatEntities = (initEntities, entity) => {
+    if (initEntities.every (e => e.value !== entity.value)) {
+        return [...initEntities, entity].sort();
+    }
+    return initEntities;
+};
+
 export const textMinedEntities = createReducer(initialState, {
     FETCH_ENTITIES_REQUEST: (state, action) => {state.loading = true},
     FETCH_ENTITIES_SUCCESS: (state, action) => {
@@ -31,10 +38,10 @@ export const textMinedEntities = createReducer(initialState, {
         state.loading = false;
         state.error = action.payload.error;
     },
-    ADD_GENE: (state, action) => {state.genes = [...state.genes, action.payload.gene].sort()},
-    ADD_ANATOMY_TERM: (state, action) => {state.anatomyTerms = [...state.anatomyTerms, action.payload.anatomyTerm].sort()},
-    ADD_LIFE_STAGE: (state, action) => {state.lifeStages = [...state.lifeStages, action.payload.lifeStage].sort()},
-    ADD_CELLULAR_COMPONENT: (state, action) => {state.cellularComponents = [...state.cellularComponents, action.payload.cellularComponent].sort()},
-    ADD_PHENOTYPE_TERM: (state, action) => {state.phenotypeTerms = [...state.phenotypeTerms, action.payload.phenotypeTerm].sort()},
-    ADD_VARIANT: (state, action) => {state.variants = [...state.variants, action.payload.variant].sort()},
+    ADD_GENE: (state, action) => {state.genes = concatEntities(state.genes, action.payload.gene)},
+    ADD_ANATOMY_TERM: (state, action) => {state.anatomyTerms = concatEntities(state.anatomyTerms, action.payload.anatomyTerm)},
+    ADD_LIFE_STAGE: (state, action) => {state.lifeStages = concatEntities(state.lifeStages, action.payload.lifeStage)},
+    ADD_CELLULAR_COMPONENT: (state, action) => {state.cellularComponents = concatEntities(state.cellularComponents, action.payload.cellularComponent)},
+    ADD_PHENOTYPE_TERM: (state, action) => {state.phenotypeTerms = concatEntities(state.phenotypeTerms, action.payload.phenotypeTerm)},
+    ADD_VARIANT: (state, action) => {state.variants = concatEntities(state.variants, action.payload.variant)},
 });

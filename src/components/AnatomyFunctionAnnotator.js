@@ -129,6 +129,7 @@ class AnatomyFunctionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addPhenotypeTerm}
                             selectedEntities={this.state.preselectedPhenoTerm}
+                            autocompleteEndpoint={this.props.autocompleteEndpointPhenotypes}
                         />
                     </Col>
                     <Col sm={2}>
@@ -142,6 +143,7 @@ class AnatomyFunctionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addGene}
                             selectedEntities={this.state.preselectedGene}
+                            autocompleteEndpoint={this.props.autocompleteEndpointGenes}
                         />
                     </Col>
                     <Col sm={1}>
@@ -165,6 +167,7 @@ class AnatomyFunctionAnnotator extends Component{
                             addEntity={this.props.addAnatomyTerm}
                             checkboxes={this.state.involvedOption === "involved" ? ["Sufficient", "Necessary"] : ["Insufficient", "Unnecessary"]}
                             selectedEntities={this.state.preselectedAnatomyTerms}
+                            autocompleteEndpoint={this.props.autocompleteEndpointAnatomyTerms}
                             multiSelect/>
                     </Col>
                     <Col sm={2}>

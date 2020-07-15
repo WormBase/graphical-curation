@@ -125,6 +125,7 @@ class PhenotypeAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addVariant}
                             selectedEntities={this.state.preselectedVariant}
+                            autocompleteEndpoint={this.props.autocompleteEndpointVariants}
                         />
                     </Col>
                     <Col>
@@ -138,6 +139,7 @@ class PhenotypeAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addPhenotypeTerm}
                             selectedEntities={this.state.preselectedPhenoTerms}
+                            autocompleteEndpoint={this.props.autocompleteEndpointPhenotypes}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -151,6 +153,7 @@ class PhenotypeAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
                             selectedEntities={this.state.preselectedAnatomyTerms}
+                            autocompleteEndpoint={this.props.autocompleteEndpointAnatomyTerms}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -164,6 +167,7 @@ class PhenotypeAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
                             selectedEntities={this.state.preselectedLifeStages}
+                            autocompleteEndpoint={this.props.autocompleteEndpointLifeStages}
                             multiSelect/>
                     </Col>
                     <Col>

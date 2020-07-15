@@ -127,6 +127,7 @@ class ExpressionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addGene}
                             selectedEntities={this.state.preselectedGene}
+                            autocompleteEndpoint={this.props.autocompleteEndpointGenes}
                         />
                     </Col>
                     <Col>
@@ -140,6 +141,7 @@ class ExpressionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
                             selectedEntities={this.state.preselectedAnatomyTerms}
+                            autocompleteEndpoint={this.props.autocompleteEndpointAnatomyTerms}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -153,6 +155,7 @@ class ExpressionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
                             selectedEntities={this.state.preselectedLifeStages}
+                            autocompleteEndpoint={this.props.autocompleteEndpointLifeStages}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -166,6 +169,7 @@ class ExpressionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addCellularComponent}
                             selectedEntities={this.state.preselectedCellularComponents}
+                            autocompleteEndpoint={this.props.autocompleteEndpointCellularComponents}
                             multiSelect/>
                     </Col>
                     <Col>
