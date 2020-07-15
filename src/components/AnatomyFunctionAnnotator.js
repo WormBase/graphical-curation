@@ -48,8 +48,6 @@ class AnatomyFunctionAnnotator extends Component{
             preselectedAnatomyTerms: undefined,
             createModify: 'Create'
         }
-
-        this.resetPickers = this.resetPickers.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -82,7 +80,7 @@ class AnatomyFunctionAnnotator extends Component{
     }
 
     resetPickers() {
-        this.genePicker.reset()
+        this.genePicker.reset();
         this.phenoTermPicker.reset();
         this.anatomyTermsPicker.reset();
         this.props.unsetAnatomyFunctionAnnotationForEditing();

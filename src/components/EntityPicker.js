@@ -15,11 +15,11 @@ import {
     getAutocompleteError,
     isAutocompleteLoading
 } from "../redux/selectors/autocompleteEntitiesSelector";
-import {fetchAutocompleteEntities} from "../redux/actions/autocompleteEntitiesActions";
+import {fetchAutocompleteEntities, resetAutocompleteEntities} from "../redux/actions/autocompleteEntitiesActions";
 import {isLoading} from "../redux/selectors/textMinedEntitiesSelector";
 
 
-class EntityPicker extends Component{
+class EntityPicker extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -33,6 +33,10 @@ class EntityPicker extends Component{
         };
 
         this.reset = this.reset.bind(this);
+    }
+
+    reset() {
+        this.setState({selectedEntities: new Map()});
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -60,11 +64,6 @@ class EntityPicker extends Component{
                 allEntities: filteredEntities,
                 showAddEntity: false});
         }
-        console.log(this.props.autocompleteEntities);
-    }
-
-    reset() {
-        this.setState({selectedEntities: new Map()});
     }
 
     render() {
@@ -76,7 +75,10 @@ class EntityPicker extends Component{
                 {this.props.addEntity !== undefined ? <div align="center"><Button size="sm" variant="outline-primary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add from source</Button><br/><br/></div> : ''}
                 <AddEntityModal
                     show={this.state.showAddEntity}
-                    onHide={() => this.setState({showAddEntity: false})}
+                    onHide={() => {
+                        this.setState({showAddEntity: false});
+                        this.props.resetAutocompleteEntities();
+                    }}
                     addEntity={this.props.addEntity}
                     autocompleteFunction={this.props.fetchAutocompleteEntities}
                     autocompleteEndpoint={this.props.autocompleteEndpoint}
@@ -173,7 +175,7 @@ function AddEntityModal(props) {
                             &nbsp;
                         </Col>
                     </Row>
-                    {props.autocompleteEntities.map(e => <Row><Col onDoubleClick={() => props.addEntity(e)}>{e.value} ( {e.modId} )</Col></Row>)}
+                    {props.autocompleteEntities.map(e => <Row><Col onDoubleClick={() => {props.addEntity(e); props.onHide();}}>{e.value} ( {e.modId} )</Col></Row>)}
                 </Container>
             </Modal.Body>
             <Modal.Footer>
@@ -190,4 +192,4 @@ const mapStateToProps = state => ({
     isAutocompleteLoading: isAutocompleteLoading(state)
 });
 
-export default connect(mapStateToProps, {fetchAutocompleteEntities})(EntityPicker);
+export default connect(mapStateToProps, {fetchAutocompleteEntities, resetAutocompleteEntities}, null, {forwardRef: true})(EntityPicker);

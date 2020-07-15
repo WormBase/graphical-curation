@@ -120,9 +120,10 @@ class GraphicalCuration extends Component{
                                         <Tab.Pane eventKey="annotator">
                                             <ExpressionAnnotator maxEntities={this.state.maxEntities}
                                                                  autocompleteEndpointGenes={this.props.autocompleteEndpointGenes}
-                                                                 autocompleteEndpointAnatomyTerms={this.props.autocompleteEndpointAnatomyTerms}/>
+                                                                 autocompleteEndpointAnatomyTerms={this.props.autocompleteEndpointAnatomyTerms}
                                                                  autocompleteEndpointLifeStages={this.props.autocompleteEndpointLifeStages}
                                                                  autocompleteEndpointCellularComponents={this.props.autocompleteEndpointCellularComponents}
+                                                                 />
                                             />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="viewer">
@@ -156,8 +157,9 @@ class GraphicalCuration extends Component{
                                             <PhenotypeAnnotator maxEntities={this.state.maxEntities}
                                                                 autocompleteEndpointVariants={this.props.autocompleteEndpointVariants}
                                                                 autocompleteEndpointPhenotypes={this.props.autocompleteEndpointPhenotypes}
-                                                                autocompleteEndpointAnatomyTerms={this.props.autocompleteEndpointAnatomyTerms}/>
+                                                                autocompleteEndpointAnatomyTerms={this.props.autocompleteEndpointAnatomyTerms}
                                                                 autocompleteEndpointLifeStages={this.props.autocompleteEndpointLifeStages}
+                                                                />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="viewer">
                                             <PhenotypeAnnotationsViewer/>
