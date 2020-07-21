@@ -47,7 +47,9 @@ class App extends Component{
                 { value: "chemosensory", modId: "WBPhenotype:0001040" }
             ],
             ASSAYS: [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistry'},
-                    {value: 'Reporter gene'}, {value: 'Western Blot'}, {value: 'Northern blot'}, {value: 'RT-PCR'}]
+                    {value: 'Reporter gene'}, {value: 'Western Blot'}, {value: 'Northern blot'}, {value: 'RT-PCR'}],
+            ANATOMY_FUNCTION_ASSAYS: [{value: 'Expression_mosaic'}, {value: 'Genetic_mosaic'}, {value: 'Laser_ablation'},
+                {value: 'Optogenetic'}, {value: 'Blastomere_isolation'}, {value: 'Genetic_ablation'}]
         }
 
         const exprAnnotations = [{
@@ -67,7 +69,7 @@ class App extends Component{
             gene: { value: 'unc-61', modId: 'WBGene00006795' },
             anatomyTerms: [{ value: 'pharynx', modId: 'WBbt:0003681',  options: {'Insufficient': true, 'Unnecessary': false}}],
             involved: 'not_involved',
-            assay: {value: 'In situ Hybridization'},
+            assay: {value: 'Blastomere Isolation'},
             evidence: 'WBPaper00045678',
             remark: '',
             noctuamodel: '',
@@ -77,6 +79,7 @@ class App extends Component{
 
         return(
             <GraphicalCuration entities={entities} error={false} expressionAnnotations={exprAnnotations}
+                               evidence={"WBPaper00000000"}
                                anatomyFunctionAnnotations={anatomyFuncAnnotations}
                                autocompleteEndpointGenes={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=gene&userValue='}
                                autocompleteEndpointPhenotypes={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=phenotype&userValue='}

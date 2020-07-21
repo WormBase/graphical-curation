@@ -190,7 +190,7 @@ class ExpressionAnnotator extends Component{
                                 gene: this.state.gene,
                                 whenExpressed: this.state.lifeStages,
                                 assay: this.state.assay,
-                                evidence: '',
+                                evidence: this.props.evidence,
                                 whereExpressed: this.state.anatomyTerms,
                                 cellularComponent: this.state.cellularComponents
                             };

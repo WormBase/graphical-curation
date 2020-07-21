@@ -23,20 +23,21 @@ class ExpressionAnnotationsViewer extends Component{
                 <Row style={{
                     backgroundColor: 'lightgray',
                 }}>
-                    <Col sm={2}><h6>Phenotype</h6></Col>
+                    <Col sm={1}><h6>Phenotype</h6></Col>
                     <Col sm={1}><h6>Gene</h6></Col>
                     <Col sm={1}><h6>Involved/Not Involved in</h6></Col>
                     <Col sm={2}><h6>Anatomy Terms</h6></Col>
                     <Col sm={1}><h6>Remark</h6></Col>
                     <Col sm={1}><h6>Noctua Model</h6></Col>
                     <Col sm={1}><h6>Genotype</h6></Col>
+                    <Col sm={1}><h6>Assay</h6></Col>
                     <Col sm={2}><h6>Date Assigned</h6></Col>
                     <Col sm={1}>&nbsp;</Col>
                 </Row>
                 {this.props.anatomyFunctionAnnotations.length === 0 ? <Row><Col sm={12}>No Annotations</Col></Row> :
                     this.props.anatomyFunctionAnnotations.map(a =>
                     <Row>
-                        <Col sm={2}>
+                        <Col sm={1}>
                             {a.phenotype.value}
                         </Col>
                         <Col sm={1}>
@@ -56,6 +57,9 @@ class ExpressionAnnotationsViewer extends Component{
                         </Col>
                         <Col sm={1}>
                             {a.genotype}
+                        </Col>
+                        <Col sm={1}>
+                            {a.assay.value}
                         </Col>
                         <Col sm={2}>
                             {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}

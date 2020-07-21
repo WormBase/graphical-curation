@@ -22,6 +22,7 @@ export const anatomyFunctionAnnotations = createReducer(initialState, {
     ADD_ANATOMYFUNCTION_ANNOT: (state, action) => {
         let newAnnotation = {
             annotationId: Math.max(...state.annotations.map(a => a.annotationId), 0) + 1,
+            assay: action.payload.annotation.assay,
             phenotype: action.payload.annotation.phenotype,
             gene: action.payload.annotation.gene,
             involved: action.payload.annotation.involved,

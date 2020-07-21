@@ -4,5 +4,8 @@ export const anatomyFunctionAnnotationHasGene = annotation => annotation.gene !=
 
 export const anatomyFunctionAnnotationHasAnatomyTerms = annotation => annotation.anatomyTerms.length > 0
 
+export const anatomyFunctionAnnotationHasAssay = annotation => annotation.assay !== '';
+
 export const anatomyFunctionAnnotationIsValid = annotation => anatomyFunctionAnnotationHasPhenotype(annotation) &&
-    anatomyFunctionAnnotationHasGene(annotation) && anatomyFunctionAnnotationHasAnatomyTerms(annotation) && annotation.evidence !== undefined
+    anatomyFunctionAnnotationHasGene(annotation) && anatomyFunctionAnnotationHasAnatomyTerms(annotation) &&
+    annotation.evidence !== undefined && anatomyFunctionAnnotationHasAssay(annotation)

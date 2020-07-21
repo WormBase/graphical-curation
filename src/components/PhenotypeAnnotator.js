@@ -182,7 +182,7 @@ class PhenotypeAnnotator extends Component{
                                 anatomyTerms: this.state.anatomyTerms,
                                 lifeStages: this.state.lifeStages,
                                 phenotypeStatement: this.state.phenotypeStatement,
-                                evidence: ''
+                                evidence: this.props.evidence
                             };
                             if (phenotypeAnnotationIsValid(annotation)) {
                                 if (this.state.preselectedId !== undefined) {

@@ -5,6 +5,7 @@ const initialState = {
     lifeStages: [],
     anatomyTerms: [],
     assays: [],
+    anatomyFunctionAssays: [],
     cellularComponents: [],
     variants: [],
     phenotypeTerms: [],
@@ -27,6 +28,7 @@ export const textMinedEntities = createReducer(initialState, {
             state.lifeStages = action.payload.entities.LIFESTAGE !== undefined ? action.payload.entities.LIFESTAGE.sort() : [];
             state.anatomyTerms = action.payload.entities.ANATOMY !== undefined ? action.payload.entities.ANATOMY.sort() : [];
             state.assays = action.payload.entities.ASSAYS !== undefined ? action.payload.entities.ASSAYS.sort() : [];
+            state.anatomyFunctionAssays = action.payload.entities.ANATOMY_FUNCTION_ASSAYS !== undefined ? action.payload.entities.ANATOMY_FUNCTION_ASSAYS.sort() : [];
             state.cellularComponents = action.payload.entities.GENEONTOLOGY !== undefined ? action.payload.entities.GENEONTOLOGY : [];
             state.phenotypeTerms = action.payload.entities.PHENOTERMS !== undefined ? action.payload.entities.PHENOTERMS : [];
             state.variants = action.payload.entities.VARIANT !== undefined ? action.payload.entities.VARIANT : [];
