@@ -24,8 +24,10 @@ export class Autocomplete {
 
     /**
      * search entities through the autocomplete
-     * @param entityType (str): type of entity to search
-     * @param matchString
+     * @param {entityTypes} entityType: type of entity to search
+     * @param {string} matchString: string to search
+     * @returns {Promise} returns a promise that resolves in a list of entities, each of which is an object with two
+     * key-value pairs, *value* and *modId*
      */
     searchEntities(entityType, matchString) {
         throw new Error('Can\'t call method from abstract class');
