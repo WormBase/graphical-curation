@@ -72,7 +72,7 @@ class App extends Component{
             involved: 'not_involved',
             assay: {value: 'Blastomere Isolation'},
             evidence: 'WBPaper00045678',
-            remark: '',
+            remark: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eget tellus enim. Quisque placerat finibus nunc, eu laoreet ligula dictum et. In in quam et neque rhoncus dignissim. Suspendisse et nisi orci. Maecenas ac quam venenatis, faucibus est in, vulputate eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent blandit sollicitudin ligula, ut pretium ipsum. Nulla vel ante rhoncus, congue purus sed, consectetur nisi. Fusce tempor lorem quis mattis molestie. Sed metus ligula, blandit non eros et, lacinia venenatis tellus. Maecenas nec lorem risus.',
             noctuamodel: '',
             genotype: '',
             dateAssigned: Date.now()

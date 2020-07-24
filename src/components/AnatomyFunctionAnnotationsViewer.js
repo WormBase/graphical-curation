@@ -9,6 +9,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import {getAnatomyFunctionAnnotations} from "../redux/selectors/anatomyFunctionAnnotationsSelector";
 import {deleteAnatomyFunctionAnnotation} from "../redux/actions/anatomyFunctionAnnotationsActions";
 import {setActiveView, setAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
+import FormControl from "react-bootstrap/FormControl";
 
 class ExpressionAnnotationsViewer extends Component{
 
@@ -50,13 +51,13 @@ class ExpressionAnnotationsViewer extends Component{
                             {a.anatomyTerms.map(a => <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>)}
                         </Col>
                         <Col sm={1}>
-                            {a.remark}
+                            <FormControl as="textarea" rows="5">{a.remark}</FormControl>
                         </Col>
                         <Col sm={1}>
-                            {a.noctuamodel}
+                            <FormControl as="textarea" rows="5">{a.noctuamodel}</FormControl>
                         </Col>
                         <Col sm={1}>
-                            {a.genotype}
+                            <FormControl as="textarea" rows="5">{a.genotype}</FormControl>
                         </Col>
                         <Col sm={1}>
                             {a.assay.value}
