@@ -80,9 +80,10 @@ class EntityPicker extends Component {
                         this.props.resetAutocompleteEntities();
                     }}
                     addEntity={this.props.addEntity}
-                    autocompleteFunction={this.props.fetchAutocompleteEntities}
-                    autocompleteEndpoint={this.props.autocompleteEndpoint}
+                    autocompleteObj={this.props.autocompleteObj}
                     autocompleteEntities={this.props.autocompleteEntities}
+                    autocompleteFetchFnct={this.props.fetchAutocompleteEntities}
+                    entityType={this.props.entityType}
                 />
                 {this.state.allEntities.length > 0 ? <div><FormControl size="sm" placeholder="filter" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
                     this.setState({filteredEntities: this.state.allEntities.filter(entity => entity.value.startsWith(event.target.value))})
@@ -167,7 +168,7 @@ function AddEntityModal(props) {
                     <Row>
                         <Col>
                             <FormControl placeholder="search" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
-                            props.autocompleteFunction(props.autocompleteEndpoint, event.target.value)}/>
+                                props.autocompleteFetchFnct(props.autocompleteObj, props.entityType, event.target.value)}/>
                         </Col>
                     </Row>
                     <Row>

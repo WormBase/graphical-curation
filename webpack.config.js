@@ -10,7 +10,8 @@ module.exports = {
         'phenotype/viewer': './src/components/PhenotypeAnnotationsViewer.js',
         'anatomyFunction/annotator': './src/components/AnatomyFunctionAnnotator.js',
         'anatomyFunction/viewer': './src/components/AnatomyFunctionAnnotationsViewer.js',
-        'entity-picker': './src/components/EntityPicker.js'
+        'entity-picker': './src/components/EntityPicker.js',
+        'autocomplete': './src/autocomplete.js'
     },
     output: {
         path: path.resolve('lib'),

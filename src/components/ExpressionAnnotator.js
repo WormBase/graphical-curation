@@ -14,6 +14,7 @@ import {addGene, addAnatomyTerm, addLifeStage, addCellularComponent} from "../re
 import Modal from "react-bootstrap/Modal";
 import {getExpressionAnnotationForEditing} from "../redux/selectors/internalStateSelector";
 import {unsetExpressionAnnotationForEditing} from "../redux/actions/internalStateActions";
+import {entityTypes} from "../autocomplete";
 
 class ExpressionAnnotator extends Component{
     constructor(props) {
@@ -127,7 +128,8 @@ class ExpressionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addGene}
                             selectedEntities={this.state.preselectedGene}
-                            autocompleteEndpoint={this.props.autocompleteEndpointGenes}
+                            autocompleteObj={this.props.autocompleteObj}
+                            entityType={entityTypes.GENE}
                         />
                     </Col>
                     <Col>
@@ -141,7 +143,8 @@ class ExpressionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
                             selectedEntities={this.state.preselectedAnatomyTerms}
-                            autocompleteEndpoint={this.props.autocompleteEndpointAnatomyTerms}
+                            autocompleteObj={this.props.autocompleteObj}
+                            entityType={entityTypes.ANATOMY_TERM}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -155,7 +158,8 @@ class ExpressionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
                             selectedEntities={this.state.preselectedLifeStages}
-                            autocompleteEndpoint={this.props.autocompleteEndpointLifeStages}
+                            autocompleteObj={this.props.autocompleteObj}
+                            entityType={entityTypes.LIFE_STAGE}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -169,7 +173,8 @@ class ExpressionAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addCellularComponent}
                             selectedEntities={this.state.preselectedCellularComponents}
-                            autocompleteEndpoint={this.props.autocompleteEndpointCellularComponents}
+                            autocompleteObj={this.props.autocompleteObj}
+                            entityType={entityTypes.CELLULAR_COMPONENT}
                             multiSelect/>
                     </Col>
                     <Col>

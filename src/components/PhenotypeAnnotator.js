@@ -17,6 +17,7 @@ import Modal from "react-bootstrap/Modal";
 import FormControl from "react-bootstrap/FormControl";
 import {getPhenotypeAnnotationForEditing} from "../redux/selectors/internalStateSelector";
 import {unsetPhenotypeAnnotationForEditing} from "../redux/actions/internalStateActions";
+import {entityTypes} from "../autocomplete";
 
 
 class PhenotypeAnnotator extends Component{
@@ -125,7 +126,8 @@ class PhenotypeAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addVariant}
                             selectedEntities={this.state.preselectedVariant}
-                            autocompleteEndpoint={this.props.autocompleteEndpointVariants}
+                            autocompleteObj={this.props.autocompleteObj}
+                            entityType={entityTypes.VARIANT}
                         />
                     </Col>
                     <Col>
@@ -139,7 +141,8 @@ class PhenotypeAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addPhenotypeTerm}
                             selectedEntities={this.state.preselectedPhenoTerms}
-                            autocompleteEndpoint={this.props.autocompleteEndpointPhenotypes}
+                            autocompleteObj={this.props.autocompleteObj}
+                            entityType={entityTypes.PHENOTYPE}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -153,7 +156,8 @@ class PhenotypeAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
                             selectedEntities={this.state.preselectedAnatomyTerms}
-                            autocompleteEndpoint={this.props.autocompleteEndpointAnatomyTerms}
+                            autocompleteObj={this.props.autocompleteObj}
+                            entityType={entityTypes.ANATOMY_TERM}
                             multiSelect/>
                     </Col>
                     <Col>
@@ -167,7 +171,8 @@ class PhenotypeAnnotator extends Component{
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
                             selectedEntities={this.state.preselectedLifeStages}
-                            autocompleteEndpoint={this.props.autocompleteEndpointLifeStages}
+                            autocompleteObj={this.props.autocompleteObj}
+                            entityType={entityTypes.LIFE_STAGE}
                             multiSelect/>
                     </Col>
                     <Col>

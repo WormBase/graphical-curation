@@ -24,6 +24,7 @@ import {
 } from "../redux/actions/anatomyFunctionAnnotationsActions";
 import {getAnatomyFunctionAnnotationForEditing} from "../redux/selectors/internalStateSelector";
 import {unsetAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
+import {entityTypes} from "../autocomplete";
 
 
 class AnatomyFunctionAnnotator extends Component{
@@ -123,7 +124,8 @@ class AnatomyFunctionAnnotator extends Component{
                                         isLoading={this.props.isLoading}
                                         addEntity={this.props.addPhenotypeTerm}
                                         selectedEntities={this.state.preselectedPhenoTerm}
-                                        autocompleteEndpoint={this.props.autocompleteEndpointPhenotypes}
+                                        autocompleteObj={this.props.autocompleteObj}
+                                        entityType={entityTypes.PHENOTYPE}
                                     />
                                 </Col>
                                 <Col sm={4}>
@@ -137,7 +139,8 @@ class AnatomyFunctionAnnotator extends Component{
                                         isLoading={this.props.isLoading}
                                         addEntity={this.props.addGene}
                                         selectedEntities={this.state.preselectedGene}
-                                        autocompleteEndpoint={this.props.autocompleteEndpointGenes}
+                                        autocompleteObj={this.props.autocompleteObj}
+                                        entityType={entityTypes.GENE}
                                     />
                                 </Col>
                                 <Col sm={4}>
@@ -166,7 +169,8 @@ class AnatomyFunctionAnnotator extends Component{
                                         addEntity={this.props.addAnatomyTerm}
                                         checkboxes={this.state.involvedOption === "involved" ? ["Sufficient", "Necessary"] : ["Insufficient", "Unnecessary"]}
                                         selectedEntities={this.state.preselectedAnatomyTerms}
-                                        autocompleteEndpoint={this.props.autocompleteEndpointAnatomyTerms}
+                                        autocompleteObj={this.props.autocompleteObj}
+                                        entityType={entityTypes.ANATOMY_TERM}
                                         multiSelect/>
                                 </Col>
                             </Row>

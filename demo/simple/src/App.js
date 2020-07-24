@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import GraphicalCuration from "@wormbase/graphical-curation";
+import {WBAutocomplete} from '@wormbase/graphical-curation/lib/autocomplete.js'
 
 class App extends Component{
 
@@ -81,12 +82,7 @@ class App extends Component{
             <GraphicalCuration entities={entities} error={false} expressionAnnotations={exprAnnotations}
                                evidence={"WBPaper00000000"}
                                anatomyFunctionAnnotations={anatomyFuncAnnotations}
-                               autocompleteEndpointGenes={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=gene&userValue='}
-                               autocompleteEndpointPhenotypes={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=phenotype&userValue='}
-                               autocompleteEndpointVariants={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=variation&userValue='}
-                               autocompleteEndpointAnatomyTerms={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=wbbt&userValue='}
-                               autocompleteEndpointLifeStages={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=wbls&userValue='}
-                               autocompleteEndpointCellularComponents={'http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=gocc&userValue='}
+                               autocompleteObj={new WBAutocomplete('http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=')}
                                showExpressionCuration={false}
                                annotationsSaved={annotations => {console.log('Annotations received')}}
                                loading={false}
