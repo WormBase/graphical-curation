@@ -51,13 +51,13 @@ class ExpressionAnnotationsViewer extends Component{
                             {a.anatomyTerms.map(a => <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>)}
                         </Col>
                         <Col>
-                            <FormControl as="textarea" readOnly rows="5">{a.remark}</FormControl>
+                            {a.remark}
                         </Col>
                         <Col>
-                            <FormControl as="textarea" readOnly rows="5">{a.noctuamodel}</FormControl>
+                            {a.noctuamodel}
                         </Col>
                         <Col>
-                            <FormControl as="textarea" readOnly rows="5">{a.genotype}</FormControl>
+                            {a.genotype}
                         </Col>
                         <Col>
                             {a.assay.value}
