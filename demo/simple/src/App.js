@@ -84,7 +84,7 @@ class App extends Component{
                                anatomyFunctionAnnotations={anatomyFuncAnnotations}
                                autocompleteObj={new WBAutocomplete('http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=')}
                                showExpressionCuration={false}
-                               annotationsSaved={annotations => {console.log('Annotations received')}}
+                               annotationsSaved={annotations => {console.log(annotations)}}
                                loading={false}
             />
         );

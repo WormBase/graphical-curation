@@ -27,6 +27,7 @@ import {
 } from "../redux/actions/internalStateActions";
 import Nav from "react-bootstrap/Nav";
 import {setAnatomyFunctionAnnotations} from "../redux/actions/anatomyFunctionAnnotationsActions";
+import {getAnatomyFunctionAnnotations} from "../redux/selectors/anatomyFunctionAnnotationsSelector";
 
 class GraphicalCuration extends Component{
 
@@ -205,7 +206,7 @@ class GraphicalCuration extends Component{
                 <div align="center">
                     <Button variant="primary" onClick={
                         () => this.props.annotationsSaved({expression: this.props.storedExpressionAnnotations,
-                            phenotype: this.props.storedPhenotypeAnnotations })}>
+                            phenotype: this.props.storedPhenotypeAnnotations, anatomyFunction: this.props.storedAnatomyFunctionAnnotations })}>
                         Save All Changes
                     </Button>
                 </div>
@@ -218,6 +219,7 @@ class GraphicalCuration extends Component{
 const mapStateToProps = state => ({
     storedExpressionAnnotations: getExpressionAnnotations(state),
     storedPhenotypeAnnotations: getPhenotypeAnnotations(state),
+    storedAnatomyFunctionAnnotations: getAnatomyFunctionAnnotations(state),
     activeAnnotationType: getActiveAnnotationType(state),
     activeView: getActiveView(state),
     expressionAnnotationForEditing: getExpressionAnnotationForEditing(state),
