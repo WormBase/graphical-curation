@@ -25,7 +25,6 @@ export const phenotypeAnnotations = createReducer(initialState, {
             phenotypeTerms: action.payload.annotation.phenotypeTerms,
             anatomyTerms: action.payload.annotation.anatomyTerms,
             lifeStages: action.payload.annotation.lifeStages,
-            geneticEntity: action.payload.annotation.object,
             evidence: action.payload.annotation.evidence,
             phenotypeStatement: action.payload.annotation.phenotypeStatement,
             dateAssigned: Date.now()

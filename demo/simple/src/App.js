@@ -77,11 +77,23 @@ class App extends Component{
             genotype: '',
             dateAssigned: Date.now()
         }]
+        const phenotypeAnnotations = [{
+            annotationId: 1,
+            object: { value: 'ttTi5605', modId: 'WBVar00254893' },
+            phenotypeTerms: [{ value: "L1-specific epitope", modId: "WBPhenotype:0001677" }],
+            anatomyTerms: [{ value: 'pharynx', modId: 'WBbt:0003681'}],
+            lifeStages: [{ value: 'L3', modId: 'WBls:0000035' }],
+            evidence: 'WBPaper00001254',
+            phenotypeStatement: 'test',
+            dateAssigned: Date.now()
+        }]
+
 
         return(
             <GraphicalCuration entities={entities} error={false} expressionAnnotations={exprAnnotations}
                                evidence={"WBPaper00000000"}
                                anatomyFunctionAnnotations={anatomyFuncAnnotations}
+                               phenotypeAnnotations={phenotypeAnnotations}
                                autocompleteObj={new WBAutocomplete('http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=')}
                                showExpressionCuration={false}
                                annotationsSaved={annotations => {console.log(annotations)}}

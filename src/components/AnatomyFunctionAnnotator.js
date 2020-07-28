@@ -92,6 +92,7 @@ class AnatomyFunctionAnnotator extends Component{
         this.genePicker.reset();
         this.phenoTermPicker.reset();
         this.anatomyTermsPicker.reset();
+        this.assayPicker.reset();
         this.props.unsetAnatomyFunctionAnnotationForEditing();
         this.setState({gene: '', phenoTerm: [], anatomyTerms: [], involvedOption: 'involved', remark: '', noctuaModel: '', genotype: ''});
     }
