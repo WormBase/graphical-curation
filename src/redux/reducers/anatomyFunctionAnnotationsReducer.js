@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit'
+import * as uuid from 'uuid'
 
 const initialState = {
     annotations: []
@@ -21,7 +22,7 @@ export const anatomyFunctionAnnotations = createReducer(initialState, {
     },
     ADD_ANATOMYFUNCTION_ANNOT: (state, action) => {
         let newAnnotation = {
-            annotationId: Math.max(...state.annotations.map(a => a.annotationId), 0) + 1,
+            annotationId: uuid.v4(),
             assay: action.payload.annotation.assay,
             phenotype: action.payload.annotation.phenotype,
             gene: action.payload.annotation.gene,

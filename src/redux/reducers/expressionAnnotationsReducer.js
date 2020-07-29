@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit'
+import * as uuid from 'uuid'
 
 const initialState = {
     annotations: []
@@ -22,7 +23,7 @@ export const expressionAnnotations = createReducer(initialState, {
     },
     ADD_EXPR_ANNOT: (state, action) => {
         let newAnnotation = {
-            annotationId: Math.max(...state.annotations.map(a => a.annotationId), 0) + 1,
+            annotationId: uuid.v4(),
             gene: action.payload.annotation.gene,
             whenExpressed: action.payload.annotation.whenExpressed,
             assay: action.payload.annotation.assay,
