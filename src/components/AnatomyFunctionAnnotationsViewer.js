@@ -36,45 +36,50 @@ class ExpressionAnnotationsViewer extends Component{
                     <Col><h6>&nbsp;</h6></Col>
                 </Row>
                 {this.props.anatomyFunctionAnnotations.length === 0 ? <Row><Col sm={12}>No Annotations</Col></Row> :
-                    this.props.anatomyFunctionAnnotations.map(a =>
-                    <Row>
-                        <Col sm={1}>
-                            {a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}
-                        </Col>
-                        <Col sm={1}>
-                            {a.genes.map(a => <span><Badge variant="primary">{a.value}</Badge>&nbsp;</span>)}
-                        </Col>
-                        <Col sm={1}>
-                            {a.involved}
-                        </Col>
-                        <Col sm={2}>
-                            {a.anatomyTerms.map(a => <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>)}
-                        </Col>
-                        <Col>
-                            {a.remark}
-                        </Col>
-                        <Col>
-                            {a.noctuamodel}
-                        </Col>
-                        <Col>
-                            {a.genotype}
-                        </Col>
-                        <Col>
-                            {a.assay.value}
-                        </Col>
-                        <Col>
-                            {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}
-                        </Col>
-                        <Col align="right">
-                            <Button variant="light" onClick={() => {
-                                this.props.setAnatomyFunctionAnnotationForEditing(a);
-                                this.props.setActiveView("annotator");
-                            }}><FaEdit /></Button>
-                            <Button variant="light" onClick={() => {
-                                this.props.deleteAnatomyFunctionAnnotation(a.annotationId);
-                            }}><FaTrash /></Button>
-                        </Col>
-                    </Row>)}
+                    this.props.anatomyFunctionAnnotations.map((a, idx) =>
+                    <div>
+                        <Row>
+                            <Col sm={1}>
+                                {a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}
+                            </Col>
+                            <Col sm={1}>
+                                {a.genes.map(a => <span><Badge variant="primary">{a.value}</Badge>&nbsp;</span>)}
+                            </Col>
+                            <Col sm={1}>
+                                {a.involved}
+                            </Col>
+                            <Col sm={2}>
+                                {a.anatomyTerms.map(a => <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>)}
+                            </Col>
+                            <Col>
+                                <div dangerouslySetInnerHTML={{ __html: a.remark.replace(/\n/g, "<br />")}}></div>
+                            </Col>
+                            <Col>
+                                <div dangerouslySetInnerHTML={{ __html: a.noctuamodel.replace(/\n/g, "<br />")}}></div>
+                            </Col>
+                            <Col>
+                                <div dangerouslySetInnerHTML={{ __html: a.genotype.replace(/\n/g, "<br />")}}></div>
+                            </Col>
+                            <Col>
+                                {a.assay.value}
+                            </Col>
+                            <Col>
+                                {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}
+                            </Col>
+                            <Col align="right">
+                                <Button variant="light" onClick={() => {
+                                    this.props.setAnatomyFunctionAnnotationForEditing(a);
+                                    this.props.setActiveView("annotator");
+                                }}><FaEdit /></Button>
+                                <Button variant="light" onClick={() => {
+                                    this.props.deleteAnatomyFunctionAnnotation(a.annotationId);
+                                }}><FaTrash /></Button>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col><hr/></Col>
+                        </Row>
+                    </div>)}
             </Container>
 
         );
