@@ -66,8 +66,8 @@ class App extends Component{
 
         const anatomyFuncAnnotations = [{
             annotationId: 1,
-            phenotype: { value: "high_sodium_chloride_concentration_osmotic_avoidance_defective", modId: "WBPhenotype:0001677" },
-            gene: { value: 'unc-61', modId: 'WBGene00006795' },
+            phenotype: { value: "high_sodium_chloride_concentration_osmotic_avoidance_defective", modId: "WBPhenotype:0001677", options: {'Autonomous': true, 'Nonautonomous': false} },
+            genes: [{ value: 'unc-61', modId: 'WBGene00006795' }],
             anatomyTerms: [{ value: 'pharynx', modId: 'WBbt:0003681',  options: {'Insufficient': true, 'Unnecessary': false}}],
             involved: 'not_involved',
             assay: {value: 'Blastomere Isolation'},

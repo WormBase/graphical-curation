@@ -25,7 +25,7 @@ export const anatomyFunctionAnnotations = createReducer(initialState, {
             annotationId: uuid.v4(),
             assay: action.payload.annotation.assay,
             phenotype: action.payload.annotation.phenotype,
-            gene: action.payload.annotation.gene,
+            genes: action.payload.annotation.genes,
             involved: action.payload.annotation.involved,
             anatomyTerms: action.payload.annotation.anatomyTerms,
             evidence: action.payload.annotation.evidence,

@@ -39,10 +39,10 @@ class ExpressionAnnotationsViewer extends Component{
                     this.props.anatomyFunctionAnnotations.map(a =>
                     <Row>
                         <Col sm={1}>
-                            {a.phenotype.value}
+                            {a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}
                         </Col>
                         <Col sm={1}>
-                            {a.gene.value}
+                            {a.genes.map(a => <span><Badge variant="primary">{a.value}</Badge>&nbsp;</span>)}
                         </Col>
                         <Col sm={1}>
                             {a.involved}

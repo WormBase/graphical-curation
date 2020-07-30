@@ -36,7 +36,7 @@ class AnatomyFunctionAnnotator extends Component{
         this.assayPicker = React.createRef();
         this.state = {
             phenoTerm: '',
-            gene: '',
+            genes: [],
             involvedOption: 'involved',
             assay: '',
             anatomyTerms: [],
@@ -47,7 +47,7 @@ class AnatomyFunctionAnnotator extends Component{
             wrongAnnotationShow: false,
             preselectedId: undefined,
             preselectedPhenoTerm: undefined,
-            preselectedGene: undefined,
+            preselectedGenes: undefined,
             preselectedAnatomyTerms: undefined,
             preselectedAssay: undefined,
             createModify: 'Create'
@@ -57,27 +57,27 @@ class AnatomyFunctionAnnotator extends Component{
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.anatomyFunctionAnnotationForEditing !== prevProps.anatomyFunctionAnnotationForEditing) {
             let preselectedPhenoTerm = undefined;
-            let preselectedGene = undefined;
+            let preselectedGenes = undefined;
             let preselectedAnatomyTerms = undefined;
             let preselectedAssay = undefined;
             if (this.props.anatomyFunctionAnnotationForEditing !== null) {
-                preselectedGene = new Map();
+                preselectedGenes = new Map();
                 preselectedPhenoTerm = new Map();
                 preselectedAnatomyTerms = new Map();
                 preselectedAssay = new Map();
-                preselectedPhenoTerm.set(this.props.anatomyFunctionAnnotationForEditing.phenotype, new Map());
-                preselectedGene.set(this.props.anatomyFunctionAnnotationForEditing.gene, new Map());
                 preselectedAssay.set(this.props.anatomyFunctionAnnotationForEditing.assay, new Map());
                 this.props.anatomyFunctionAnnotationForEditing.anatomyTerms.forEach(a => preselectedAnatomyTerms.set({value: a.value, modId: a.modId}, new Map(Object.entries(a.options))));
+                this.props.anatomyFunctionAnnotationForEditing.genes.forEach(a => preselectedGenes.set(a, new Map()));
+                preselectedPhenoTerm.set({value: this.props.anatomyFunctionAnnotationForEditing.phenotype.value, modId: this.props.anatomyFunctionAnnotationForEditing.phenotype.modId}, new Map(Object.entries(this.props.anatomyFunctionAnnotationForEditing.phenotype.options)));
             }
             this.setState({
                 preselectedId: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.annotationId : undefined,
-                preselectedGene: preselectedGene,
+                preselectedGenes: preselectedGenes,
                 preselectedAnatomyTerms: preselectedAnatomyTerms,
                 preselectedPhenoTerm: preselectedPhenoTerm,
                 preselectedAssay: preselectedAssay,
-                gene: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.gene : '',
-                phenoTerm: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.phenotype : '',
+                genes: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.genes : [],
+                phenoTerm: preselectedPhenoTerm !== undefined ? preselectedPhenoTerm : new Map(),
                 anatomyTerms: preselectedAnatomyTerms !== undefined ? preselectedAnatomyTerms : new Map(),
                 remark: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.remark : '',
                 noctuaModel: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.noctuaModel : '',
@@ -94,7 +94,7 @@ class AnatomyFunctionAnnotator extends Component{
         this.anatomyTermsPicker.reset();
         this.assayPicker.reset();
         this.props.unsetAnatomyFunctionAnnotationForEditing();
-        this.setState({gene: '', phenoTerm: [], anatomyTerms: [], involvedOption: 'involved', remark: '', noctuaModel: '', genotype: ''});
+        this.setState({genes: [], phenoTerm: [], anatomyTerms: [], involvedOption: 'involved', remark: '', noctuaModel: '', genotype: ''});
     }
 
     render() {
@@ -109,17 +109,15 @@ class AnatomyFunctionAnnotator extends Component{
                     <Col sm={6}>
                         <Container fluid>
                             <Row>
-                                <Col sm={4}><h6 align="center">Phenotype</h6></Col>
-                                <Col sm={4}><h6 align="center">Gene</h6></Col>
-                                <Col sm={4}><h6 align="center">Involved/Not Involved in</h6></Col>
+                                <Col sm={12}><h6 align="center">Phenotype</h6></Col>
                             </Row>
                             <Row>
-                                <Col sm={4}>
+                                <Col sm={12}>
                                     <EntityPicker
                                         entities={this.props.phenotypeTerms}
                                         ref={instance => { this.phenoTermPicker = instance; }}
                                         selectedItemsCallback={(phenoTerms) => {
-                                            this.setState({phenoTerm: phenoTerms.size > 0 ? phenoTerms.keys().next().value : ''});
+                                            this.setState({phenoTerm: phenoTerms});
                                         }}
                                         count={this.props.maxEntities}
                                         isLoading={this.props.isLoading}
@@ -127,31 +125,8 @@ class AnatomyFunctionAnnotator extends Component{
                                         selectedEntities={this.state.preselectedPhenoTerm}
                                         autocompleteObj={this.props.autocompleteObj}
                                         entityType={entityTypes.PHENOTYPE}
+                                        checkboxes={["Autonomous", "Nonautonomous"]}
                                     />
-                                </Col>
-                                <Col sm={4}>
-                                    <EntityPicker
-                                        entities={this.props.genes}
-                                        ref={instance => { this.genePicker = instance; }}
-                                        selectedItemsCallback={(genes) => {
-                                            this.setState({gene: genes.size > 0 ? genes.keys().next().value : ''});
-                                        }}
-                                        count={this.props.maxEntities}
-                                        isLoading={this.props.isLoading}
-                                        addEntity={this.props.addGene}
-                                        selectedEntities={this.state.preselectedGene}
-                                        autocompleteObj={this.props.autocompleteObj}
-                                        entityType={entityTypes.GENE}
-                                    />
-                                </Col>
-                                <Col sm={4}>
-                                    <FormControl as="select" value={this.state.involvedOption} onChange={(e) => {
-                                        this.setState({involvedOption: e.target.value});
-                                        this.anatomyTermsPicker.reset();
-                                    }}>
-                                        <option value="involved" selected>Involved</option>
-                                        <option value="not_involved">Not Involved</option>
-                                    </FormControl>
                                 </Col>
                             </Row>
                             <Row>
@@ -179,6 +154,37 @@ class AnatomyFunctionAnnotator extends Component{
                     </Col>
                     <Col sm={4}>
                         <Container fluid>
+                            <Row>
+                                <Col sm={6}><h6 align="center">Genes</h6></Col>
+                                <Col sm={6}><h6 align="center">Involved/Not Involved in</h6></Col>
+                            </Row>
+                            <Row>
+                                <Col sm={6}>
+                                    <EntityPicker
+                                        entities={this.props.genes}
+                                        ref={instance => { this.genePicker = instance; }}
+                                        selectedItemsCallback={(genes) => {
+                                            this.setState({genes: [...genes.keys()]});
+                                        }}
+                                        count={this.props.maxEntities}
+                                        isLoading={this.props.isLoading}
+                                        addEntity={this.props.addGene}
+                                        selectedEntities={this.state.preselectedGenes}
+                                        autocompleteObj={this.props.autocompleteObj}
+                                        entityType={entityTypes.GENE}
+                                        multiSelect
+                                    />
+                                </Col>
+                                <Col sm={6}>
+                                    <FormControl as="select" value={this.state.involvedOption} onChange={(e) => {
+                                        this.setState({involvedOption: e.target.value});
+                                        this.anatomyTermsPicker.reset();
+                                    }}>
+                                        <option value="involved" selected>Involved</option>
+                                        <option value="not_involved">Not Involved</option>
+                                    </FormControl>
+                                </Col>
+                            </Row>
                             <Row>
                                 <Col sm={6}><h6 align="center">Assay</h6></Col>
                                 <Col sm={6}><h6 align="center">Remarks</h6></Col>
@@ -250,8 +256,8 @@ class AnatomyFunctionAnnotator extends Component{
                         <Button variant="success" onClick={() => {
                             let annotation = {
                                 assay: this.state.assay,
-                                phenotype: this.state.phenoTerm,
-                                gene: this.state.gene,
+                                phenotype: this.state.phenoTerm.size > 0 ? Array.from(this.state.phenoTerm).map(([key, value]) => {return {value: key.value, modId: key.modId, options: Object.fromEntries(value)}})[0] : '',
+                                genes: this.state.genes,
                                 anatomyTerms: Array.from(this.state.anatomyTerms).map(([key, value]) => {return {value: key.value, modId: key.modId, options: Object.fromEntries(value)}}),
                                 evidence: this.props.evidence,
                                 remark: this.state.remark,
