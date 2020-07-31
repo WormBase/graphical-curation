@@ -67,14 +67,15 @@ class App extends Component{
         const anatomyFuncAnnotations = [{
             annotationId: 1,
             phenotype: { value: "high_sodium_chloride_concentration_osmotic_avoidance_defective", modId: "WBPhenotype:0001677", options: {'Autonomous': true, 'Nonautonomous': false} },
-            genes: [{ value: 'unc-61', modId: 'WBGene00006795' }],
+            gene: { value: 'unc-61', modId: 'WBGene00006795' },
             anatomyTerms: [{ value: 'pharynx', modId: 'WBbt:0003681',  options: {'Insufficient': true, 'Unnecessary': false}}],
             involved: 'not_involved',
             assay: {value: 'Blastomere Isolation'},
             evidence: 'WBPaper00045678',
-            remark: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nCurabitur eget tellus enim. Quisque placerat finibus nunc, eu laoreet ligula dictum et. In in quam et neque rhoncus dignissim. Suspendisse et nisi orci. Maecenas ac quam venenatis, faucibus est in, vulputate eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent blandit sollicitudin ligula, ut pretium ipsum. Nulla vel ante rhoncus, congue purus sed, consectetur nisi. Fusce tempor lorem quis mattis molestie. Sed metus ligula, blandit non eros et, lacinia venenatis tellus. Maecenas nec lorem risus.',
-            noctuamodel: '',
-            genotype: '',
+            remarks: ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'Curabitur eget tellus enim. Quisque placerat finibus nunc, eu laoreet ligula dictum et. In in quam et neque rhoncus dignissim. Suspendisse et nisi orci. Maecenas ac quam venenatis, faucibus est in, vulputate eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent blandit sollicitudin ligula, ut pretium ipsum. Nulla vel ante rhoncus, congue purus sed, consectetur nisi. Fusce tempor lorem quis mattis molestie. Sed metus ligula, blandit non eros et, lacinia venenatis tellus. Maecenas nec lorem risus.'],
+            noctuamodels: [],
+            genotypes: [],
+            authorstatements: [],
             dateAssigned: Date.now()
         }]
         const phenotypeAnnotations = [{

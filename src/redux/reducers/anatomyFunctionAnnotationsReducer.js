@@ -25,13 +25,14 @@ export const anatomyFunctionAnnotations = createReducer(initialState, {
             annotationId: uuid.v4(),
             assay: action.payload.annotation.assay,
             phenotype: action.payload.annotation.phenotype,
-            genes: action.payload.annotation.genes,
+            gene: action.payload.annotation.gene,
             involved: action.payload.annotation.involved,
             anatomyTerms: action.payload.annotation.anatomyTerms,
             evidence: action.payload.annotation.evidence,
-            remark: action.payload.annotation.remark,
-            noctuamodel: action.payload.annotation.noctuamodel,
-            genotype: action.payload.annotation.genotype,
+            remarks: action.payload.annotation.remarks.filter(r => r !== ''),
+            noctuamodels: action.payload.annotation.noctuamodels.filter(n => n !== ''),
+            genotypes: action.payload.annotation.genotypes.filter(g => g !== ''),
+            authorstatements: action.payload.annotation.authorstatements.filter(a => a !== ''),
             dateAssigned: Date.now()
         };
         if (!annotationExists(newAnnotation, state.annotations)) {

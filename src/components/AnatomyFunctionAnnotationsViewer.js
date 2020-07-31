@@ -9,7 +9,6 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import {getAnatomyFunctionAnnotations} from "../redux/selectors/anatomyFunctionAnnotationsSelector";
 import {deleteAnatomyFunctionAnnotation} from "../redux/actions/anatomyFunctionAnnotationsActions";
 import {setActiveView, setAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
-import FormControl from "react-bootstrap/FormControl";
 
 class ExpressionAnnotationsViewer extends Component{
 
@@ -28,9 +27,10 @@ class ExpressionAnnotationsViewer extends Component{
                     <Col sm={1}><h6>Gene</h6></Col>
                     <Col sm={1}><h6>Involved/Not Involved in</h6></Col>
                     <Col sm={2}><h6>Anatomy Terms</h6></Col>
-                    <Col><h6>Remark</h6></Col>
-                    <Col><h6>Noctua Model</h6></Col>
-                    <Col><h6>Genotype</h6></Col>
+                    <Col><h6>Remarks</h6></Col>
+                    <Col><h6>Noctua Models</h6></Col>
+                    <Col><h6>Genotypes</h6></Col>
+                    <Col><h6>Author Statements</h6></Col>
                     <Col><h6>Assay</h6></Col>
                     <Col><h6>Date Assigned</h6></Col>
                     <Col><h6>&nbsp;</h6></Col>
@@ -43,7 +43,7 @@ class ExpressionAnnotationsViewer extends Component{
                                 {a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}
                             </Col>
                             <Col sm={1}>
-                                {a.genes.map(a => <span><Badge variant="primary">{a.value}</Badge>&nbsp;</span>)}
+                                {a.gene.value}
                             </Col>
                             <Col sm={1}>
                                 {a.involved}
@@ -52,13 +52,16 @@ class ExpressionAnnotationsViewer extends Component{
                                 {a.anatomyTerms.map(a => <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>)}
                             </Col>
                             <Col>
-                                <div dangerouslySetInnerHTML={{ __html: a.remark.replace(/\n/g, "<br />")}}></div>
+                                <div dangerouslySetInnerHTML={{ __html: a.remarks.join('<br/><br/>')}}></div>
                             </Col>
                             <Col>
-                                <div dangerouslySetInnerHTML={{ __html: a.noctuamodel.replace(/\n/g, "<br />")}}></div>
+                                <div dangerouslySetInnerHTML={{ __html: a.noctuamodels.join('<br/><br/>')}}></div>
                             </Col>
                             <Col>
-                                <div dangerouslySetInnerHTML={{ __html: a.genotype.replace(/\n/g, "<br />")}}></div>
+                                <div dangerouslySetInnerHTML={{ __html: a.genotypes.join('<br/><br/>')}}></div>
+                            </Col>
+                            <Col>
+                                <div dangerouslySetInnerHTML={{ __html: a.authorstatements.join('<br/><br/>')}}></div>
                             </Col>
                             <Col>
                                 {a.assay.value}

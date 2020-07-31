@@ -25,6 +25,7 @@ import {
 import {getAnatomyFunctionAnnotationForEditing} from "../redux/selectors/internalStateSelector";
 import {unsetAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
 import {entityTypes} from "../autocomplete";
+import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa';
 
 
 class AnatomyFunctionAnnotator extends Component{
@@ -36,13 +37,14 @@ class AnatomyFunctionAnnotator extends Component{
         this.assayPicker = React.createRef();
         this.state = {
             phenoTerm: '',
-            genes: [],
+            gene: '',
             involvedOption: 'involved',
             assay: '',
             anatomyTerms: [],
-            remark: '',
-            noctuaModel: '',
-            genotype: '',
+            remarks: [],
+            noctuaModels: [],
+            genotypes: [],
+            authorStatements: [],
             annotationCreatedShow: false,
             wrongAnnotationShow: false,
             preselectedId: undefined,
@@ -57,11 +59,11 @@ class AnatomyFunctionAnnotator extends Component{
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.anatomyFunctionAnnotationForEditing !== prevProps.anatomyFunctionAnnotationForEditing) {
             let preselectedPhenoTerm = undefined;
-            let preselectedGenes = undefined;
+            let preselectedGene = undefined;
             let preselectedAnatomyTerms = undefined;
             let preselectedAssay = undefined;
             if (this.props.anatomyFunctionAnnotationForEditing !== null) {
-                preselectedGenes = new Map();
+                preselectedGene = new Map();
                 preselectedPhenoTerm = new Map();
                 preselectedAnatomyTerms = new Map();
                 preselectedAssay = new Map();
@@ -72,16 +74,17 @@ class AnatomyFunctionAnnotator extends Component{
             }
             this.setState({
                 preselectedId: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.annotationId : undefined,
-                preselectedGenes: preselectedGenes,
+                preselectedGene: preselectedGene,
                 preselectedAnatomyTerms: preselectedAnatomyTerms,
                 preselectedPhenoTerm: preselectedPhenoTerm,
                 preselectedAssay: preselectedAssay,
-                genes: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.genes : [],
+                gene: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.gene : '',
                 phenoTerm: preselectedPhenoTerm !== undefined ? preselectedPhenoTerm : new Map(),
                 anatomyTerms: preselectedAnatomyTerms !== undefined ? preselectedAnatomyTerms : new Map(),
-                remark: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.remark : '',
-                noctuaModel: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.noctuaModel : '',
-                genotype: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.genotype : '',
+                remarks: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.remarks : [],
+                noctuaModels: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.noctuaModels : [],
+                genotypes: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.genotypes : [],
+                authorStatements: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.authorStatements : [],
                 involvedOption: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.involved : 'involved',
                 assay: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.assay : ''
             });
@@ -94,7 +97,7 @@ class AnatomyFunctionAnnotator extends Component{
         this.anatomyTermsPicker.reset();
         this.assayPicker.reset();
         this.props.unsetAnatomyFunctionAnnotationForEditing();
-        this.setState({genes: [], phenoTerm: [], anatomyTerms: [], involvedOption: 'involved', remark: '', noctuaModel: '', genotype: ''});
+        this.setState({gene: '', phenoTerm: [], anatomyTerms: [], involvedOption: 'involved', remarks: [], noctuaModels: [], genotypes: [], authorStatements: []});
     }
 
     render() {
@@ -164,7 +167,7 @@ class AnatomyFunctionAnnotator extends Component{
                                         entities={this.props.genes}
                                         ref={instance => { this.genePicker = instance; }}
                                         selectedItemsCallback={(genes) => {
-                                            this.setState({genes: [...genes.keys()]});
+                                            this.setState({gene: genes.size > 0 ? genes.keys().next().value : ''});
                                         }}
                                         count={this.props.maxEntities}
                                         isLoading={this.props.isLoading}
@@ -172,7 +175,6 @@ class AnatomyFunctionAnnotator extends Component{
                                         selectedEntities={this.state.preselectedGenes}
                                         autocompleteObj={this.props.autocompleteObj}
                                         entityType={entityTypes.GENE}
-                                        multiSelect
                                     />
                                 </Col>
                                 <Col sm={6}>
@@ -206,13 +208,37 @@ class AnatomyFunctionAnnotator extends Component{
                                     <Container fluid>
                                         <Row>
                                             <Col>
-                                                <h7 align="center">Remark</h7>
+                                                <h7 align="center">General Remarks</h7>
                                             </Col>
                                         </Row>
+                                        {this.state.remarks.map((remark, idx) =>
+                                            <div>
+                                                <Row>
+                                                    <Col>
+                                                        <FormControl as="textarea" rows="3" value={remark} onChange={event => {
+                                                            let remarks = this.state.remarks;
+                                                            remarks[idx] = event.target.value;
+                                                            this.setState({remarks: remarks})}}/>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col>
+                                                        <Button variant="light" onClick={() => {
+                                                            let remarks = this.state.remarks;
+                                                            remarks.splice(idx, 1);
+                                                            this.setState({remarks: remarks});
+                                                        }}><FaMinusCircle/></Button>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        )}
                                         <Row>
                                             <Col>
-                                                <FormControl as="textarea" rows="3" value={this.state.remark} onChange={event =>
-                                                    this.setState({remark: event.target.value})}/>
+                                                <Button variant="light" onClick={() => {
+                                                    let remarks = this.state.remarks;
+                                                    remarks.push('');
+                                                    this.setState({remarks: remarks});
+                                                }}><FaPlusCircle/></Button>
                                             </Col>
                                         </Row>
                                         <Row>
@@ -222,13 +248,37 @@ class AnatomyFunctionAnnotator extends Component{
                                         </Row>
                                         <Row>
                                             <Col>
-                                                <h7 align="center">Noctua Model</h7>
+                                                <h7 align="center">Noctua Models</h7>
                                             </Col>
                                         </Row>
+                                        {this.state.noctuaModels.map((noctuaModel, idx) =>
+                                            <div>
+                                                <Row>
+                                                    <Col>
+                                                        <FormControl as="textarea" rows="3" value={noctuaModel} onChange={event => {
+                                                            let noctuaModels = this.state.noctuaModels;
+                                                            noctuaModels[idx] = event.target.value;
+                                                            this.setState({noctuaModels: noctuaModels})}}/>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col>
+                                                        <Button variant="light" onClick={() => {
+                                                            let noctuaModels = this.state.noctuaModels;
+                                                            noctuaModels.splice(idx, 1);
+                                                            this.setState({noctuaModels: noctuaModels});
+                                                        }}><FaMinusCircle/></Button>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        )}
                                         <Row>
                                             <Col>
-                                                <FormControl as="textarea" rows="3" value={this.state.noctuaModel} onChange={event =>
-                                                    this.setState({noctuaModel: event.target.value})}/>
+                                                <Button variant="light" onClick={() => {
+                                                    let noctuaModels = this.state.noctuaModels;
+                                                    noctuaModels.push('');
+                                                    this.setState({noctuaModels: noctuaModels});
+                                                }}><FaPlusCircle/></Button>
                                             </Col>
                                         </Row>
                                         <Row>
@@ -238,13 +288,77 @@ class AnatomyFunctionAnnotator extends Component{
                                         </Row>
                                         <Row>
                                             <Col>
-                                                <h7 align="center">Genotype</h7>
+                                                <h7 align="center">Genotypes</h7>
+                                            </Col>
+                                        </Row>
+                                        {this.state.genotypes.map((genotype, idx) =>
+                                            <div>
+                                                <Row>
+                                                    <Col>
+                                                        <FormControl as="textarea" rows="3" value={genotype} onChange={event => {
+                                                            let genotypes = this.state.genotypes;
+                                                            genotypes[idx] = event.target.value;
+                                                            this.setState({genotypes: genotypes})}}/>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col>
+                                                        <Button variant="light" onClick={() => {
+                                                            let genotypes = this.state.genotypes;
+                                                            genotypes.splice(idx, 1);
+                                                            this.setState({genotypes: genotypes});
+                                                        }}><FaMinusCircle/></Button>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        )}
+                                        <Row>
+                                            <Col>
+                                                <Button variant="light" onClick={() => {
+                                                    let genotypes = this.state.genotypes;
+                                                    genotypes.push('');
+                                                    this.setState({genotypes: genotypes});
+                                                }}><FaPlusCircle/></Button>
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col>
-                                                <FormControl as="textarea" rows="3" value={this.state.genotype} onChange={event =>
-                                                    this.setState({genotype: event.target.value})}/>
+                                                &nbsp;
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                <h7 align="center">Author Statements</h7>
+                                            </Col>
+                                        </Row>
+                                        {this.state.authorStatements.map((authorStatement, idx) =>
+                                            <div>
+                                                <Row>
+                                                    <Col>
+                                                        <FormControl as="textarea" rows="3" value={authorStatement} onChange={event => {
+                                                            let authorStatements = this.state.authorStatements;
+                                                            authorStatements[idx] = event.target.value;
+                                                            this.setState({authorStatements: authorStatements})}}/>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col>
+                                                        <Button variant="light" onClick={() => {
+                                                            let authorStatements = this.state.authorStatements;
+                                                            authorStatements.splice(idx, 1);
+                                                            this.setState({authorStatements: authorStatements});
+                                                        }}><FaMinusCircle/></Button>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        )}
+                                        <Row>
+                                            <Col>
+                                                <Button variant="light" onClick={() => {
+                                                    let authorStatements = this.state.authorStatements;
+                                                    authorStatements.push('');
+                                                    this.setState({authorStatements: authorStatements});
+                                                }}><FaPlusCircle/></Button>
                                             </Col>
                                         </Row>
                                     </Container>
@@ -257,12 +371,13 @@ class AnatomyFunctionAnnotator extends Component{
                             let annotation = {
                                 assay: this.state.assay,
                                 phenotype: this.state.phenoTerm.size > 0 ? Array.from(this.state.phenoTerm).map(([key, value]) => {return {value: key.value, modId: key.modId, options: Object.fromEntries(value)}})[0] : '',
-                                genes: this.state.genes,
+                                gene: this.state.gene,
                                 anatomyTerms: Array.from(this.state.anatomyTerms).map(([key, value]) => {return {value: key.value, modId: key.modId, options: Object.fromEntries(value)}}),
                                 evidence: this.props.evidence,
-                                remark: this.state.remark,
-                                noctuamodel: this.state.noctuaModel,
-                                genotype: this.state.genotype,
+                                remarks: this.state.remarks,
+                                noctuamodels: this.state.noctuaModels,
+                                genotypes: this.state.genotypes,
+                                authorstatements: this.state.authorStatements,
                                 involved: this.state.involvedOption
                             };
                             if (anatomyFunctionAnnotationIsValid(annotation)) {
