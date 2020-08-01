@@ -43,7 +43,7 @@ class ExpressionAnnotationsViewer extends Component{
                                 {a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}
                             </Col>
                             <Col sm={1}>
-                                {a.gene.value}
+                                {a.gene !== '' ? a.gene.value : ''}
                             </Col>
                             <Col sm={1}>
                                 {a.involved}

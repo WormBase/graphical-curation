@@ -49,7 +49,7 @@ class AnatomyFunctionAnnotator extends Component{
             wrongAnnotationShow: false,
             preselectedId: undefined,
             preselectedPhenoTerm: undefined,
-            preselectedGenes: undefined,
+            preselectedGene: undefined,
             preselectedAnatomyTerms: undefined,
             preselectedAssay: undefined,
             createModify: 'Create'
@@ -69,7 +69,9 @@ class AnatomyFunctionAnnotator extends Component{
                 preselectedAssay = new Map();
                 preselectedAssay.set(this.props.anatomyFunctionAnnotationForEditing.assay, new Map());
                 this.props.anatomyFunctionAnnotationForEditing.anatomyTerms.forEach(a => preselectedAnatomyTerms.set({value: a.value, modId: a.modId}, new Map(Object.entries(a.options))));
-                this.props.anatomyFunctionAnnotationForEditing.genes.forEach(a => preselectedGenes.set(a, new Map()));
+                if (this.props.anatomyFunctionAnnotationForEditing.gene !== '') {
+                    preselectedGene.set(this.props.anatomyFunctionAnnotationForEditing.gene, new Map());
+                }
                 preselectedPhenoTerm.set({value: this.props.anatomyFunctionAnnotationForEditing.phenotype.value, modId: this.props.anatomyFunctionAnnotationForEditing.phenotype.modId}, new Map(Object.entries(this.props.anatomyFunctionAnnotationForEditing.phenotype.options)));
             }
             this.setState({
@@ -82,9 +84,9 @@ class AnatomyFunctionAnnotator extends Component{
                 phenoTerm: preselectedPhenoTerm !== undefined ? preselectedPhenoTerm : new Map(),
                 anatomyTerms: preselectedAnatomyTerms !== undefined ? preselectedAnatomyTerms : new Map(),
                 remarks: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.remarks : [],
-                noctuaModels: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.noctuaModels : [],
+                noctuaModels: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.noctuamodels : [],
                 genotypes: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.genotypes : [],
-                authorStatements: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.authorStatements : [],
+                authorStatements: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.authorstatements : [],
                 involvedOption: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.involved : 'involved',
                 assay: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.assay : ''
             });
@@ -172,7 +174,7 @@ class AnatomyFunctionAnnotator extends Component{
                                         count={this.props.maxEntities}
                                         isLoading={this.props.isLoading}
                                         addEntity={this.props.addGene}
-                                        selectedEntities={this.state.preselectedGenes}
+                                        selectedEntities={this.state.preselectedGene}
                                         autocompleteObj={this.props.autocompleteObj}
                                         entityType={entityTypes.GENE}
                                     />
