@@ -90,6 +90,7 @@ class AnatomyFunctionAnnotator extends Component{
                 involvedOption: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.involved : 'involved',
                 assay: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.assay : ''
             });
+            console.log(this.props.anatomyFunctionAnnotationForEditing);
         }
     }
 
@@ -218,7 +219,7 @@ class AnatomyFunctionAnnotator extends Component{
                                                 <Row>
                                                     <Col>
                                                         <FormControl as="textarea" rows="3" value={remark} onChange={event => {
-                                                            let remarks = this.state.remarks;
+                                                            let remarks = [...this.state.remarks];
                                                             remarks[idx] = event.target.value;
                                                             this.setState({remarks: remarks})}}/>
                                                     </Col>
@@ -226,7 +227,7 @@ class AnatomyFunctionAnnotator extends Component{
                                                 <Row>
                                                     <Col>
                                                         <Button variant="light" onClick={() => {
-                                                            let remarks = this.state.remarks;
+                                                            let remarks = [...this.state.remarks];
                                                             remarks.splice(idx, 1);
                                                             this.setState({remarks: remarks});
                                                         }}><FaMinusCircle/></Button>
@@ -237,7 +238,7 @@ class AnatomyFunctionAnnotator extends Component{
                                         <Row>
                                             <Col>
                                                 <Button variant="light" onClick={() => {
-                                                    let remarks = this.state.remarks;
+                                                    let remarks = [...this.state.remarks];
                                                     remarks.push('');
                                                     this.setState({remarks: remarks});
                                                 }}><FaPlusCircle/></Button>
@@ -258,7 +259,7 @@ class AnatomyFunctionAnnotator extends Component{
                                                 <Row>
                                                     <Col>
                                                         <FormControl as="textarea" rows="3" value={noctuaModel} onChange={event => {
-                                                            let noctuaModels = this.state.noctuaModels;
+                                                            let noctuaModels = [...this.state.noctuaModels];
                                                             noctuaModels[idx] = event.target.value;
                                                             this.setState({noctuaModels: noctuaModels})}}/>
                                                     </Col>
@@ -266,7 +267,7 @@ class AnatomyFunctionAnnotator extends Component{
                                                 <Row>
                                                     <Col>
                                                         <Button variant="light" onClick={() => {
-                                                            let noctuaModels = this.state.noctuaModels;
+                                                            let noctuaModels = [...this.state.noctuaModels];
                                                             noctuaModels.splice(idx, 1);
                                                             this.setState({noctuaModels: noctuaModels});
                                                         }}><FaMinusCircle/></Button>
@@ -277,7 +278,7 @@ class AnatomyFunctionAnnotator extends Component{
                                         <Row>
                                             <Col>
                                                 <Button variant="light" onClick={() => {
-                                                    let noctuaModels = this.state.noctuaModels;
+                                                    let noctuaModels = [...this.state.noctuaModels];
                                                     noctuaModels.push('');
                                                     this.setState({noctuaModels: noctuaModels});
                                                 }}><FaPlusCircle/></Button>
@@ -298,7 +299,7 @@ class AnatomyFunctionAnnotator extends Component{
                                                 <Row>
                                                     <Col>
                                                         <FormControl as="textarea" rows="3" value={genotype} onChange={event => {
-                                                            let genotypes = this.state.genotypes;
+                                                            let genotypes = [...this.state.genotypes];
                                                             genotypes[idx] = event.target.value;
                                                             this.setState({genotypes: genotypes})}}/>
                                                     </Col>
@@ -306,7 +307,7 @@ class AnatomyFunctionAnnotator extends Component{
                                                 <Row>
                                                     <Col>
                                                         <Button variant="light" onClick={() => {
-                                                            let genotypes = this.state.genotypes;
+                                                            let genotypes = [...this.state.genotypes];
                                                             genotypes.splice(idx, 1);
                                                             this.setState({genotypes: genotypes});
                                                         }}><FaMinusCircle/></Button>
@@ -317,7 +318,7 @@ class AnatomyFunctionAnnotator extends Component{
                                         <Row>
                                             <Col>
                                                 <Button variant="light" onClick={() => {
-                                                    let genotypes = this.state.genotypes;
+                                                    let genotypes = [...this.state.genotypes];
                                                     genotypes.push('');
                                                     this.setState({genotypes: genotypes});
                                                 }}><FaPlusCircle/></Button>
@@ -338,7 +339,7 @@ class AnatomyFunctionAnnotator extends Component{
                                                 <Row>
                                                     <Col>
                                                         <FormControl as="textarea" rows="3" value={authorStatement} onChange={event => {
-                                                            let authorStatements = this.state.authorStatements;
+                                                            let authorStatements = [...this.state.authorStatements];
                                                             authorStatements[idx] = event.target.value;
                                                             this.setState({authorStatements: authorStatements})}}/>
                                                     </Col>
@@ -346,7 +347,7 @@ class AnatomyFunctionAnnotator extends Component{
                                                 <Row>
                                                     <Col>
                                                         <Button variant="light" onClick={() => {
-                                                            let authorStatements = this.state.authorStatements;
+                                                            let authorStatements = [...this.state.authorStatements];
                                                             authorStatements.splice(idx, 1);
                                                             this.setState({authorStatements: authorStatements});
                                                         }}><FaMinusCircle/></Button>
@@ -357,7 +358,7 @@ class AnatomyFunctionAnnotator extends Component{
                                         <Row>
                                             <Col>
                                                 <Button variant="light" onClick={() => {
-                                                    let authorStatements = this.state.authorStatements;
+                                                    let authorStatements = [...this.state.authorStatements];
                                                     authorStatements.push('');
                                                     this.setState({authorStatements: authorStatements});
                                                 }}><FaPlusCircle/></Button>
