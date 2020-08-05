@@ -123,7 +123,6 @@ class GraphicalCuration extends Component{
                                                                  evidence={this.props.evidence}
                                                                  autocompleteObj={this.props.autocompleteObj}
                                                                  />
-                                            />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="viewer">
                                             <ExpressionAnnotationsViewer/>
