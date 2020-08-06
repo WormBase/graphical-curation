@@ -102,14 +102,12 @@ class EntityPicker extends Component {
                                 <Row>
                                     <Col onClick={() => {
                                         let selectedEntities = this.state.selectedEntities;
-                                        if (this.props.multiSelect !== undefined) {
-                                            if (selectedEntities.has(entity)) {
-                                                selectedEntities.delete(entity)
-                                            } else {
-                                                selectedEntities.set(entity, mapEntry);
-                                            }
+                                        if (selectedEntities.has(entity)) {
+                                            selectedEntities.delete(entity)
                                         } else {
-                                            selectedEntities = new Map();
+                                            if (this.props.multiSelect === undefined) {
+                                                selectedEntities = new Map();
+                                            }
                                             selectedEntities.set(entity, mapEntry);
                                         }
                                         this.props.selectedItemsCallback(selectedEntities);
