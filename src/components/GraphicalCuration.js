@@ -125,7 +125,7 @@ class GraphicalCuration extends Component{
                                                                  />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="viewer">
-                                            <ExpressionAnnotationsViewer/>
+                                            <ExpressionAnnotationsViewer showAnnotationIds={this.props.showAnnotationIds}/>
                                         </Tab.Pane>
                                     </Tab.Content>
                                 </Tab.Container>
@@ -158,7 +158,7 @@ class GraphicalCuration extends Component{
                                                                 />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="viewer">
-                                            <PhenotypeAnnotationsViewer/>
+                                            <PhenotypeAnnotationsViewer showAnnotationIds={this.props.showAnnotationIds}/>
                                         </Tab.Pane>
                                     </Tab.Content>
                                 </Tab.Container>
@@ -191,7 +191,7 @@ class GraphicalCuration extends Component{
                                             />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="viewer">
-                                            <AnatomyFunctionAnnotationsViewer/>
+                                            <AnatomyFunctionAnnotationsViewer showAnnotationIds={this.props.showAnnotationIds}/>
                                         </Tab.Pane>
                                     </Tab.Content>
                                 </Tab.Container>

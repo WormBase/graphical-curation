@@ -9,6 +9,8 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import {getAnatomyFunctionAnnotations} from "../redux/selectors/anatomyFunctionAnnotationsSelector";
 import {deleteAnatomyFunctionAnnotation} from "../redux/actions/anatomyFunctionAnnotationsActions";
 import {setActiveView, setAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 class ExpressionAnnotationsViewer extends Component{
 
@@ -23,6 +25,7 @@ class ExpressionAnnotationsViewer extends Component{
                 <Row style={{
                     backgroundColor: 'lightgray',
                 }}>
+                    {this.props.showAnnotationIds ? <Col><h6>ID</h6></Col> : ''}
                     <Col sm={1}><h6>Phenotype</h6></Col>
                     <Col sm={1}><h6>Gene</h6></Col>
                     <Col sm={1}><h6>Involved/Not Involved in</h6></Col>
@@ -39,29 +42,39 @@ class ExpressionAnnotationsViewer extends Component{
                     this.props.anatomyFunctionAnnotations.map((a, idx) =>
                     <div>
                         <Row>
+                            {this.props.showAnnotationIds ? <Col>{a.annotationId}</Col> : ''}
                             <Col sm={1}>
-                                {a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}
+                                <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.phenotype.modId}</Tooltip>}>
+                                    <span>{a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</span>
+                                </OverlayTrigger>
                             </Col>
                             <Col sm={1}>
-                                {a.gene !== '' ? a.gene.value : ''}
+                                {a.gene !== '' ?
+                                    <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.gene.modId}</Tooltip>}>
+                                        <span>{a.gene.value}</span>
+                                    </OverlayTrigger>
+                                    : ''}
                             </Col>
                             <Col sm={1}>
                                 {a.involved}
                             </Col>
                             <Col sm={2}>
-                                {a.anatomyTerms.map(a => <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>)}
+                                {a.anatomyTerms.map(a =>
+                                    <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.modId}</Tooltip>}>
+                                    <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>
+                                    </OverlayTrigger>)}
                             </Col>
                             <Col>
-                                <div dangerouslySetInnerHTML={{ __html: a.remarks.join('<br/><br/>')}}></div>
+                                <OverlayTrigger trigger="click" placement="right" poppperConfig={{modifiers: {preventOverflow: {enabled: false}}}} delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip"><p dangerouslySetInnerHTML={{ __html: a.remarks.join('<br/><br/>')}}/></Tooltip>}><p dangerouslySetInnerHTML={{ __html: a.remarks.join('<br/><br/>')}} style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}/></OverlayTrigger>
                             </Col>
                             <Col>
-                                <div dangerouslySetInnerHTML={{ __html: a.noctuamodels.join('<br/><br/>')}}></div>
+                                <OverlayTrigger trigger="click" placement="right" poppperConfig={{modifiers: {preventOverflow: {enabled: false}}}} delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip"><p dangerouslySetInnerHTML={{ __html: a.noctuamodels.join('<br/><br/>')}}/></Tooltip>}><p dangerouslySetInnerHTML={{ __html: a.noctuamodels.join('<br/><br/>')}} style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}/></OverlayTrigger>
                             </Col>
                             <Col>
-                                <div dangerouslySetInnerHTML={{ __html: a.genotypes.join('<br/><br/>')}}></div>
+                                <OverlayTrigger trigger="click" placement="right" poppperConfig={{modifiers: {preventOverflow: {enabled: false}}}} delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip"><p dangerouslySetInnerHTML={{ __html: a.genotypes.join('<br/><br/>')}}/></Tooltip>}><p dangerouslySetInnerHTML={{ __html: a.genotypes.join('<br/><br/>')}} style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}/></OverlayTrigger>
                             </Col>
                             <Col>
-                                <div dangerouslySetInnerHTML={{ __html: a.authorstatements.join('<br/><br/>')}}></div>
+                                <OverlayTrigger trigger="click" placement="right" poppperConfig={{modifiers: {preventOverflow: {enabled: false}}}} delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip"><p dangerouslySetInnerHTML={{ __html: a.authorstatements.join('<br/><br/>')}}/></Tooltip>}><p dangerouslySetInnerHTML={{ __html: a.authorstatements.join('<br/><br/>')}} style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}/></OverlayTrigger>
                             </Col>
                             <Col>
                                 {a.assay.value}

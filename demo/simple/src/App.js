@@ -66,7 +66,7 @@ class App extends Component{
 
         const anatomyFuncAnnotations = [{
             annotationId: 1,
-            phenotype: { value: "high_sodium_chloride_concentration_osmotic_avoidance_defective", modId: "WBPhenotype:0001677", options: {'Autonomous': true, 'Nonautonomous': false} },
+            phenotype: { value: "high sodium chloride concentration osmotic avoidance defective", modId: "WBPhenotype:0001677", options: {'Autonomous': true, 'Nonautonomous': false} },
             gene: { value: 'unc-61', modId: 'WBGene00006795' },
             anatomyTerms: [{ value: 'pharynx', modId: 'WBbt:0003681',  options: {'Insufficient': true, 'Unnecessary': false}}],
             involved: 'not_involved',
@@ -98,6 +98,7 @@ class App extends Component{
                                autocompleteObj={new WBAutocomplete('http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=')}
                                annotationsSaved={annotations => {console.log(annotations)}}
                                loading={false}
+                               showAnnotationIds={true}
             />
         );
     }

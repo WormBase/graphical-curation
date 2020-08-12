@@ -31,6 +31,7 @@ class ExpressionAnnotationsViewer extends Component{
                 <Row style={{
                     backgroundColor: 'lightgray',
                 }}>
+                    {this.props.showAnnotationIds ? <Col><h6>ID</h6></Col> : ''}
                     <Col><h6>Gene</h6></Col>
                     <Col><h6>Where Expressed</h6></Col>
                     <Col><h6>Cellular Component</h6></Col>
@@ -43,8 +44,11 @@ class ExpressionAnnotationsViewer extends Component{
                     this.props.expressionAnnotations.map(a =>
                     <div>
                         <Row>
+                            {this.props.showAnnotationIds ? <Col>{a.annotationId}</Col> : ''}
                             <Col>
-                                {a.gene.value}
+                                <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.gene.modId}</Tooltip>}>
+                                    <span>{a.gene.value}</span>
+                                </OverlayTrigger>
                                 {expressionAnnotationNtoN(a) ?
                                     <span>
                                         <OverlayTrigger
@@ -58,13 +62,16 @@ class ExpressionAnnotationsViewer extends Component{
                                     </span> : ''}
                             </Col>
                             <Col>
-                                {a.whereExpressed.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
+                                {a.whereExpressed.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                                    <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                             </Col>
                             <Col>
-                                {a.cellularComponent.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
+                                {a.cellularComponent.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                                    <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                             </Col>
                             <Col>
-                                {a.whenExpressed.map(e => <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span>)}
+                                {a.whenExpressed.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                                    <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                             </Col>
                             <Col>
                                 <Badge variant="primary">{a.assay.value}</Badge>
