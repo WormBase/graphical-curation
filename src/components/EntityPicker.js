@@ -57,7 +57,7 @@ class EntityPicker extends Component {
             }
             filteredEntities.sort((a, b) => (a.value > b.value) ? 1 : -1);
             this.setState({
-                selectedEntities: this.props.selectedEntities !== undefined ? this.props.selectedEntities : new Map(),
+                selectedEntities: this.props.selectedEntities !== undefined ? this.props.selectedEntities : this.state.selectedEntities,
                 offset: 0,
                 count: this.props.count !== undefined ? this.props.count : 3,
                 filteredEntities: filteredEntities,
@@ -79,7 +79,21 @@ class EntityPicker extends Component {
                         this.setState({showAddEntity: false});
                         this.props.resetAutocompleteEntities();
                     }}
-                    addEntity={this.props.addEntity}
+                    addEntity={(e) => {
+                        this.props.addEntity(e);
+                        let mapEntry = new Map();
+                        if (this.props.checkboxes !== undefined) {
+                            this.props.checkboxes.forEach(c => {mapEntry.set(c, false)});
+                        }
+                        let selectedEntities = this.state.selectedEntities;
+                        console.log(selectedEntities);
+                        if (this.props.multiSelect === undefined) {
+                            selectedEntities = new Map();
+                        }
+                        selectedEntities.set(e, mapEntry);
+                        this.props.selectedItemsCallback(selectedEntities);
+                        this.setState({selectedEntities: selectedEntities});
+                    }}
                     autocompleteObj={this.props.autocompleteObj}
                     autocompleteEntities={this.props.autocompleteEntities}
                     autocompleteFetchFnct={this.props.fetchAutocompleteEntities}
@@ -174,7 +188,10 @@ function AddEntityModal(props) {
                             &nbsp;
                         </Col>
                     </Row>
-                    {props.autocompleteEntities.map(e => <Row><Col onDoubleClick={() => {props.addEntity(e); props.onHide();}}>{e.value} ( {e.modId} )</Col></Row>)}
+                    {props.autocompleteEntities.map(e => <Row><Col onDoubleClick={() => {
+                        props.addEntity(e);
+                        props.onHide();
+                    }}>{e.value} ( {e.modId} )</Col></Row>)}
                 </Container>
             </Modal.Body>
             <Modal.Footer>
