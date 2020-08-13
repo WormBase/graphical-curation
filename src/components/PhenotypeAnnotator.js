@@ -48,26 +48,7 @@ class PhenotypeAnnotator extends Component{
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.phenotypeAnnotationForEditing !== prevProps.phenotypeAnnotationForEditing) {
-            let preselectedVariant = undefined;
-            let preselectedPhenoTerms = undefined;
-            let preselectedAnatomyTerms = undefined;
-            let preselectedLifeStages = undefined;
-            if (this.props.phenotypeAnnotationForEditing !== null) {
-                preselectedVariant = new Map();
-                preselectedAnatomyTerms = new Map();
-                preselectedPhenoTerms = new Map();
-                preselectedLifeStages = new Map();
-                preselectedVariant.set(this.props.phenotypeAnnotationForEditing.object, new Map());
-                this.props.phenotypeAnnotationForEditing.phenotypeTerms.forEach(a => preselectedPhenoTerms.set(a, new Map()));
-                this.props.phenotypeAnnotationForEditing.lifeStages.forEach(a => preselectedLifeStages.set(a, new Map()));
-                this.props.phenotypeAnnotationForEditing.anatomyTerms.forEach(a => preselectedAnatomyTerms.set(a, new Map()));
-            }
             this.setState({
-                preselectedId: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.annotationId : undefined,
-                preselectedVariant: preselectedVariant,
-                preselectedAnatomyTerms: preselectedAnatomyTerms,
-                preselectedPhenoTerms: preselectedPhenoTerms,
-                preselectedLifeStages: preselectedLifeStages,
                 variant: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.object : '',
                 anatomyTerms: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.anatomyTerms : [],
                 lifeStages: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.lifeStages : [],
@@ -120,12 +101,12 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.variants}
                             ref={instance => { this.variantPicker = instance; }}
                             selectedItemsCallback={(variants) => {
-                                this.setState({variant: variants.size > 0 ? variants.keys().next().value : ''});
+                                this.setState({variant: variants});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addVariant}
-                            selectedEntities={this.state.preselectedVariant}
+                            selectedEntities={this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.object : ''}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.VARIANT}
                         />
@@ -135,12 +116,12 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.phenotypeTerms}
                             ref={instance => { this.phenoTermPicker = instance; }}
                             selectedItemsCallback={(phenoTerms) => {
-                                this.setState({phenoTerms: [...phenoTerms.keys()]});
+                                this.setState({phenoTerms: phenoTerms});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addPhenotypeTerm}
-                            selectedEntities={this.state.preselectedPhenoTerms}
+                            selectedEntities={this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.phenotypeTerms : ''}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.PHENOTYPE}
                             multiSelect/>
@@ -150,12 +131,12 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.anatomyTerms}
                             ref={instance => { this.anatomyTermsPicker = instance; }}
                             selectedItemsCallback={(anatomyTerms) => {
-                                this.setState({anatomyTerms: [...anatomyTerms.keys()]});
+                                this.setState({anatomyTerms: anatomyTerms});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
-                            selectedEntities={this.state.preselectedAnatomyTerms}
+                            selectedEntities={this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.anatomyTerms : ''}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.ANATOMY_TERM}
                             multiSelect/>
@@ -165,12 +146,12 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.lifeStages}
                             ref={instance => { this.lifeStagesPicker = instance; }}
                             selectedItemsCallback={(lifeStages) => {
-                                this.setState({lifeStages: [...lifeStages.keys()]});
+                                this.setState({lifeStages: lifeStages});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
-                            selectedEntities={this.state.preselectedLifeStages}
+                            selectedEntities={this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.lifeStages : ''}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.LIFE_STAGE}
                             multiSelect/>
@@ -190,8 +171,8 @@ class PhenotypeAnnotator extends Component{
                                 evidence: this.props.evidence
                             };
                             if (phenotypeAnnotationIsValid(annotation)) {
-                                if (this.state.preselectedId !== undefined) {
-                                    annotation.annotationId = this.state.preselectedId;
+                                if (this.props.phenotypeAnnotationForEditing !== null) {
+                                    annotation.annotationId = this.props.phenotypeAnnotationForEditing.annotationId;
                                     this.props.modifyPhenotypeAnnotation(annotation);
                                 } else {
                                     this.props.addPhenotypeAnnotation(annotation);
@@ -205,8 +186,8 @@ class PhenotypeAnnotator extends Component{
                             } else {
                                 this.setState({wrongAnnotationShow: true});
                             }
-                        }}>{this.state.preselectedId === undefined ? 'Create' : 'Modify'} Annotation</Button><br/><br/>
-                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.state.preselectedId === undefined ? 'Clear' : 'Cancel'}</Button>
+                        }}>{this.props.phenotypeAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Button><br/><br/>
+                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.phenotypeAnnotationForEditing !== null ? 'Cancel' : 'Clear'}</Button>
                     </Col>
                 </Row>
                 <AnnotationCreatedModal

@@ -24,7 +24,7 @@ class EntityPicker extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            selectedEntities: props.selectedEntities !== undefined ? props.selectedEntities : new Map(),
+            selectedEntities: new Map(),
             offset: 0,
             count: props.count !== undefined ? props.count : 3,
             filteredEntities: [],
@@ -34,6 +34,26 @@ class EntityPicker extends Component {
 
         this.reset = this.reset.bind(this);
     }
+    
+    returnSelectedEntities(selectedEntities) {
+        let returnEntities = '';
+        if (selectedEntities.size > 0) {
+            returnEntities = Array.from(selectedEntities).map(([key, value]) => {
+                let entity = {
+                    value: JSON.parse(key).value,
+                    modId: JSON.parse(key).modId,
+                };
+                if (value.size > 0) {
+                    entity.options = Object.fromEntries(value);
+                }
+                return entity;
+            });
+            if (this.props.multiSelect === undefined && returnEntities.length > 0) {
+                returnEntities = returnEntities[0];
+            }
+        }
+        this.props.selectedItemsCallback(returnEntities);
+    }
 
     reset() {
         this.setState({selectedEntities: new Map()});
@@ -42,22 +62,40 @@ class EntityPicker extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.entities !== prevProps.entities || this.props.selectedEntities !== prevProps.selectedEntities) {
             let filteredEntities = [];
+            let selectedEntitiesMap = this.state.selectedEntities;
             if (this.props.entities !== undefined) {
                 this.props.entities.forEach(e => filteredEntities.push(e));
             }
-            if (this.props.selectedEntities !== undefined) {
-                this.props.selectedEntities.forEach((v, k) => {
+            if (this.props.selectedEntities !== prevProps.selectedEntities && this.props.selectedEntities !== undefined) {
+                let selectedEntitiesArray;
+                selectedEntitiesMap = new Map();
+                if (this.props.selectedEntities !== '') {
+                    if (Array.isArray(this.props.selectedEntities)) {
+                        selectedEntitiesArray = this.props.selectedEntities;
+                    } else {
+                        selectedEntitiesArray = [this.props.selectedEntities];
+                    }
+                    selectedEntitiesArray.forEach(a => {
+                        if (a.options !== undefined) {
+                            selectedEntitiesMap.set(JSON.stringify({value: a.value, modId: a.modId}),
+                                new Map(Object.entries(a.options)));
+                        } else {
+                            selectedEntitiesMap.set(JSON.stringify(a), new Map());
+                        }
+                    });
+                }
+                selectedEntitiesMap.forEach((v, k) => {
                     filteredEntities.forEach((item, index, object) => {
-                        if (k.value === item.value) {
+                        if (JSON.parse(k).value === item.value) {
                             object.splice(index, 1)
                         }
                     })
-                    filteredEntities.push(k);
+                    filteredEntities.push(JSON.parse(k));
                 });
             }
             filteredEntities.sort((a, b) => (a.value > b.value) ? 1 : -1);
             this.setState({
-                selectedEntities: this.props.selectedEntities !== undefined ? this.props.selectedEntities : this.state.selectedEntities,
+                selectedEntities: selectedEntitiesMap,
                 offset: 0,
                 count: this.props.count !== undefined ? this.props.count : 3,
                 filteredEntities: filteredEntities,
@@ -86,12 +124,11 @@ class EntityPicker extends Component {
                             this.props.checkboxes.forEach(c => {mapEntry.set(c, false)});
                         }
                         let selectedEntities = this.state.selectedEntities;
-                        console.log(selectedEntities);
                         if (this.props.multiSelect === undefined) {
                             selectedEntities = new Map();
                         }
-                        selectedEntities.set(e, mapEntry);
-                        this.props.selectedItemsCallback(selectedEntities);
+                        selectedEntities.set(JSON.stringify(e), mapEntry);
+                        this.returnSelectedEntities(selectedEntities);
                         this.setState({selectedEntities: selectedEntities});
                     }}
                     autocompleteObj={this.props.autocompleteObj}
@@ -105,26 +142,26 @@ class EntityPicker extends Component {
                 <ListGroup>
                     {this.state.filteredEntities.slice(this.state.offset, this.state.offset + this.state.count).map(entity => {
                         let mapEntry = new Map();
-                        if (this.state.selectedEntities.has(entity)) {
-                            mapEntry = this.state.selectedEntities.get(entity)
+                        if (this.state.selectedEntities.has(JSON.stringify(entity))) {
+                            mapEntry = this.state.selectedEntities.get(JSON.stringify(entity));
                         } else if (this.props.checkboxes !== undefined) {
                             this.props.checkboxes.forEach(c => {mapEntry.set(c, false)});
                         }
                         return <ListGroup.Item action variant="default"
-                            active={this.state.selectedEntities.has(entity)}>
+                            active={this.state.selectedEntities.has(JSON.stringify(entity))}>
                             <Container>
                                 <Row>
                                     <Col onClick={() => {
                                         let selectedEntities = this.state.selectedEntities;
-                                        if (selectedEntities.has(entity)) {
-                                            selectedEntities.delete(entity)
+                                        if (selectedEntities.has(JSON.stringify(entity))) {
+                                            selectedEntities.delete(JSON.stringify(entity));
                                         } else {
                                             if (this.props.multiSelect === undefined) {
                                                 selectedEntities = new Map();
                                             }
-                                            selectedEntities.set(entity, mapEntry);
+                                            selectedEntities.set(JSON.stringify(entity), mapEntry);
                                         }
-                                        this.props.selectedItemsCallback(selectedEntities);
+                                        this.returnSelectedEntities(selectedEntities);
                                         this.setState({selectedEntities: selectedEntities});
                                     }}>
                                         {entity.value}
@@ -132,16 +169,16 @@ class EntityPicker extends Component {
                                     {this.props.checkboxes !== undefined ? this.props.checkboxes.map(c => {
                                         return <Col><FormCheck inline type="checkbox" label={c}
                                                                onClick={() => {
-                                                                   if (this.state.selectedEntities.has(entity)) {
+                                                                   if (this.state.selectedEntities.has(JSON.stringify(entity))) {
                                                                        let selectedEntities = this.state.selectedEntities;
-                                                                       let mapEntry = selectedEntities.get(entity);
+                                                                       let mapEntry = selectedEntities.get(JSON.stringify(entity));
                                                                        mapEntry.set(c, !mapEntry.get(c))
-                                                                       selectedEntities.set(entity, mapEntry);
-                                                                       this.props.selectedItemsCallback(selectedEntities);
+                                                                       selectedEntities.set(JSON.stringify(entity), mapEntry);
+                                                                       this.returnSelectedEntities(selectedEntities);
                                                                        this.setState({selectedEntities: selectedEntities});
                                                                    }
                                                                }}
-                                                               checked={this.state.selectedEntities.has(entity) && this.state.selectedEntities.get(entity).get(c)}
+                                                               checked={this.state.selectedEntities.has(JSON.stringify(entity)) && this.state.selectedEntities.get(JSON.stringify(entity)).get(c)}
                                         /></Col>}) : ''}
                                 </Row>
                             </Container>

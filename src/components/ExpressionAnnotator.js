@@ -32,12 +32,6 @@ class ExpressionAnnotator extends Component{
             assay: '',
             annotationCreatedShow: false,
             wrongAnnotationShow: false,
-            preselectedId: undefined,
-            preselectedGene: undefined,
-            preselectedAnatomyTerms: undefined,
-            preselectedLifeStages: undefined,
-            preselectedCellularComponents: undefined,
-            preselectedAssay: undefined,
             createModify: 'Create'
         }
         this.resetPickers = this.resetPickers.bind(this);
@@ -45,30 +39,7 @@ class ExpressionAnnotator extends Component{
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.expressionAnnotationForEditing !== prevProps.expressionAnnotationForEditing) {
-            let preselectedGene = undefined;
-            let preselectedAssay = undefined;
-            let preselectedAnatomyTerms = undefined;
-            let preselectedCellularComponents = undefined;
-            let preselectedLifeStages = undefined;
-            if (this.props.expressionAnnotationForEditing !== null) {
-                preselectedGene = new Map();
-                preselectedAssay = new Map();
-                preselectedAnatomyTerms = new Map();
-                preselectedCellularComponents = new Map();
-                preselectedLifeStages = new Map();
-                preselectedGene.set(this.props.expressionAnnotationForEditing.gene, new Map());
-                preselectedAssay.set(this.props.expressionAnnotationForEditing.assay, new Map());
-                this.props.expressionAnnotationForEditing.whereExpressed.forEach(a => preselectedAnatomyTerms.set(a, new Map()));
-                this.props.expressionAnnotationForEditing.cellularComponent.forEach(a => preselectedCellularComponents.set(a, new Map()));
-                this.props.expressionAnnotationForEditing.whenExpressed.forEach(a => preselectedLifeStages.set(a, new Map()));
-            }
             this.setState({
-                preselectedId: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.annotationId : undefined,
-                preselectedGene: preselectedGene,
-                preselectedAnatomyTerms: preselectedAnatomyTerms,
-                preselectedCellularComponents: preselectedCellularComponents,
-                preselectedLifeStages: preselectedLifeStages,
-                preselectedAssay: preselectedAssay,
                 gene: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.gene : '',
                 anatomyTerms: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.whereExpressed : [],
                 lifeStages: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.whenExpressed : [],
@@ -122,12 +93,12 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.genes}
                             ref={instance => { this.genePicker = instance; }}
                             selectedItemsCallback={(genes) => {
-                                this.setState({gene: genes.size > 0 ? genes.keys().next().value : ''});
+                                this.setState({gene: genes});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addGene}
-                            selectedEntities={this.state.preselectedGene}
+                            selectedEntities={this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.gene : ''}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.GENE}
                         />
@@ -137,12 +108,12 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.anatomyTerms}
                             ref={instance => { this.anatomyTermsPicker = instance; }}
                             selectedItemsCallback={(anatomyTerms) => {
-                                this.setState({anatomyTerms: [...anatomyTerms.keys()]});
+                                this.setState({anatomyTerms: anatomyTerms});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
-                            selectedEntities={this.state.preselectedAnatomyTerms}
+                            selectedEntities={this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.whereExpressed : ''}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.ANATOMY_TERM}
                             multiSelect/>
@@ -152,12 +123,12 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.lifeStages}
                             ref={instance => { this.lifeStagesPicker = instance; }}
                             selectedItemsCallback={(lifeStages) => {
-                                this.setState({lifeStages: [...lifeStages.keys()]});
+                                this.setState({lifeStages: lifeStages});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
-                            selectedEntities={this.state.preselectedLifeStages}
+                            selectedEntities={this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.whenExpressed : ''}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.LIFE_STAGE}
                             multiSelect/>
@@ -167,12 +138,12 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.cellularComponents}
                             ref={instance => { this.cellularComponentPicker = instance; }}
                             selectedItemsCallback={(cellularComponents) => {
-                                this.setState({cellularComponents: [...cellularComponents.keys()]});
+                                this.setState({cellularComponents: cellularComponents});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addCellularComponent}
-                            selectedEntities={this.state.preselectedCellularComponents}
+                            selectedEntities={this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.cellularComponent : ''}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.CELLULAR_COMPONENT}
                             multiSelect/>
@@ -182,10 +153,10 @@ class ExpressionAnnotator extends Component{
                             entities={this.props.assays}
                             ref={instance => { this.assayPicker = instance; }}
                             selectedItemsCallback={(assays) => {
-                                this.setState({assay: assays.size > 0 ? assays.keys().next().value : ''});
+                                this.setState({assay: assays});
                             }}
                             count={this.props.maxEntities}
-                            selectedEntities={this.state.preselectedAssay}
+                            selectedEntities={this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.assay : ''}
                             isLoading={this.props.isLoading}
                         />
                     </Col>
@@ -200,8 +171,8 @@ class ExpressionAnnotator extends Component{
                                 cellularComponent: this.state.cellularComponents
                             };
                             if (expressionAnnotationIsValid(annotation)) {
-                                if (this.state.preselectedId !== undefined) {
-                                    annotation.annotationId = this.state.preselectedId;
+                                if (this.props.expressionAnnotationForEditing !== null) {
+                                    annotation.annotationId = this.props.expressionAnnotationForEditing.annotationId;
                                     this.props.modifyExpressionAnnotation(annotation);
                                 } else {
                                     this.props.addExpressionAnnotation(annotation);
@@ -215,8 +186,8 @@ class ExpressionAnnotator extends Component{
                             } else {
                                 this.setState({wrongAnnotationShow: true});
                             }
-                        }}>{this.state.preselectedId === undefined ? 'Create' : 'Modify'} Annotation</Button><br/><br/>
-                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.state.preselectedId === undefined ? 'Clear' : 'Cancel'}</Button>
+                        }}>{this.props.expressionAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Button><br/><br/>
+                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.expressionAnnotationForEditing !== null ? 'Cancel' : 'Clear'}</Button>
                     </Col>
                 </Row>
                 <AnnotationCreatedModal
