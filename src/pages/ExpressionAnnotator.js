@@ -11,10 +11,11 @@ import Button from "react-bootstrap/Button";
 import {addExpressionAnnotation, modifyExpressionAnnotation} from "../redux/actions/expressionAnnotationsActions";
 import {expressionAnnotationIsValid} from "../redux/constraints/expression";
 import {addGene, addAnatomyTerm, addLifeStage, addCellularComponent} from "../redux/actions/textMinedEntitiesActions";
-import Modal from "react-bootstrap/Modal";
 import {getExpressionAnnotationForEditing} from "../redux/selectors/internalStateSelector";
 import {unsetExpressionAnnotationForEditing} from "../redux/actions/internalStateActions";
 import {entityTypes} from "../autocomplete";
+import {AnnotationCreatedModal, WrongAnnotationModal} from "./Modals";
+import {createExpressionAnnotation} from "../annotationUtils";
 
 class ExpressionAnnotator extends Component{
     constructor(props) {
@@ -25,11 +26,7 @@ class ExpressionAnnotator extends Component{
         this.cellularComponentPicker = React.createRef();
         this.assayPicker = React.createRef();
         this.state = {
-            gene: '',
-            anatomyTerms: [],
-            lifeStages: [],
-            cellularComponents: [],
-            assay: '',
+            tmpAnnotation: createExpressionAnnotation(),
             annotationCreatedShow: false,
             wrongAnnotationShow: false,
             createModify: 'Create'
@@ -40,11 +37,7 @@ class ExpressionAnnotator extends Component{
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.expressionAnnotationForEditing !== prevProps.expressionAnnotationForEditing) {
             this.setState({
-                gene: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.gene : '',
-                anatomyTerms: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.whereExpressed : [],
-                lifeStages: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.whenExpressed : [],
-                cellularComponents: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.cellularComponent : [],
-                assay: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.assay : ''
+                tmpAnnotation: this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing : createExpressionAnnotation()
             });
         }
     }
@@ -69,31 +62,14 @@ class ExpressionAnnotator extends Component{
                 </Row>
                 <Row>
                     <Col>
-                        <h6 align="center">Gene</h6>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Anatomy terms</h6>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Life stages</h6>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Cellular Component</h6>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Method</h6>
-                    </Col>
-                    <Col>
-                        &nbsp;
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
                         <EntityPicker
+                            title="Gene"
                             entities={this.props.genes}
                             ref={instance => { this.genePicker = instance; }}
-                            selectedItemsCallback={(genes) => {
-                                this.setState({gene: genes});
+                            selectedItemsCallback={(gene) => {
+                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                                tmpAnnotation.gene = gene;
+                                this.setState({tmpAnnotation: tmpAnnotation});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -105,10 +81,13 @@ class ExpressionAnnotator extends Component{
                     </Col>
                     <Col>
                         <EntityPicker
+                            title="Anatomy terms"
                             entities={this.props.anatomyTerms}
                             ref={instance => { this.anatomyTermsPicker = instance; }}
                             selectedItemsCallback={(anatomyTerms) => {
-                                this.setState({anatomyTerms: anatomyTerms});
+                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                                tmpAnnotation.whereExpressed = anatomyTerms;
+                                this.setState({tmpAnnotation: tmpAnnotation});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -120,10 +99,13 @@ class ExpressionAnnotator extends Component{
                     </Col>
                     <Col>
                         <EntityPicker
+                            title="Life stages"
                             entities={this.props.lifeStages}
                             ref={instance => { this.lifeStagesPicker = instance; }}
                             selectedItemsCallback={(lifeStages) => {
-                                this.setState({lifeStages: lifeStages});
+                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                                tmpAnnotation.whenExpressed = lifeStages;
+                                this.setState({tmpAnnotation: tmpAnnotation});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -135,10 +117,13 @@ class ExpressionAnnotator extends Component{
                     </Col>
                     <Col>
                         <EntityPicker
+                            title="Cellular components"
                             entities={this.props.cellularComponents}
                             ref={instance => { this.cellularComponentPicker = instance; }}
                             selectedItemsCallback={(cellularComponents) => {
-                                this.setState({cellularComponents: cellularComponents});
+                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                                tmpAnnotation.cellularComponent = cellularComponents;
+                                this.setState({tmpAnnotation: tmpAnnotation});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -150,10 +135,13 @@ class ExpressionAnnotator extends Component{
                     </Col>
                     <Col>
                         <EntityPicker
+                            title="Method"
                             entities={this.props.assays}
                             ref={instance => { this.assayPicker = instance; }}
-                            selectedItemsCallback={(assays) => {
-                                this.setState({assay: assays});
+                            selectedItemsCallback={(assay) => {
+                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                                tmpAnnotation.assay = assay;
+                                this.setState({tmpAnnotation: tmpAnnotation});
                             }}
                             count={this.props.maxEntities}
                             selectedEntities={this.props.expressionAnnotationForEditing !== null ? this.props.expressionAnnotationForEditing.assay : ''}
@@ -162,20 +150,12 @@ class ExpressionAnnotator extends Component{
                     </Col>
                     <Col align="left">
                         <Button variant="success" onClick={() => {
-                            let annotation = {
-                                gene: this.state.gene,
-                                whenExpressed: this.state.lifeStages,
-                                assay: this.state.assay,
-                                evidence: this.props.evidence,
-                                whereExpressed: this.state.anatomyTerms,
-                                cellularComponent: this.state.cellularComponents
-                            };
-                            if (expressionAnnotationIsValid(annotation)) {
+                            console.log(this.state.tmpAnnotation);
+                            if (expressionAnnotationIsValid(this.state.tmpAnnotation)) {
                                 if (this.props.expressionAnnotationForEditing !== null) {
-                                    annotation.annotationId = this.props.expressionAnnotationForEditing.annotationId;
-                                    this.props.modifyExpressionAnnotation(annotation);
+                                    this.props.modifyExpressionAnnotation(this.state.tmpAnnotation);
                                 } else {
-                                    this.props.addExpressionAnnotation(annotation);
+                                    this.props.addExpressionAnnotation(this.state.tmpAnnotation);
                                 }
                                 this.setState({
                                     createModify: this.props.expressionAnnotationForEditing !== null ? 'Modified' : 'Created'
@@ -202,53 +182,6 @@ class ExpressionAnnotator extends Component{
             </Container>
         );
     }
-}
-
-function AnnotationCreatedModal(props) {
-    return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-            </Modal.Header>
-            <Modal.Body>
-                <p>
-                    Annotation Successfully {props.create_modify}
-                </p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    );
-}
-
-function WrongAnnotationModal(props) {
-    return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Invalid Annotation
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <p>
-                    At least one gene, one anatomy term, life stage term or cellular component, and one method must be provided.
-                </p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    );
 }
 
 

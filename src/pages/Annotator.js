@@ -15,7 +15,6 @@ import {
     addAnatomyTerm,
     addGene
 } from "../redux/actions/textMinedEntitiesActions";
-import Modal from "react-bootstrap/Modal";
 import FormControl from "react-bootstrap/FormControl";
 import {anatomyFunctionAnnotationIsValid} from "../redux/constraints/anatomyFunction";
 import {
@@ -26,6 +25,7 @@ import {getAnatomyFunctionAnnotationForEditing} from "../redux/selectors/interna
 import {unsetAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
 import {entityTypes} from "../autocomplete";
 import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa';
+import {AnnotationCreatedModal, WrongAnnotationModal} from "./Modals";
 
 
 class AnatomyFunctionAnnotator extends Component{
@@ -88,11 +88,9 @@ class AnatomyFunctionAnnotator extends Component{
                     <Col sm={6}>
                         <Container fluid>
                             <Row>
-                                <Col sm={12}><h6 align="center">Phenotype</h6></Col>
-                            </Row>
-                            <Row>
                                 <Col sm={12}>
                                     <EntityPicker
+                                        title={"Phenotype"}
                                         entities={this.props.phenotypeTerms}
                                         ref={instance => { this.phenoTermPicker = instance; }}
                                         selectedItemsCallback={(phenoTerms) => {
@@ -109,11 +107,9 @@ class AnatomyFunctionAnnotator extends Component{
                                 </Col>
                             </Row>
                             <Row>
-                                <Col sm={12}><h6 align="center">{this.state.involvedOption === "not_involved" ? 'Not ' : ''}Involved Tissue</h6></Col>
-                            </Row>
-                            <Row>
                                 <Col sm={12}>
                                     <EntityPicker
+                                        title={this.state.involvedOption === 'not_involved' ? 'Not involved tissues' : 'Involved tissues'}
                                         entities={this.props.anatomyTerms}
                                         ref={instance => { this.anatomyTermsPicker = instance; }}
                                         selectedItemsCallback={(anatomyTerms) => {
@@ -134,12 +130,9 @@ class AnatomyFunctionAnnotator extends Component{
                     <Col sm={4}>
                         <Container fluid>
                             <Row>
-                                <Col sm={6}><h6 align="center">Genes</h6></Col>
-                                <Col sm={6}><h6 align="center">Involved/Not Involved in</h6></Col>
-                            </Row>
-                            <Row>
                                 <Col sm={6}>
                                     <EntityPicker
+                                        title={"Genes"}
                                         entities={this.props.genes}
                                         ref={instance => { this.genePicker = instance; }}
                                         selectedItemsCallback={(genes) => {
@@ -154,6 +147,7 @@ class AnatomyFunctionAnnotator extends Component{
                                     />
                                 </Col>
                                 <Col sm={6}>
+                                    <h6>Involved/not involved in</h6>
                                     <FormControl as="select" value={this.state.involvedOption} onChange={(e) => {
                                         this.setState({involvedOption: e.target.value});
                                         this.anatomyTermsPicker.reset();
@@ -164,12 +158,9 @@ class AnatomyFunctionAnnotator extends Component{
                                 </Col>
                             </Row>
                             <Row>
-                                <Col sm={6}><h6 align="center">Assay</h6></Col>
-                                <Col sm={6}><h6 align="center">Remarks</h6></Col>
-                            </Row>
-                            <Row>
                                 <Col sm={6}>
                                     <EntityPicker
+                                        title={"Assay"}
                                         entities={this.props.anatomyFunctionAssays}
                                         ref={instance => { this.assayPicker = instance; }}
                                         selectedItemsCallback={(assays) => {
@@ -181,6 +172,7 @@ class AnatomyFunctionAnnotator extends Component{
                                     />
                                 </Col>
                                 <Col sm={6}>
+                                    <div align="center"><h6>Remarks</h6></div>
                                     <Container fluid>
                                         <Row>
                                             <Col>
@@ -389,54 +381,6 @@ class AnatomyFunctionAnnotator extends Component{
         );
     }
 }
-
-function AnnotationCreatedModal(props) {
-    return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-            </Modal.Header>
-            <Modal.Body>
-                <p>
-                    Annotation Successfully {props.create_modify}.
-                </p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    );
-}
-
-function WrongAnnotationModal(props) {
-    return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Invalid Annotation
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <p>
-                    Annotation does not meet constraints.
-                </p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    );
-}
-
 
 const mapStateToProps = state => ({
     genes: getGenes(state),

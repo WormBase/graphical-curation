@@ -110,6 +110,7 @@ class EntityPicker extends Component {
                 active={this.props.isLoading}
                 spinner
                 text='Loading data ...'>
+                <div align="center"><h6>{this.props.title}</h6></div>
                 {this.props.addEntity !== undefined ? <div align="center"><Button size="sm" variant="outline-primary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add from source</Button><br/><br/></div> : ''}
                 <AddEntityModal
                     show={this.state.showAddEntity}

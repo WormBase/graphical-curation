@@ -4,13 +4,13 @@ module.exports = {
     mode: 'production',
     entry: {
         'main.js': './src/App.js',
-        'expression/annotator': './src/components/ExpressionAnnotator.js',
-        'expression/viewer': './src/components/ExpressionAnnotationsViewer.js',
-        'phenotype/annotator': './src/components/PhenotypeAnnotator.js',
-        'phenotype/viewer': './src/components/PhenotypeAnnotationsViewer.js',
-        'anatomyFunction/annotator': './src/components/AnatomyFunctionAnnotator.js',
-        'anatomyFunction/viewer': './src/components/AnatomyFunctionAnnotationsViewer.js',
-        'entity-picker': './src/components/EntityPicker.js',
+        'expression/annotator': './src/pages/ExpressionAnnotator.js',
+        'expression/viewer': './src/pages/ExpressionAnnotationsViewer.js',
+        'phenotype/annotator': './src/pages/PhenotypeAnnotator.js',
+        'phenotype/viewer': './src/pages/PhenotypeAnnotationsViewer.js',
+        'anatomyFunction/annotator': './src/pages/AnatomyFunctionAnnotator.js',
+        'anatomyFunction/viewer': './src/pages/AnatomyFunctionAnnotationsViewer.js',
+        'entity-picker': './src/pages/EntityPicker.js',
         'autocomplete': './src/autocomplete.js'
     },
     output: {

@@ -13,11 +13,12 @@ import Button from "react-bootstrap/Button";
 import {addPhenotypeAnnotation, modifyPhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
 import {phenotypeAnnotationIsValid} from "../redux/constraints/phenotype";
 import {addVariant, addPhenotypeTerm, addLifeStage, addAnatomyTerm} from "../redux/actions/textMinedEntitiesActions";
-import Modal from "react-bootstrap/Modal";
 import FormControl from "react-bootstrap/FormControl";
 import {getPhenotypeAnnotationForEditing} from "../redux/selectors/internalStateSelector";
 import {unsetPhenotypeAnnotationForEditing} from "../redux/actions/internalStateActions";
 import {entityTypes} from "../autocomplete";
+import {AnnotationCreatedModal, WrongAnnotationModal} from "./Modals";
+import {createPhenotypeAnnotation} from "../annotationUtils";
 
 
 class PhenotypeAnnotator extends Component{
@@ -28,18 +29,9 @@ class PhenotypeAnnotator extends Component{
         this.anatomyTermsPicker = React.createRef();
         this.lifeStagesPicker = React.createRef();
         this.state = {
-            variant: '',
-            phenoTerms: [],
-            anatomyTerms: [],
-            lifeStages: [],
-            phenotypeStatement: '',
+            tmpAnnotation: createPhenotypeAnnotation(),
             annotationCreatedShow: false,
             wrongAnnotationShow: false,
-            preselectedId: undefined,
-            preselectedVariant: undefined,
-            preselectedPhenoTerms: undefined,
-            preselectedAnatomyTerms: undefined,
-            preselectedLifeStages: undefined,
             createModify: 'Create'
         }
 
@@ -49,11 +41,7 @@ class PhenotypeAnnotator extends Component{
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.phenotypeAnnotationForEditing !== prevProps.phenotypeAnnotationForEditing) {
             this.setState({
-                variant: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.object : '',
-                anatomyTerms: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.anatomyTerms : [],
-                lifeStages: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.lifeStages : [],
-                phenoTerms: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.phenotypeTerms : [],
-                phenotypeStatement: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.phenotypeStatement : ''
+                tmpAnnotation: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing : createPhenotypeAnnotation()
             });
         }
     }
@@ -77,31 +65,14 @@ class PhenotypeAnnotator extends Component{
                 </Row>
                 <Row>
                     <Col>
-                        <h6 align="center">Variant</h6>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Phenotype Terms</h6>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Anatomy Terms</h6>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Life Stages</h6>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Phenotype Statement</h6>
-                    </Col>
-                    <Col>
-                        &nbsp;
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
                         <EntityPicker
+                            title="Variant"
                             entities={this.props.variants}
                             ref={instance => { this.variantPicker = instance; }}
-                            selectedItemsCallback={(variants) => {
-                                this.setState({variant: variants});
+                            selectedItemsCallback={(object) => {
+                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                                tmpAnnotation.object = object;
+                                this.setState({tmpAnnotation: tmpAnnotation});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -113,10 +84,13 @@ class PhenotypeAnnotator extends Component{
                     </Col>
                     <Col>
                         <EntityPicker
+                            title="Phenotype terms"
                             entities={this.props.phenotypeTerms}
                             ref={instance => { this.phenoTermPicker = instance; }}
                             selectedItemsCallback={(phenoTerms) => {
-                                this.setState({phenoTerms: phenoTerms});
+                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                                tmpAnnotation.phenoTerms = phenoTerms;
+                                this.setState({tmpAnnotation: tmpAnnotation});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -128,10 +102,13 @@ class PhenotypeAnnotator extends Component{
                     </Col>
                     <Col>
                         <EntityPicker
+                            title="Anatomy terms"
                             entities={this.props.anatomyTerms}
                             ref={instance => { this.anatomyTermsPicker = instance; }}
                             selectedItemsCallback={(anatomyTerms) => {
-                                this.setState({anatomyTerms: anatomyTerms});
+                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                                tmpAnnotation.anatomyTerms = anatomyTerms;
+                                this.setState({tmpAnnotation: tmpAnnotation});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -143,10 +120,13 @@ class PhenotypeAnnotator extends Component{
                     </Col>
                     <Col>
                         <EntityPicker
+                            title="Life stages"
                             entities={this.props.lifeStages}
                             ref={instance => { this.lifeStagesPicker = instance; }}
                             selectedItemsCallback={(lifeStages) => {
-                                this.setState({lifeStages: lifeStages});
+                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                                tmpAnnotation.lifeStages = lifeStages;
+                                this.setState({tmpAnnotation: tmpAnnotation});
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
@@ -157,25 +137,20 @@ class PhenotypeAnnotator extends Component{
                             multiSelect/>
                     </Col>
                     <Col>
-                        <FormControl as="textarea" rows="3" value={this.state.phenotypeStatement} onChange={event =>
-                            this.setState({phenotypeStatement: event.target.value})}/>
+                        <h6 align="center">Phenotype Statement</h6>
+                        <FormControl as="textarea" rows="3" value={this.state.tmpAnnotation.phenotypeStatement} onChange={event => {
+                            let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
+                            tmpAnnotation.phenotypeStatement = event.target.value;
+                            this.setState({tmpAnnotation: tmpAnnotation});
+                        }}/>
                     </Col>
                     <Col align="left">
                         <Button variant="success" onClick={() => {
-                            let annotation = {
-                                object: this.state.variant,
-                                phenotypeTerms: this.state.phenoTerms,
-                                anatomyTerms: this.state.anatomyTerms,
-                                lifeStages: this.state.lifeStages,
-                                phenotypeStatement: this.state.phenotypeStatement,
-                                evidence: this.props.evidence
-                            };
-                            if (phenotypeAnnotationIsValid(annotation)) {
+                            if (phenotypeAnnotationIsValid(this.state.tmpAnnotation)) {
                                 if (this.props.phenotypeAnnotationForEditing !== null) {
-                                    annotation.annotationId = this.props.phenotypeAnnotationForEditing.annotationId;
-                                    this.props.modifyPhenotypeAnnotation(annotation);
+                                    this.props.modifyPhenotypeAnnotation(this.state.tmpAnnotation);
                                 } else {
-                                    this.props.addPhenotypeAnnotation(annotation);
+                                    this.props.addPhenotypeAnnotation(this.state.tmpAnnotation);
                                 }
                                 this.setState({
                                     createModify: this.props.phenotypeAnnotationForEditing !== null ? 'Modified' : 'Created'
@@ -202,54 +177,6 @@ class PhenotypeAnnotator extends Component{
             </Container>
         );
     }
-}
-
-function AnnotationCreatedModal(props) {
-    return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-            </Modal.Header>
-            <Modal.Body>
-                <p>
-                    Annotation Successfully {props.create_modify}.
-                </p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    );
-}
-
-function WrongAnnotationModal(props) {
-    return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Invalid Annotation
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <p>
-                    At least one variant, one or more phenotype terms, and one or more anatomy terms or life stages
-                    must be provided.
-                </p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    );
 }
 
 
