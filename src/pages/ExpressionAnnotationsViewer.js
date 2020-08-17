@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import {getExpressionAnnotations} from "../redux/selectors/expressionAnnotationsSelector";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
@@ -46,15 +43,15 @@ class ExpressionAnnotationsViewer extends Component{
                             </OverlayTrigger>
                             {expressionAnnotationNtoN(a) ?
                                 <span>
-                                        <OverlayTrigger
-                                            overlay={
-                                                <Tooltip>
-                                                    Multiple 'where expressed' and 'when expressed' entries. This implies that the gene product is expressed in all tissues specified during all developmental stages specified
-                                                </Tooltip>
-                                            }>
-                                            <IoIosWarning />
-                                        </OverlayTrigger>
-                                    </span> : ''}
+                                    <OverlayTrigger popperConfig={{modifiers: {preventOverflow: {enabled: false}}}}
+                                        overlay={
+                                            <Tooltip>
+                                                Multiple 'where expressed' and 'when expressed' entries. This implies that the gene product is expressed in all tissues specified during all developmental stages specified
+                                            </Tooltip>
+                                        }>
+                                        <IoIosWarning />
+                                    </OverlayTrigger>
+                                </span> : ''}
                         </td>
                         <td>
                             {a.whereExpressed.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
