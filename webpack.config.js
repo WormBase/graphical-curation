@@ -4,12 +4,9 @@ module.exports = {
     mode: 'production',
     entry: {
         'main.js': './src/App.js',
-        'expression/annotator': './src/pages/ExpressionAnnotator.js',
-        'expression/viewer': './src/pages/ExpressionAnnotationsViewer.js',
-        'phenotype/annotator': './src/pages/PhenotypeAnnotator.js',
-        'phenotype/viewer': './src/pages/PhenotypeAnnotationsViewer.js',
-        'anatomyFunction/annotator': './src/pages/AnatomyFunctionAnnotator.js',
-        'anatomyFunction/viewer': './src/pages/AnatomyFunctionAnnotationsViewer.js',
+        'expression/table': './src/components/ExpressionAnnotationTable.js',
+        'phenotype/table': './src/components/PhenotypeAnnotationTable.js',
+        'anatomyFunction/table': './src/components/AnatomyFunctionAnnotationTable.js',
         'entity-picker': './src/pages/EntityPicker.js',
         'autocomplete': './src/autocomplete.js'
     },

@@ -41,8 +41,10 @@ class EntityPicker extends Component {
             returnEntities = Array.from(selectedEntities).map(([key, value]) => {
                 let entity = {
                     value: JSON.parse(key).value,
-                    modId: JSON.parse(key).modId,
                 };
+                if (JSON.parse(key).modId !== undefined) {
+                    entity.modId = JSON.parse(key).modId;
+                }
                 if (value.size > 0) {
                     entity.options = Object.fromEntries(value);
                 }
@@ -77,7 +79,11 @@ class EntityPicker extends Component {
                     }
                     selectedEntitiesArray.forEach(a => {
                         if (a.options !== undefined) {
-                            selectedEntitiesMap.set(JSON.stringify({value: a.value, modId: a.modId}),
+                            let entity = {value: a.value};
+                            if (a.modId !== undefined) {
+                                entity.modId = a.modId;
+                            }
+                            selectedEntitiesMap.set(JSON.stringify(entity),
                                 new Map(Object.entries(a.options)));
                         } else {
                             selectedEntitiesMap.set(JSON.stringify(a), new Map());
