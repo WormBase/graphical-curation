@@ -5,27 +5,39 @@ import Button from "react-bootstrap/Button";
 import {connect} from "react-redux";
 import Tab from "react-bootstrap/Tab";
 import {fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError} from "../redux/actions/textMinedEntitiesActions";
-import {getExpressionAnnotations} from "../redux/selectors/expressionAnnotationsSelector";
+import {
+    getCurrentExpressionAction,
+    getExpressionAnnotations,
+    getExpressionSavedStatus
+} from "../redux/selectors/expressionAnnotationsSelector";
 import {setExpressionAnnotations} from "../redux/actions/expressionAnnotationsActions";
 import PhenotypeAnnotator from "./PhenotypeAnnotator";
 import PhenotypeAnnotationsViewer from "./PhenotypeAnnotationsViewer";
 import {setPhenotypeAnnotations} from "../redux/actions/phenotypeAnnotationsActions";
 import AnatomyFunctionAnnotator from "./AnatomyFunctionAnnotator";
 import AnatomyFunctionAnnotationsViewer from "./AnatomyFunctionAnnotationsViewer";
-import {getPhenotypeAnnotations} from "../redux/selectors/phenotypeAnnotationsSelector";
+import {
+    getCurrentPhenotypeAction,
+    getPhenotypeAnnotations,
+    getPhenotypeSavedStatus
+} from "../redux/selectors/phenotypeAnnotationsSelector";
 import {
     getActiveAnnotationType,
-    getActiveView, getAnatomyFunctionAnnotationForEditing,
-    getExpressionAnnotationForEditing, getPhenotypeAnnotationForEditing
+    getActiveView
 } from "../redux/selectors/internalStateSelector";
 import {
     setActiveAnnotationType,
     setActiveView,
-    unsetExpressionAnnotationForEditing
 } from "../redux/actions/internalStateActions";
 import Nav from "react-bootstrap/Nav";
 import {setAnatomyFunctionAnnotations} from "../redux/actions/anatomyFunctionAnnotationsActions";
-import {getAnatomyFunctionAnnotations} from "../redux/selectors/anatomyFunctionAnnotationsSelector";
+import {
+    getAnatomyFunctionAnnotations, getAnatomyFunctionSavedStatus,
+    getCurrentAnatomyFunctionAction
+} from "../redux/selectors/anatomyFunctionAnnotationsSelector";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import { IoIosWarning } from 'react-icons/io';
+import Tooltip from "react-bootstrap/Tooltip";
 
 class GraphicalCuration extends Component{
 
@@ -35,7 +47,8 @@ class GraphicalCuration extends Component{
             showExpressionCuration: true,
             showPhenotypeCuration: true,
             showAnatomyFunctionCuration: true,
-            maxEntities: 5
+            maxEntities: 5,
+            modified: false
         };
     }
 
@@ -91,6 +104,9 @@ class GraphicalCuration extends Component{
         if (this.props.anatomyFunctionAnnotations !== prevProps.anatomyFunctionAnnotations) {
             this.props.setAnatomyFunctionAnnotations(this.props.anatomyFunctionAnnotations);
         }
+        if (this.props.anatomyFunctionSavedStatus !== prevProps.anatomyFunctionSavedStatus && this.props.anatomyFunctionSavedStatus !== null || this.props.expressionSavedStatus !== prevProps.expressionSavedStatus && this.props.expressionSavedStatus !== null || this.props.phenotypeSavedStatus !== prevProps.phenotypeSavedStatus && this.props.phenotypeSavedStatus !== null) {
+            this.setState({modified: true});
+        }
     }
 
     render() {
@@ -111,11 +127,20 @@ class GraphicalCuration extends Component{
                              <Nav.Link eventKey="anatomyFunction" onClick={() => this.props.setActiveAnnotationType("anatomyFunction")}>Anatomy Function</Nav.Link>
                          </Nav.Item> : ''}
                          <Nav.Item>
-                             &nbsp;&nbsp;<Button variant="outline-success" onClick={
-                                 () => this.props.annotationsSaved({expression: this.props.storedExpressionAnnotations,
-                                     phenotype: this.props.storedPhenotypeAnnotations, anatomyFunction: this.props.storedAnatomyFunctionAnnotations })}>
-                                 Save All Changes
-                             </Button>
+                             &nbsp;&nbsp;
+                             <OverlayTrigger placement="bottom" popperConfig={{modifiers: {preventOverflow: {enabled: false}}}} overlay={
+                                 <Tooltip>
+                                     {this.state.modified ? "No changes need to be saved to persistent storage" : "Click here to save annotations to persistent storage"}
+                                 </Tooltip>}>
+                                 <Button variant={this.state.modified ? "outline-warning" : "outline-success"} onClick={
+                                     () => {
+                                         this.props.annotationsSaved({expression: this.props.storedExpressionAnnotations,
+                                             phenotype: this.props.storedPhenotypeAnnotations, anatomyFunction: this.props.storedAnatomyFunctionAnnotations });
+                                         this.setState({modified: false});
+                                     }}>
+                                     Save All Changes {this.state.modified ? <IoIosWarning /> : ''}
+                                 </Button>
+                             </OverlayTrigger>
                          </Nav.Item>
                      </Nav>
                     <Tab.Content>
@@ -125,7 +150,7 @@ class GraphicalCuration extends Component{
                             <Tab.Container activeKey={this.props.activeView}>
                                 <Nav variant="tabs" defaultActiveKey="references">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.expressionAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Nav.Link>
+                                        <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.currentExpressionAction} Annotation</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
@@ -149,7 +174,7 @@ class GraphicalCuration extends Component{
                             <Tab.Container activeKey={this.props.activeView}>
                                 <Nav variant="tabs" defaultActiveKey="references">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.phenotypeAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Nav.Link>
+                                        <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.currentPhenotypeAction} Annotation</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
@@ -173,7 +198,7 @@ class GraphicalCuration extends Component{
                             <Tab.Container activeKey={this.props.activeView}>
                                 <Nav variant="tabs" defaultActiveKey="references">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.anatomyFunctionAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Nav.Link>
+                                        <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.currentAnatomyFunctionAction} Annotation</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
@@ -205,12 +230,14 @@ const mapStateToProps = state => ({
     storedAnatomyFunctionAnnotations: getAnatomyFunctionAnnotations(state),
     activeAnnotationType: getActiveAnnotationType(state),
     activeView: getActiveView(state),
-    expressionAnnotationForEditing: getExpressionAnnotationForEditing(state),
-    phenotypeAnnotationForEditing: getPhenotypeAnnotationForEditing(state),
-    anatomyFunctionAnnotationForEditing: getAnatomyFunctionAnnotationForEditing(state)
+    currentAnatomyFunctionAction: getCurrentAnatomyFunctionAction(state),
+    currentExpressionAction: getCurrentExpressionAction(state),
+    currentPhenotypeAction: getCurrentPhenotypeAction(state),
+    anatomyFunctionSavedStatus: getAnatomyFunctionSavedStatus(state),
+    expressionSavedStatus: getExpressionSavedStatus(state),
+    phenotypeSavedStatus: getPhenotypeSavedStatus(state)
 });
 
 export default connect(mapStateToProps, {
     fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError, setExpressionAnnotations,
-    setPhenotypeAnnotations, setAnatomyFunctionAnnotations, setActiveAnnotationType, setActiveView,
-    unsetExpressionAnnotationForEditing})(GraphicalCuration);
+    setPhenotypeAnnotations, setAnatomyFunctionAnnotations, setActiveAnnotationType, setActiveView})(GraphicalCuration);

@@ -12,7 +12,7 @@ class ExpressionAnnotationTable extends Component{
 
     render() {
         return (
-            <Table striped bordered hover size="xs" responsive>
+            <Table striped bordered hover size="sm" responsive>
                 <thead>
                     <tr style={{backgroundColor: 'lightgray'}}>
                         {this.props.showAnnotationIds ? <th>ID</th> : ''}

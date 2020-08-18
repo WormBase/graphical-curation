@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {getAnatomyFunctionAnnotations} from "../redux/selectors/anatomyFunctionAnnotationsSelector";
-import {deleteAnatomyFunctionAnnotation} from "../redux/actions/anatomyFunctionAnnotationsActions";
-import {setActiveView, setAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
+import {deleteAnatomyFunctionAnnotation, setAnatomyFunctionTmpAnnotation} from "../redux/actions/anatomyFunctionAnnotationsActions";
+import {setActiveView} from "../redux/actions/internalStateActions";
 import AnatomyFunctionAnnotationTable from "../components/AnatomyFunctionAnnotationTable";
 
 class AnatomyFunctionAnnotationsViewer extends Component{
@@ -12,7 +12,7 @@ class AnatomyFunctionAnnotationsViewer extends Component{
             <AnatomyFunctionAnnotationTable annotations={this.props.anatomyFunctionAnnotations}
                                             deleteAnnotation={(a) => this.props.deleteAnatomyFunctionAnnotation(a.annotationId)}
                                             modifyAnnotation={(a) => {
-                                                this.props.setAnatomyFunctionAnnotationForEditing(a);
+                                                this.props.setAnatomyFunctionTmpAnnotation(a);
                                                 this.props.setActiveView("annotator");
                                             }}
                                             showAnnotationIds={this.props.showAnnotationIds}/>
@@ -24,4 +24,4 @@ const mapStateToProps = state => ({
     anatomyFunctionAnnotations: getAnatomyFunctionAnnotations(state)
 });
 
-export default connect(mapStateToProps, {deleteAnatomyFunctionAnnotation, setAnatomyFunctionAnnotationForEditing, setActiveView})(AnatomyFunctionAnnotationsViewer);
+export default connect(mapStateToProps, {deleteAnatomyFunctionAnnotation, setAnatomyFunctionTmpAnnotation, setActiveView})(AnatomyFunctionAnnotationsViewer);

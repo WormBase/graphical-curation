@@ -1,11 +1,16 @@
 import {createReducer} from '@reduxjs/toolkit'
-import * as uuid from 'uuid'
+import {phenotypeAnnotationIsValid} from "../constraints/phenotype";
+import {createPhenotypeAnnotation} from "../../annotationUtils";
 
 const initialState = {
-    annotations: []
+    annotations: [],
+    tmpAnnotation: createPhenotypeAnnotation(),
+    savedStatus: null,
+    wrongAnnotation: false,
+    currentAction: 'Create',
 };
 
-function annotationExists(annotation, storedAnnotations) {
+function annotationIsDuplicate(annotation, storedAnnotations) {
     return storedAnnotations.some(a => {
         return annotation.object === a.object && arraysContainSameElements(annotation.phenoTerms, a.phenoTerms)
     })
@@ -19,31 +24,59 @@ export const phenotypeAnnotations = createReducer(initialState, {
             state.annotations = action.payload.annotations
         }
     },
-    ADD_PHENOTYPE_ANNOT: (state, action) => {
-        let newAnnotation = {
-            annotationId: uuid.v4(),
-            object: action.payload.annotation.object,
-            phenotypeTerms: action.payload.annotation.phenotypeTerms,
-            anatomyTerms: action.payload.annotation.anatomyTerms,
-            lifeStages: action.payload.annotation.lifeStages,
-            evidence: action.payload.annotation.evidence,
-            phenotypeStatement: action.payload.annotation.phenotypeStatement,
-            dateAssigned: Date.now()
-        };
-        if (!annotationExists(newAnnotation, state.annotations)) {
-            state.annotations.push(newAnnotation);
+    SAVE_PHENOTYPE_TMP_ANNOT: (state, action) => {
+        if (phenotypeAnnotationIsValid(state.tmpAnnotation)) {
+            if (state.annotations.some(a => a.annotationId === state.tmpAnnotation.annotationId)) {
+                let modAnnotation = _.cloneDeep(state.tmpAnnotation);
+                modAnnotation.dateAssigned = Date.now();
+                state.annotations.forEach((annotation, idx, object) => {
+                    if (annotation.annotationId === modAnnotation.annotationId) {
+                        object[idx] = modAnnotation;
+                    }
+                });
+                state.savedStatus = 'Modified';
+            } else if (!annotationIsDuplicate(state.tmpAnnotation, state.annotations)) {
+                state.annotations.push(_.cloneDeep(state.tmpAnnotation));
+                state.savedStatus = 'Created';
+            }
+            state.currentAction = 'Create';
+        } else {
+            state.wrongAnnotation = true;
         }
+    },
+    SET_PHENOTYPE_TMP_ANNOT: (state, action) => {
+        state.tmpAnnotation = _.cloneDeep(action.payload.annotation);
+        state.currentAction = 'Modify';
+    },
+    RESET_PHENOTYPE_TMP_ANNOT: (state, action) => {
+        state.tmpAnnotation = createPhenotypeAnnotation();
+        state.currentAction = 'Create';
     },
     DELETE_PHENOTYPE_ANNOT: (state, action) => {
         state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId)
     },
-    MODIFY_PHENOTYPE_ANNOT: (state, action) => {
-        let modAnnotation = action.payload.annotation;
-        modAnnotation.dateAssigned = Date.now();
-        state.annotations.forEach((annotation, idx, object) => {
-            if (annotation.annotationId === modAnnotation.annotationId) {
-                object[idx] = modAnnotation;
-            }
-        });
+    SET_PHENOTYPE_TMP_ANNOT_OBJECT: (state, action) => {
+        state.tmpAnnotation.object = _.cloneDeep(action.payload.object);
+    },
+    SET_PHENOTYPE_TMP_ANNOT_PHENOTYPE_TERMS: (state, action) => {
+        state.tmpAnnotation.phenotypeTerms = _.cloneDeep(action.payload.phenotypeTerms);
+    },
+    SET_PHENOTYPE_TMP_ANNOT_ANATOMY_TERMS: (state, action) => {
+        state.tmpAnnotation.anatomyTerms = _.cloneDeep(action.payload.anatomyTerms);
+    },
+    SET_PHENOTYPE_TMP_ANNOT_LIFE_STAGES: (state, action) => {
+        state.tmpAnnotation.lifeStages = _.cloneDeep(action.payload.lifeStages);
+    },
+    SET_PHENOTYPE_TMP_ANNOT_PHENOTYPE_STATEMENT: (state, action) => {
+        state.tmpAnnotation.phenotypeStatement = _.cloneDeep(action.payload.phenotypeStatement);
+    },
+    SET_PHENOTYPE_TMP_ANNOT_EVIDENCE: (state, action) => {
+        state.tmpAnnotation.evidence = _.cloneDeep(action.payload.evidence);
+    },
+    DISMISS_SAVED_STATUS: (state, action) => {
+        state.savedStatus = null;
+    },
+    DISMISS_WRONG_ANNOTATION: (state, action) => {
+        state.wrongAnnotation = false;
     },
 });

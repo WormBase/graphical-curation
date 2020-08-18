@@ -1,8 +1,11 @@
+import * as uuid from 'uuid';
+
 export const createAnatomyFunctionAnnotation = (phenotype = '', gene = '', anatomyTerms = [],
                                                 assay = '', remarks = [], noctuamodels = [],
                                                 genotypes = [], authorstatements = [],
                                                 evidence = '') => {
     return {
+        annotationId: uuid.v4(),
         phenotype: phenotype,
         gene: gene,
         anatomyTerms: anatomyTerms,
@@ -13,6 +16,7 @@ export const createAnatomyFunctionAnnotation = (phenotype = '', gene = '', anato
         genotypes: genotypes,
         authorstatements: authorstatements,
         evidence: evidence,
+        dateAssigned: Date.now(),
     }
 }
 
@@ -20,12 +24,14 @@ export const createExpressionAnnotation = (gene = '', whenExpressed = [], whereE
                                            cellularComponents = [], assay = '',
                                            evidence = '') => {
     return {
+        annotationId: uuid.v4(),
         gene: gene,
         whenExpressed: whenExpressed,
         whereExpressed: whereExpressed,
         cellularComponent: cellularComponents,
         assay: assay,
         evidence: evidence,
+        dateAssigned: Date.now(),
     }
 }
 
@@ -33,11 +39,13 @@ export const createPhenotypeAnnotation = (object = '', phenotypeTerms = [], anat
                                           lifeStages = [], phenotypeStatement = '',
                                           evidence = '') => {
     return {
+        annotationId: uuid.v4(),
         object: object,
         phenotypeTerms: phenotypeTerms,
         anatomyTerms: anatomyTerms,
         lifeStages: lifeStages,
         phenotypeStatement: phenotypeStatement,
-        evidence: evidence
+        evidence: evidence,
+        dateAssigned: Date.now(),
     }
 }

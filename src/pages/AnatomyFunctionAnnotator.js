@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import _ from "lodash";
 import {
     isLoading,
     getPhenotypeTerms,
@@ -17,17 +16,29 @@ import {
     addGene
 } from "../redux/actions/textMinedEntitiesActions";
 import FormControl from "react-bootstrap/FormControl";
-import {anatomyFunctionAnnotationIsValid} from "../redux/constraints/anatomyFunction";
-import {
-    addAnatomyFunctionAnnotation,
-    modifyAnatomyFunctionAnnotation
-} from "../redux/actions/anatomyFunctionAnnotationsActions";
-import {getAnatomyFunctionAnnotationForEditing} from "../redux/selectors/internalStateSelector";
-import {unsetAnatomyFunctionAnnotationForEditing} from "../redux/actions/internalStateActions";
 import {entityTypes} from "../autocomplete";
 import {AnnotationCreatedModal, WrongAnnotationModal} from "./Modals";
-import {createAnatomyFunctionAnnotation} from "../annotationUtils";
 import RemarksEditor from "../components/RemarksEditor";
+import {
+    dismissSavedStatus,
+    dismissWrongAnnotation,
+    resetAnatomyFunctionTmpAnnotation,
+    saveAnatomyFunctionTmpAnnotation,
+    setAnatomyFunctionTmpAnnotationAnatomyTerms, setAnatomyFunctionTmpAnnotationAssay,
+    setAnatomyFunctionTmpAnnotationAuthorStatements,
+    setAnatomyFunctionTmpAnnotationEvidence,
+    setAnatomyFunctionTmpAnnotationGene,
+    setAnatomyFunctionTmpAnnotationGenotypes,
+    setAnatomyFunctionTmpAnnotationInvolved,
+    setAnatomyFunctionTmpAnnotationNoctuaModels,
+    setAnatomyFunctionTmpAnnotationPhenotype,
+    setAnatomyFunctionTmpAnnotationRemarks
+} from "../redux/actions/anatomyFunctionAnnotationsActions";
+import {
+    getAnatomyFunctionTmpAnnotation, getCurrentAnatomyFunctionAction,
+    getAnatomyFunctionSavedStatus,
+    getWrongAnnotation
+} from "../redux/selectors/anatomyFunctionAnnotationsSelector";
 
 
 class AnatomyFunctionAnnotator extends Component{
@@ -37,20 +48,6 @@ class AnatomyFunctionAnnotator extends Component{
         this.phenoTermPicker = React.createRef();
         this.anatomyTermsPicker = React.createRef();
         this.assayPicker = React.createRef();
-        this.state = {
-            tmpAnnotation: createAnatomyFunctionAnnotation(),
-            annotationCreatedShow: false,
-            wrongAnnotationShow: false,
-            createModify: 'Create'
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.anatomyFunctionAnnotationForEditing !== prevProps.anatomyFunctionAnnotationForEditing) {
-            this.setState({
-                tmpAnnotation: this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing : createAnatomyFunctionAnnotation()
-            });
-        }
     }
 
     resetPickers() {
@@ -58,8 +55,14 @@ class AnatomyFunctionAnnotator extends Component{
         this.phenoTermPicker.reset();
         this.anatomyTermsPicker.reset();
         this.assayPicker.reset();
-        this.props.unsetAnatomyFunctionAnnotationForEditing();
-        this.setState({gene: '', phenoTerm: [], anatomyTerms: [], involvedOption: 'involved', remarks: [], noctuaModels: [], genotypes: [], authorStatements: []});
+        this.props.resetAnatomyFunctionTmpAnnotation();
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.savedStatus !== prevProps.savedStatus && this.props.savedStatus !== null) {
+            this.resetPickers();
+            setTimeout(() => this.props.dismissSavedStatus(), 2000);
+        }
     }
 
     render() {
@@ -80,14 +83,12 @@ class AnatomyFunctionAnnotator extends Component{
                                         entities={this.props.phenotypeTerms}
                                         ref={instance => { this.phenoTermPicker = instance; }}
                                         selectedItemsCallback={(phenoTerm) => {
-                                            let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                            tmpAnnotation.phenotype = phenoTerm;
-                                            this.setState({tmpAnnotation: tmpAnnotation});
+                                            this.props.setAnatomyFunctionTmpAnnotationPhenotype(phenoTerm);
                                         }}
                                         count={this.props.maxEntities}
                                         isLoading={this.props.isLoading}
                                         addEntity={this.props.addPhenotypeTerm}
-                                        selectedEntities={this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.phenotype : ''}
+                                        selectedEntities={this.props.tmpAnnotation.phenotype}
                                         autocompleteObj={this.props.autocompleteObj}
                                         entityType={entityTypes.PHENOTYPE}
                                         checkboxes={["Autonomous", "Nonautonomous"]}
@@ -97,19 +98,17 @@ class AnatomyFunctionAnnotator extends Component{
                             <Row>
                                 <Col sm={12}>
                                     <EntityPicker
-                                        title={this.state.involvedOption === 'not_involved' ? 'Not involved tissues' : 'Involved tissues'}
+                                        title={this.props.tmpAnnotation.involved === 'not_involved' ? 'Not involved tissues' : 'Involved tissues'}
                                         entities={this.props.anatomyTerms}
                                         ref={instance => { this.anatomyTermsPicker = instance; }}
                                         selectedItemsCallback={(anatomyTerms) => {
-                                            let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                            tmpAnnotation.anatomyTerms = anatomyTerms;
-                                            this.setState({tmpAnnotation: tmpAnnotation});
+                                            this.props.setAnatomyFunctionTmpAnnotationAnatomyTerms(anatomyTerms);
                                         }}
                                         count={this.props.maxEntities}
                                         isLoading={this.props.isLoading}
                                         addEntity={this.props.addAnatomyTerm}
-                                        checkboxes={this.state.involvedOption === "involved" ? ["Sufficient", "Necessary"] : ["Insufficient", "Unnecessary"]}
-                                        selectedEntities={this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.anatomyTerms : ''}
+                                        checkboxes={this.props.tmpAnnotation.involved === "involved" ? ["Sufficient", "Necessary"] : ["Insufficient", "Unnecessary"]}
+                                        selectedEntities={this.props.tmpAnnotation.anatomyTerms}
                                         autocompleteObj={this.props.autocompleteObj}
                                         entityType={entityTypes.ANATOMY_TERM}
                                         multiSelect/>
@@ -126,22 +125,20 @@ class AnatomyFunctionAnnotator extends Component{
                                         entities={this.props.genes}
                                         ref={instance => { this.genePicker = instance; }}
                                         selectedItemsCallback={(gene) => {
-                                            let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                            tmpAnnotation.gene = gene;
-                                            this.setState({tmpAnnotation: tmpAnnotation});
+                                            this.props.setAnatomyFunctionTmpAnnotationGene(gene);
                                         }}
                                         count={this.props.maxEntities}
                                         isLoading={this.props.isLoading}
                                         addEntity={this.props.addGene}
-                                        selectedEntities={this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.gene : ''}
+                                        selectedEntities={this.props.tmpAnnotation.gene}
                                         autocompleteObj={this.props.autocompleteObj}
                                         entityType={entityTypes.GENE}
                                     />
                                 </Col>
                                 <Col sm={6}>
                                     <h6>Involved/not involved in</h6>
-                                    <FormControl as="select" value={this.state.involvedOption} onChange={(e) => {
-                                        this.setState({involvedOption: e.target.value});
+                                    <FormControl as="select" value={this.props.tmpAnnotation.involved} onChange={(e) => {
+                                        this.props.setAnatomyFunctionTmpAnnotationInvolved(e.target.value);
                                         this.anatomyTermsPicker.reset();
                                     }}>
                                         <option value="involved" selected>Involved</option>
@@ -156,12 +153,10 @@ class AnatomyFunctionAnnotator extends Component{
                                         entities={this.props.anatomyFunctionAssays}
                                         ref={instance => { this.assayPicker = instance; }}
                                         selectedItemsCallback={(assay) => {
-                                            let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                            tmpAnnotation.assay = assay;
-                                            this.setState({tmpAnnotation: tmpAnnotation});
+                                            this.props.setAnatomyFunctionTmpAnnotationAssay(assay);
                                         }}
                                         count={this.props.maxEntities}
-                                        selectedEntities={this.props.anatomyFunctionAnnotationForEditing !== null ? this.props.anatomyFunctionAnnotationForEditing.assay : ''}
+                                        selectedEntities={this.props.tmpAnnotation.assay}
                                         isLoading={this.props.isLoading}
                                     />
                                 </Col>
@@ -169,35 +164,27 @@ class AnatomyFunctionAnnotator extends Component{
                                     <div align="center"><h6>Remarks</h6></div>
                                     <Container fluid>
                                         <Row><Col><RemarksEditor title="General remarks"
-                                                                 remarks={this.state.tmpAnnotation.remarks}
+                                                                 remarks={this.props.tmpAnnotation.remarks}
                                                                  remarksModified={(remarks) => {
-                                                                     let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                                                     tmpAnnotation.remarks = remarks;
-                                                                     this.setState({tmpAnnotation: tmpAnnotation});
+                                                                     this.props.setAnatomyFunctionTmpAnnotationRemarks(remarks);
                                                                  }}
                                         /></Col></Row>
                                         <Row><Col><RemarksEditor title="Noctua models"
-                                                                 remarks={this.state.tmpAnnotation.noctuamodels}
+                                                                 remarks={this.props.tmpAnnotation.noctuamodels}
                                                                  remarksModified={(remarks) => {
-                                                                     let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                                                     tmpAnnotation.noctuamodels = remarks;
-                                                                     this.setState({tmpAnnotation: tmpAnnotation});
+                                                                     this.props.setAnatomyFunctionTmpAnnotationNoctuaModels(remarks);
                                                                  }}
                                         /></Col></Row>
                                         <Row><Col><RemarksEditor title="Genotypes"
-                                                                 remarks={this.state.tmpAnnotation.genotypes}
+                                                                 remarks={this.props.tmpAnnotation.genotypes}
                                                                  remarksModified={(remarks) => {
-                                                                     let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                                                     tmpAnnotation.genotypes = remarks;
-                                                                     this.setState({tmpAnnotation: tmpAnnotation});
+                                                                     this.props.setAnatomyFunctionTmpAnnotationGenotypes(remarks);
                                                                  }}
                                         /></Col></Row>
                                         <Row><Col><RemarksEditor title="Author statements"
-                                                                 remarks={this.state.tmpAnnotation.authorstatements}
+                                                                 remarks={this.props.tmpAnnotation.authorstatements}
                                                                  remarksModified={(remarks) => {
-                                                                     let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                                                     tmpAnnotation.authorstatements = remarks;
-                                                                     this.setState({tmpAnnotation: tmpAnnotation});
+                                                                     this.props.setAnatomyFunctionTmpAnnotationAuthorStatements(remarks);
                                                                  }}
                                         /></Col></Row>
                                     </Container>
@@ -207,33 +194,19 @@ class AnatomyFunctionAnnotator extends Component{
                     </Col>
                     <Col sm={2} align="left">
                         <Button variant="success" onClick={() => {
-                            if (anatomyFunctionAnnotationIsValid(this.state.tmpAnnotation)) {
-                                if (this.props.anatomyFunctionAnnotationForEditing !== null) {
-                                    this.props.modifyAnatomyFunctionAnnotation(this.state.tmpAnnotation);
-                                } else {
-                                    this.props.addAnatomyFunctionAnnotation(this.state.tmpAnnotation);
-                                }
-                                this.setState({
-                                    createModify: this.props.anatomyFunctionAnnotationForEditing !== null ? 'Modified' : 'Created'
-                                });
-                                this.resetPickers();
-                                this.setState({annotationCreatedShow: true});
-                                setTimeout(() => this.setState({annotationCreatedShow: false}), 2000);
-                            } else {
-                                this.setState({wrongAnnotationShow: true});
-                            }
-                        }}>{this.props.anatomyFunctionAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Button><br/><br/>
-                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.anatomyFunctionAnnotationForEditing !== null ? 'Cancel' : 'Clear'}</Button>
+                            this.props.saveAnatomyFunctionTmpAnnotation();
+                        }}>{this.props.currentAction} Annotation</Button><br/><br/>
+                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
                     </Col>
                 </Row>
                 <AnnotationCreatedModal
-                    show={this.state.annotationCreatedShow}
-                    onHide={() => this.setState({annotationCreatedShow: false})}
-                    create_modify={this.state.createModify}
+                    show={this.props.savedStatus !== null}
+                    onHide={() => this.props.dismissSavedStatus()}
+                    create_modify={this.props.savedStatus}
                 />
                 <WrongAnnotationModal
-                    show={this.state.wrongAnnotationShow}
-                    onHide={() => this.setState({wrongAnnotationShow: false})}
+                    show={this.props.wrongAnnotation === true}
+                    onHide={() => this.props.dismissWrongAnnotation()}
                 />
             </Container>
         );
@@ -246,8 +219,16 @@ const mapStateToProps = state => ({
     isLoading: isLoading(state),
     anatomyFunctionAssays: getAnatomyFunctionAssays(state),
     anatomyTerms: getAnatomyTerms(state),
-    anatomyFunctionAnnotationForEditing: getAnatomyFunctionAnnotationForEditing(state)
+    tmpAnnotation: getAnatomyFunctionTmpAnnotation(state),
+    savedStatus: getAnatomyFunctionSavedStatus(state),
+    wrongAnnotation: getWrongAnnotation(state),
+    currentAction: getCurrentAnatomyFunctionAction(state)
 });
 
-export default connect(mapStateToProps, {addPhenotypeTerm, addAnatomyTerm, addGene, addAnatomyFunctionAnnotation,
-    modifyAnatomyFunctionAnnotation, unsetAnatomyFunctionAnnotationForEditing})(AnatomyFunctionAnnotator);
+export default connect(mapStateToProps, {addPhenotypeTerm, addAnatomyTerm, addGene, saveAnatomyFunctionTmpAnnotation,
+    resetAnatomyFunctionTmpAnnotation, setAnatomyFunctionTmpAnnotationPhenotype, setAnatomyFunctionTmpAnnotationGene,
+    setAnatomyFunctionTmpAnnotationAnatomyTerms, setAnatomyFunctionTmpAnnotationInvolved,
+    setAnatomyFunctionTmpAnnotationRemarks, setAnatomyFunctionTmpAnnotationNoctuaModels,
+    setAnatomyFunctionTmpAnnotationGenotypes, setAnatomyFunctionTmpAnnotationAuthorStatements,
+    setAnatomyFunctionTmpAnnotationAssay, setAnatomyFunctionTmpAnnotationEvidence, dismissSavedStatus,
+    dismissWrongAnnotation})(AnatomyFunctionAnnotator);

@@ -2,10 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 
 const initialState = {
     activeAnnotationType: 'expression',
-    activeView: 'annotator',
-    expressionAnnotationForEditing: null,
-    phenotypeAnnotationForEditing: null,
-    anatomyFunctionAnnotationForEditing: null
+    activeView: 'annotator'
 };
 
 export const internalState = createReducer(initialState, {
@@ -25,10 +22,4 @@ export const internalState = createReducer(initialState, {
         }
         state.activeView = action.payload.view;
         },
-    SET_EXPRESSION_ANNOTATION_FOR_EDITING: (state, action) => {state.expressionAnnotationForEditing = action.payload.annotation},
-    UNSET_EXPRESSION_ANNOTATION_FOR_EDITING: (state, action) => {state.expressionAnnotationForEditing = null},
-    SET_PHENOTYPE_ANNOTATION_FOR_EDITING: (state, action) => {state.phenotypeAnnotationForEditing = action.payload.annotation},
-    UNSET_PHENOTYPE_ANNOTATION_FOR_EDITING: (state, action) => {state.phenotypeAnnotationForEditing = null},
-    SET_ANATOMY_FUNCTION_ANNOTATION_FOR_EDITING: (state, action) => {state.anatomyFunctionAnnotationForEditing = action.payload.annotation},
-    UNSET_ANATOMY_FUNCTION_ANNOTATION_FOR_EDITING: (state, action) => {state.anatomyFunctionAnnotationForEditing = null}
 });

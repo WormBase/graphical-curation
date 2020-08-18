@@ -10,15 +10,24 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {addPhenotypeAnnotation, modifyPhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
-import {phenotypeAnnotationIsValid} from "../redux/constraints/phenotype";
+import {
+    dismissSavedStatus, dismissWrongAnnotation,
+    resetPhenotypeTmpAnnotation,
+    savePhenotypeTmpAnnotation,
+    setPhenotypeTmpAnnotationAnatomyTerms, setPhenotypeTmpAnnotationEvidence, setPhenotypeTmpAnnotationLifeStages,
+    setPhenotypeTmpAnnotationObject, setPhenotypeTmpAnnotationPhenotypeStatement,
+    setPhenotypeTmpAnnotationPhenotypeTerms
+} from "../redux/actions/phenotypeAnnotationsActions";
 import {addVariant, addPhenotypeTerm, addLifeStage, addAnatomyTerm} from "../redux/actions/textMinedEntitiesActions";
 import FormControl from "react-bootstrap/FormControl";
-import {getPhenotypeAnnotationForEditing} from "../redux/selectors/internalStateSelector";
-import {unsetPhenotypeAnnotationForEditing} from "../redux/actions/internalStateActions";
 import {entityTypes} from "../autocomplete";
 import {AnnotationCreatedModal, WrongAnnotationModal} from "./Modals";
-import {createPhenotypeAnnotation} from "../annotationUtils";
+import {
+    getCurrentPhenotypeAction,
+    getPhenotypeTmpAnnotation,
+    getPhenotypeSavedStatus,
+    getWrongAnnotation
+} from "../redux/selectors/phenotypeAnnotationsSelector";
 
 
 class PhenotypeAnnotator extends Component{
@@ -28,31 +37,21 @@ class PhenotypeAnnotator extends Component{
         this.phenoTermPicker = React.createRef();
         this.anatomyTermsPicker = React.createRef();
         this.lifeStagesPicker = React.createRef();
-        this.state = {
-            tmpAnnotation: createPhenotypeAnnotation(),
-            annotationCreatedShow: false,
-            wrongAnnotationShow: false,
-            createModify: 'Create'
-        }
-
-        this.resetPickers = this.resetPickers.bind(this);
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.phenotypeAnnotationForEditing !== prevProps.phenotypeAnnotationForEditing) {
-            this.setState({
-                tmpAnnotation: this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing : createPhenotypeAnnotation()
-            });
-        }
     }
 
     resetPickers() {
-        this.setState({variant: '', phenoTerms: [], anatomyTerms: [], lifeStages: [], phenotypeStatement: ''});
         this.variantPicker.reset();
         this.phenoTermPicker.reset();
         this.anatomyTermsPicker.reset();
         this.lifeStagesPicker.reset();
-        this.props.unsetPhenotypeAnnotationForEditing();
+        this.props.resetPhenotypeTmpAnnotation();
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.savedStatus !== prevProps.savedStatus && this.props.savedStatus !== null) {
+            this.resetPickers();
+            setTimeout(() => this.props.dismissSavedStatus(), 2000);
+        }
     }
 
     render() {
@@ -70,14 +69,12 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.variants}
                             ref={instance => { this.variantPicker = instance; }}
                             selectedItemsCallback={(object) => {
-                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                tmpAnnotation.object = object;
-                                this.setState({tmpAnnotation: tmpAnnotation});
+                                 this.props.setPhenotypeTmpAnnotationObject(object);
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addVariant}
-                            selectedEntities={this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.object : ''}
+                            selectedEntities={this.props.tmpAnnotation.object}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.VARIANT}
                         />
@@ -88,14 +85,12 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.phenotypeTerms}
                             ref={instance => { this.phenoTermPicker = instance; }}
                             selectedItemsCallback={(phenoTerms) => {
-                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                tmpAnnotation.phenoTerms = phenoTerms;
-                                this.setState({tmpAnnotation: tmpAnnotation});
+                                this.props.setPhenotypeTmpAnnotationPhenotypeTerms(phenoTerms);
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addPhenotypeTerm}
-                            selectedEntities={this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.phenotypeTerms : ''}
+                            selectedEntities={this.props.tmpAnnotation.phenotypeTerms}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.PHENOTYPE}
                             multiSelect/>
@@ -106,14 +101,12 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.anatomyTerms}
                             ref={instance => { this.anatomyTermsPicker = instance; }}
                             selectedItemsCallback={(anatomyTerms) => {
-                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                tmpAnnotation.anatomyTerms = anatomyTerms;
-                                this.setState({tmpAnnotation: tmpAnnotation});
+                                this.props.setPhenotypeTmpAnnotationAnatomyTerms(anatomyTerms);
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addAnatomyTerm}
-                            selectedEntities={this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.anatomyTerms : ''}
+                            selectedEntities={this.props.tmpAnnotation.anatomyTerms}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.ANATOMY_TERM}
                             multiSelect/>
@@ -124,55 +117,37 @@ class PhenotypeAnnotator extends Component{
                             entities={this.props.lifeStages}
                             ref={instance => { this.lifeStagesPicker = instance; }}
                             selectedItemsCallback={(lifeStages) => {
-                                let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                                tmpAnnotation.lifeStages = lifeStages;
-                                this.setState({tmpAnnotation: tmpAnnotation});
+                                this.props.setPhenotypeTmpAnnotationLifeStages(lifeStages);
                             }}
                             count={this.props.maxEntities}
                             isLoading={this.props.isLoading}
                             addEntity={this.props.addLifeStage}
-                            selectedEntities={this.props.phenotypeAnnotationForEditing !== null ? this.props.phenotypeAnnotationForEditing.lifeStages : ''}
+                            selectedEntities={this.props.tmpAnnotation.lifeStages}
                             autocompleteObj={this.props.autocompleteObj}
                             entityType={entityTypes.LIFE_STAGE}
                             multiSelect/>
                     </Col>
                     <Col>
                         <h6 align="center">Phenotype Statement</h6>
-                        <FormControl as="textarea" rows="3" value={this.state.tmpAnnotation.phenotypeStatement} onChange={event => {
-                            let tmpAnnotation = _.cloneDeep(this.state.tmpAnnotation);
-                            tmpAnnotation.phenotypeStatement = event.target.value;
-                            this.setState({tmpAnnotation: tmpAnnotation});
+                        <FormControl as="textarea" rows="3" value={this.props.tmpAnnotation.phenotypeStatement} onChange={event => {
+                            this.props.setPhenotypeTmpAnnotationPhenotypeStatement(event.target.value);
                         }}/>
                     </Col>
                     <Col align="left">
                         <Button variant="success" onClick={() => {
-                            if (phenotypeAnnotationIsValid(this.state.tmpAnnotation)) {
-                                if (this.props.phenotypeAnnotationForEditing !== null) {
-                                    this.props.modifyPhenotypeAnnotation(this.state.tmpAnnotation);
-                                } else {
-                                    this.props.addPhenotypeAnnotation(this.state.tmpAnnotation);
-                                }
-                                this.setState({
-                                    createModify: this.props.phenotypeAnnotationForEditing !== null ? 'Modified' : 'Created'
-                                });
-                                this.resetPickers();
-                                this.setState({annotationCreatedShow: true});
-                                setTimeout(() => this.setState({annotationCreatedShow: false}), 2000);
-                            } else {
-                                this.setState({wrongAnnotationShow: true});
-                            }
-                        }}>{this.props.phenotypeAnnotationForEditing !== null ? 'Modify' : 'Create'} Annotation</Button><br/><br/>
-                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.phenotypeAnnotationForEditing !== null ? 'Cancel' : 'Clear'}</Button>
+                            this.props.savePhenotypeTmpAnnotation();
+                        }}>{this.props.currentAction}  Annotation</Button><br/><br/>
+                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
                     </Col>
                 </Row>
                 <AnnotationCreatedModal
-                    show={this.state.annotationCreatedShow}
-                    onHide={() => this.setState({annotationCreatedShow: false})}
-                    create_modify={this.state.createModify}
+                    show={this.props.savedStatus !== null}
+                    onHide={() => this.props.dismissSavedStatus()}
+                    create_modify={this.props.savedStatus}
                 />
                 <WrongAnnotationModal
-                    show={this.state.wrongAnnotationShow}
-                    onHide={() => this.setState({wrongAnnotationShow: false})}
+                    show={this.props.wrongAnnotation === true}
+                    onHide={() => this.props.dismissWrongAnnotation()}
                 />
             </Container>
         );
@@ -186,8 +161,14 @@ const mapStateToProps = state => ({
     isLoading: isLoading(state),
     anatomyTerms: getAnatomyTerms(state),
     lifeStages: getLifeStages(state),
-    phenotypeAnnotationForEditing: getPhenotypeAnnotationForEditing(state)
+    tmpAnnotation: getPhenotypeTmpAnnotation(state),
+    savedStatus: getPhenotypeSavedStatus(state),
+    wrongAnnotation: getWrongAnnotation(state),
+    currentAction: getCurrentPhenotypeAction(state)
 });
 
-export default connect(mapStateToProps, {addPhenotypeAnnotation, addVariant, addPhenotypeTerm, addAnatomyTerm,
-    addLifeStage, unsetPhenotypeAnnotationForEditing, modifyPhenotypeAnnotation})(PhenotypeAnnotator);
+export default connect(mapStateToProps, {addVariant, addPhenotypeTerm, addAnatomyTerm, addLifeStage,
+    savePhenotypeTmpAnnotation, resetPhenotypeTmpAnnotation, setPhenotypeTmpAnnotationObject,
+    setPhenotypeTmpAnnotationPhenotypeTerms, setPhenotypeTmpAnnotationAnatomyTerms, setPhenotypeTmpAnnotationLifeStages,
+    setPhenotypeTmpAnnotationPhenotypeStatement, setPhenotypeTmpAnnotationEvidence, dismissSavedStatus,
+    dismissWrongAnnotation})(PhenotypeAnnotator);
