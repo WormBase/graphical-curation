@@ -35,24 +35,24 @@ class PhenotypeAnnotationsViewer extends Component{
                         <tr>
                             {this.props.showAnnotationIds ? <td><p style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{a.annotationId}</p></td> : ''}
                             <td>
-                                <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.object.modId}</Tooltip>}>
+                                <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.object.modId}</Tooltip>}>
                                     <span>{a.object.value}</span>
                                 </OverlayTrigger>
                             </td>
                             <td>
-                                {a.phenotypeTerms.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                                {a.phenotypeTerms.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
                                     <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                             </td>
                             <td>
-                                {a.anatomyTerms.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                                {a.anatomyTerms.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
                                     <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                             </td>
                             <td>
-                                {a.lifeStages.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                                {a.lifeStages.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
                                     <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                             </td>
                             <td>
-                                <OverlayTrigger trigger="click" placement="right" poppperConfig={{modifiers: {preventOverflow: {enabled: false}}}} delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip"><span>{a.phenotypeStatement}</span></Tooltip>}><span style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{a.phenotypeStatement}</span></OverlayTrigger>
+                                <p dangerouslySetInnerHTML={{ __html: a.phenotypeStatement}}/>
                             </td>
                             <td>
                                 {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}

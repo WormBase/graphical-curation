@@ -33,13 +33,13 @@ class AnatomyFunctionAnnotationTable extends Component{
                         <tr>
                             {this.props.showAnnotationIds ? <td><p style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{a.annotationId}</p></td> : ''}
                             <td>
-                                <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.phenotype.modId}</Tooltip>}>
+                                <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.phenotype.modId}</Tooltip>}>
                                     <span>{a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</span>
                                 </OverlayTrigger>
                             </td>
                             <td>
                                 {a.gene !== '' ?
-                                    <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.gene.modId}</Tooltip>}>
+                                    <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.gene.modId}</Tooltip>}>
                                         <span>{a.gene.value}</span>
                                     </OverlayTrigger>
                                     : ''}
@@ -49,7 +49,7 @@ class AnatomyFunctionAnnotationTable extends Component{
                             </td>
                             <td>
                                 {a.anatomyTerms.map(a =>
-                                    <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.modId}</Tooltip>}>
+                                    <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.modId}</Tooltip>}>
                                         <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>
                                     </OverlayTrigger>)}
                             </td>

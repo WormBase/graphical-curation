@@ -31,12 +31,12 @@ class ExpressionAnnotationTable extends Component{
                     <tr>
                         {this.props.showAnnotationIds ? <td><p style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{a.annotationId}</p></td> : ''}
                         <td>
-                            <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.gene.modId}</Tooltip>}>
+                            <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.gene.modId}</Tooltip>}>
                                 <span>{a.gene.value}</span>
                             </OverlayTrigger>
                             {expressionAnnotationNtoN(a) ?
                                 <span>
-                                    <OverlayTrigger popperConfig={{modifiers: {preventOverflow: {enabled: false}}}}
+                                    <OverlayTrigger trigger="click" popperConfig={{modifiers: {preventOverflow: {enabled: false}}}}
                                         overlay={
                                             <Tooltip>
                                                 Multiple 'where expressed' and 'when expressed' entries. This implies that the gene product is expressed in all tissues specified during all developmental stages specified
@@ -47,15 +47,15 @@ class ExpressionAnnotationTable extends Component{
                                 </span> : ''}
                         </td>
                         <td>
-                            {a.whereExpressed.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                            {a.whereExpressed.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
                                 <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                         </td>
                         <td>
-                            {a.cellularComponent.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                            {a.cellularComponent.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
                                 <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                         </td>
                         <td>
-                            {a.whenExpressed.map(e => <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                            {a.whenExpressed.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
                                 <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                         </td>
                         <td>
