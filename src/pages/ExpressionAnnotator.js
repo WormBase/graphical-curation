@@ -141,6 +141,7 @@ class ExpressionAnnotator extends Component{
                     </Col>
                     <Col align="left">
                         <Button variant="success" onClick={() => {
+                            this.props.setExpressionTmpAnnotationEvidence(this.props.evidence);
                             this.props.saveExpressionTmpAnnotation();
                         }}>{this.props.currentAction}  Annotation</Button><br/><br/>
                         <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>

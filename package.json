@@ -1,6 +1,6 @@
 {
   "name": "@wormbase/graphical-curation",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Wormbase graphical curation tool",
   "main": "./lib/main.js",
   "license": "MIT",

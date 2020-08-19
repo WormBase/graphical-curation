@@ -135,6 +135,7 @@ class PhenotypeAnnotator extends Component{
                     </Col>
                     <Col align="left">
                         <Button variant="success" onClick={() => {
+                            this.props.setPhenotypeTmpAnnotationEvidence(this.props.evidence);
                             this.props.savePhenotypeTmpAnnotation();
                         }}>{this.props.currentAction}  Annotation</Button><br/><br/>
                         <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>

@@ -7,7 +7,7 @@ import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import {deletePhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
-import {setActiveView, setPhenotypeAnnotationForEditing} from "../redux/actions/internalStateActions";
+import {setActiveView} from "../redux/actions/internalStateActions";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import Table from "react-bootstrap/Table";
@@ -77,4 +77,4 @@ const mapStateToProps = state => ({
     phenotypeAnnotations: getPhenotypeAnnotations(state)
 });
 
-export default connect(mapStateToProps, {deletePhenotypeAnnotation, setActiveView, setPhenotypeAnnotationForEditing})(PhenotypeAnnotationsViewer);
+export default connect(mapStateToProps, {deletePhenotypeAnnotation, setActiveView})(PhenotypeAnnotationsViewer);
