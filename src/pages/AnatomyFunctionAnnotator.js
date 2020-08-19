@@ -194,7 +194,7 @@ class AnatomyFunctionAnnotator extends Component{
                     </Col>
                     <Col sm={2} align="left">
                         <Button variant="success" onClick={() => {
-                            PhenotypeAnnotation
+                            this.props.setAnatomyFunctionTmpAnnotationEvidence(this.props.evidence);
                             this.props.saveAnatomyFunctionTmpAnnotation();
                         }}>{this.props.currentAction} Annotation</Button><br/><br/>
                         <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
