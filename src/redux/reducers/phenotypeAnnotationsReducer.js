@@ -53,7 +53,8 @@ export const phenotypeAnnotations = createReducer(initialState, {
         state.currentAction = 'Create';
     },
     DELETE_PHENOTYPE_ANNOT: (state, action) => {
-        state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId)
+        state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId);
+        state.savedStatus = 'Deleted';
     },
     SET_PHENOTYPE_TMP_ANNOT_OBJECT: (state, action) => {
         state.tmpAnnotation.object = _.cloneDeep(action.payload.object);

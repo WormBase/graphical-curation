@@ -55,7 +55,8 @@ export const anatomyFunctionAnnotations = createReducer(initialState, {
         state.currentAction = 'Create';
     },
     DELETE_ANATOMYFUNCTION_ANNOT: (state, action) => {
-        state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId)
+        state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId);
+        state.savedStatus = 'Deleted';
     },
     SET_ANATOMYFUNCTION_TMP_ANNOT_PHENOTYPE: (state, action) => {
         state.tmpAnnotation.phenotype = _.cloneDeep(action.payload.phenotype);

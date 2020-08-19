@@ -128,9 +128,9 @@ class GraphicalCuration extends Component{
                          </Nav.Item> : ''}
                          <Nav.Item>
                              &nbsp;&nbsp;
-                             <OverlayTrigger placement="bottom" popperConfig={{modifiers: {preventOverflow: {enabled: false}}}} overlay={
+                             <OverlayTrigger placement="right" overlay={
                                  <Tooltip>
-                                     {this.state.modified ? "No changes need to be saved to persistent storage" : "Click here to save annotations to persistent storage"}
+                                     Click here to save annotations to persistent storage
                                  </Tooltip>}>
                                  <Button variant={this.state.modified ? "outline-warning" : "outline-success"} onClick={
                                      () => {
