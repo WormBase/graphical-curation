@@ -3,14 +3,14 @@ import {connect} from "react-redux";
 import {
     isLoading, getAnatomyTerms, getAssays, getGenes, getLifeStages, getCellularComponents
 } from "../redux/selectors/textMinedEntitiesSelector";
-import EntityPicker from "./EntityPicker";
+import EntityPicker from "../components/EntityPicker";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import {addGene, addAnatomyTerm, addLifeStage, addCellularComponent} from "../redux/actions/textMinedEntitiesActions";
 import {entityTypes} from "../autocomplete";
-import {AnnotationCreatedModal, WrongAnnotationModal} from "./Modals";
+import {AnnotationCreatedModal, WrongAnnotationModal} from "../components/Modals";
 import {
     resetExpressionTmpAnnotation,
     saveExpressionTmpAnnotation,
@@ -26,6 +26,7 @@ import {
     getExpressionSavedStatus,
     getWrongAnnotation
 } from "../redux/selectors/expressionAnnotationsSelector";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 class ExpressionAnnotator extends Component{
     constructor(props) {
@@ -55,98 +56,104 @@ class ExpressionAnnotator extends Component{
 
     render() {
         return (
-            <Container fluid>
-                <Row>
-                    <Col>
-                        &nbsp;
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <EntityPicker
-                            title="Gene"
-                            entities={this.props.genes}
-                            ref={instance => { this.genePicker = instance; }}
-                            selectedItemsCallback={(gene) => {
-                                this.props.setExpressionTmpAnnotationGene(gene);
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addGene}
-                            selectedEntities={this.props.tmpAnnotation.gene}
-                            autocompleteObj={this.props.autocompleteObj}
-                            entityType={entityTypes.GENE}
-                        />
-                    </Col>
-                    <Col>
-                        <EntityPicker
-                            title="Anatomy terms"
-                            entities={this.props.anatomyTerms}
-                            ref={instance => { this.anatomyTermsPicker = instance; }}
-                            selectedItemsCallback={(anatomyTerms) => {
-                                this.props.setExpressionTmpAnnotationWhereExpressed(anatomyTerms);
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addAnatomyTerm}
-                            selectedEntities={this.props.tmpAnnotation.whereExpressed}
-                            autocompleteObj={this.props.autocompleteObj}
-                            entityType={entityTypes.ANATOMY_TERM}
-                            multiSelect/>
-                    </Col>
-                    <Col>
-                        <EntityPicker
-                            title="Life stages"
-                            entities={this.props.lifeStages}
-                            ref={instance => { this.lifeStagesPicker = instance; }}
-                            selectedItemsCallback={(lifeStages) => {
-                                this.props.setExpressionTmpAnnotationWhenExpressed(lifeStages);
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addLifeStage}
-                            selectedEntities={this.props.tmpAnnotation.whenExpressed}
-                            autocompleteObj={this.props.autocompleteObj}
-                            entityType={entityTypes.LIFE_STAGE}
-                            multiSelect/>
-                    </Col>
-                    <Col>
-                        <EntityPicker
-                            title="Cellular components"
-                            entities={this.props.cellularComponents}
-                            ref={instance => { this.cellularComponentPicker = instance; }}
-                            selectedItemsCallback={(cellularComponents) => {
-                                this.props.setExpressionTmpAnnotationCellularComponents(cellularComponents);
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addCellularComponent}
-                            selectedEntities={this.props.tmpAnnotation.cellularComponent}
-                            autocompleteObj={this.props.autocompleteObj}
-                            entityType={entityTypes.CELLULAR_COMPONENT}
-                            multiSelect/>
-                    </Col>
-                    <Col>
-                        <EntityPicker
-                            title="Method"
-                            entities={this.props.assays}
-                            ref={instance => { this.assayPicker = instance; }}
-                            selectedItemsCallback={(assay) => {
-                                this.props.setExpressionTmpAnnotationAssay(assay);
-                            }}
-                            count={this.props.maxEntities}
-                            selectedEntities={this.props.tmpAnnotation.assay}
-                            isLoading={this.props.isLoading}
-                        />
-                    </Col>
-                    <Col align="left">
-                        <Button variant="success" onClick={() => {
-                            this.props.setExpressionTmpAnnotationEvidence(this.props.evidence);
-                            this.props.saveExpressionTmpAnnotation();
-                        }}>{this.props.currentAction}  Annotation</Button><br/><br/>
-                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
-                    </Col>
-                </Row>
+            <div>
+                <Container fluid>
+                    <Row>
+                        <Col>
+                            &nbsp;
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <EntityPicker
+                                title="Gene"
+                                entities={this.props.genes}
+                                ref={instance => { this.genePicker = instance; }}
+                                selectedItemsCallback={(gene) => {
+                                    this.props.setExpressionTmpAnnotationGene(gene);
+                                }}
+                                count={this.props.maxEntities}
+                                isLoading={this.props.isLoading}
+                                addEntity={this.props.addGene}
+                                selectedEntities={this.props.tmpAnnotation.gene}
+                                autocompleteObj={this.props.autocompleteObj}
+                                entityType={entityTypes.GENE}
+                            />
+                        </Col>
+                        <Col>
+                            <EntityPicker
+                                title="Anatomy terms"
+                                entities={this.props.anatomyTerms}
+                                ref={instance => { this.anatomyTermsPicker = instance; }}
+                                selectedItemsCallback={(anatomyTerms) => {
+                                    this.props.setExpressionTmpAnnotationWhereExpressed(anatomyTerms);
+                                }}
+                                count={this.props.maxEntities}
+                                isLoading={this.props.isLoading}
+                                addEntity={this.props.addAnatomyTerm}
+                                selectedEntities={this.props.tmpAnnotation.whereExpressed}
+                                autocompleteObj={this.props.autocompleteObj}
+                                entityType={entityTypes.ANATOMY_TERM}
+                                multiSelect/>
+                        </Col>
+                        <Col>
+                            <EntityPicker
+                                title="Life stages"
+                                entities={this.props.lifeStages}
+                                ref={instance => { this.lifeStagesPicker = instance; }}
+                                selectedItemsCallback={(lifeStages) => {
+                                    this.props.setExpressionTmpAnnotationWhenExpressed(lifeStages);
+                                }}
+                                count={this.props.maxEntities}
+                                isLoading={this.props.isLoading}
+                                addEntity={this.props.addLifeStage}
+                                selectedEntities={this.props.tmpAnnotation.whenExpressed}
+                                autocompleteObj={this.props.autocompleteObj}
+                                entityType={entityTypes.LIFE_STAGE}
+                                multiSelect/>
+                        </Col>
+                        <Col>
+                            <EntityPicker
+                                title="Cellular components"
+                                entities={this.props.cellularComponents}
+                                ref={instance => { this.cellularComponentPicker = instance; }}
+                                selectedItemsCallback={(cellularComponents) => {
+                                    this.props.setExpressionTmpAnnotationCellularComponents(cellularComponents);
+                                }}
+                                count={this.props.maxEntities}
+                                isLoading={this.props.isLoading}
+                                addEntity={this.props.addCellularComponent}
+                                selectedEntities={this.props.tmpAnnotation.cellularComponent}
+                                autocompleteObj={this.props.autocompleteObj}
+                                entityType={entityTypes.CELLULAR_COMPONENT}
+                                multiSelect/>
+                        </Col>
+                        <Col>
+                            <EntityPicker
+                                title="Method"
+                                entities={this.props.assays}
+                                ref={instance => { this.assayPicker = instance; }}
+                                selectedItemsCallback={(assay) => {
+                                    this.props.setExpressionTmpAnnotationAssay(assay);
+                                }}
+                                count={this.props.maxEntities}
+                                selectedEntities={this.props.tmpAnnotation.assay}
+                                isLoading={this.props.isLoading}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm={12} align="right">
+                            <ButtonGroup>
+                                <Button variant="success" onClick={() => {
+                                    this.props.setExpressionTmpAnnotationEvidence(this.props.evidence);
+                                    this.props.saveExpressionTmpAnnotation();
+                                }}>{this.props.currentAction}  Annotation</Button><br/><br/>
+                                <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
+                            </ButtonGroup>
+                        </Col>
+                    </Row>
+                </Container>
                 <AnnotationCreatedModal
                     show={this.props.savedStatus !== null}
                     onHide={() => this.props.dismissSavedStatus()}
@@ -156,7 +163,7 @@ class ExpressionAnnotator extends Component{
                     show={this.props.wrongAnnotation === true}
                     onHide={() => this.props.dismissWrongAnnotation()}
                 />
-            </Container>
+            </div>
         );
     }
 }

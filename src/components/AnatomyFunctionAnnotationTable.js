@@ -15,7 +15,7 @@ class AnatomyFunctionAnnotationTable extends Component{
                     <tr style={{backgroundColor: 'lightgray'}}>
                         {this.props.showAnnotationIds ? <th>ID</th> : ''}
                         <th>Phenotype</th>
-                        <th width="100px">Gene</th>
+                        <th>Gene</th>
                         <th>Involved/Not Involved in</th>
                         <th>Anatomy Terms</th>
                         <th>Remarks</th>
@@ -37,7 +37,7 @@ class AnatomyFunctionAnnotationTable extends Component{
                                     <span>{a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</span>
                                 </OverlayTrigger>
                             </td>
-                            <td>
+                            <td style={{minWidth: "100px"}}>
                                 {a.gene !== '' ?
                                     <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.gene.modId}</Tooltip>}>
                                         <span>{a.gene.value}</span>
@@ -53,16 +53,16 @@ class AnatomyFunctionAnnotationTable extends Component{
                                         <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>
                                     </OverlayTrigger>)}
                             </td>
-                            <td>
+                            <td style={a.remarks.some(r => r.length > 10) ? {minWidth: "300px"} : {}}>
                                 <p dangerouslySetInnerHTML={{ __html: a.remarks.join('<br/><br/>')}}/>
                             </td>
-                            <td>
+                            <td style={a.noctuamodels.some(r => r.length > 10) ? {minWidth: "300px"} : {}}>
                                 <p dangerouslySetInnerHTML={{ __html: a.noctuamodels.join('<br/><br/>')}}/>
                             </td>
-                            <td>
+                            <td style={a.genotypes.some(r => r.length > 10) ? {minWidth: "300px"} : {}}>
                                 <p dangerouslySetInnerHTML={{ __html: a.genotypes.join('<br/><br/>')}}/>
                             </td>
-                            <td>
+                            <td style={a.authorstatements.some(r => r.length > 10) ? {minWidth: "300px"} : {}}>
                                 <p dangerouslySetInnerHTML={{ __html: a.authorstatements.join('<br/><br/>')}}/>
                             </td>
                             <td>

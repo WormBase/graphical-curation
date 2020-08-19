@@ -51,7 +51,7 @@ class PhenotypeAnnotationsViewer extends Component{
                                 {a.lifeStages.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
                                     <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
                             </td>
-                            <td>
+                            <td style={a.phenotypeStatement.length > 10 ? {minWidth: "300px"} : {}}>
                                 <p dangerouslySetInnerHTML={{ __html: a.phenotypeStatement}}/>
                             </td>
                             <td>

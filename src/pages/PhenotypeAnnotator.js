@@ -5,7 +5,7 @@ import {
     getPhenotypeTerms,
     getVariants, getAnatomyTerms, getLifeStages
 } from "../redux/selectors/textMinedEntitiesSelector";
-import EntityPicker from "./EntityPicker";
+import EntityPicker from "../components/EntityPicker";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -21,13 +21,14 @@ import {
 import {addVariant, addPhenotypeTerm, addLifeStage, addAnatomyTerm} from "../redux/actions/textMinedEntitiesActions";
 import FormControl from "react-bootstrap/FormControl";
 import {entityTypes} from "../autocomplete";
-import {AnnotationCreatedModal, WrongAnnotationModal} from "./Modals";
+import {AnnotationCreatedModal, WrongAnnotationModal} from "../components/Modals";
 import {
     getCurrentPhenotypeAction,
     getPhenotypeTmpAnnotation,
     getPhenotypeSavedStatus,
     getWrongAnnotation
 } from "../redux/selectors/phenotypeAnnotationsSelector";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 
 class PhenotypeAnnotator extends Component{
@@ -56,91 +57,97 @@ class PhenotypeAnnotator extends Component{
 
     render() {
         return (
-            <Container fluid>
-                <Row>
-                    <Col>
-                        &nbsp;
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <EntityPicker
-                            title="Variant"
-                            entities={this.props.variants}
-                            ref={instance => { this.variantPicker = instance; }}
-                            selectedItemsCallback={(object) => {
-                                 this.props.setPhenotypeTmpAnnotationObject(object);
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addVariant}
-                            selectedEntities={this.props.tmpAnnotation.object}
-                            autocompleteObj={this.props.autocompleteObj}
-                            entityType={entityTypes.VARIANT}
-                        />
-                    </Col>
-                    <Col>
-                        <EntityPicker
-                            title="Phenotype terms"
-                            entities={this.props.phenotypeTerms}
-                            ref={instance => { this.phenoTermPicker = instance; }}
-                            selectedItemsCallback={(phenoTerms) => {
-                                this.props.setPhenotypeTmpAnnotationPhenotypeTerms(phenoTerms);
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addPhenotypeTerm}
-                            selectedEntities={this.props.tmpAnnotation.phenotypeTerms}
-                            autocompleteObj={this.props.autocompleteObj}
-                            entityType={entityTypes.PHENOTYPE}
-                            multiSelect/>
-                    </Col>
-                    <Col>
-                        <EntityPicker
-                            title="Anatomy terms"
-                            entities={this.props.anatomyTerms}
-                            ref={instance => { this.anatomyTermsPicker = instance; }}
-                            selectedItemsCallback={(anatomyTerms) => {
-                                this.props.setPhenotypeTmpAnnotationAnatomyTerms(anatomyTerms);
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addAnatomyTerm}
-                            selectedEntities={this.props.tmpAnnotation.anatomyTerms}
-                            autocompleteObj={this.props.autocompleteObj}
-                            entityType={entityTypes.ANATOMY_TERM}
-                            multiSelect/>
-                    </Col>
-                    <Col>
-                        <EntityPicker
-                            title="Life stages"
-                            entities={this.props.lifeStages}
-                            ref={instance => { this.lifeStagesPicker = instance; }}
-                            selectedItemsCallback={(lifeStages) => {
-                                this.props.setPhenotypeTmpAnnotationLifeStages(lifeStages);
-                            }}
-                            count={this.props.maxEntities}
-                            isLoading={this.props.isLoading}
-                            addEntity={this.props.addLifeStage}
-                            selectedEntities={this.props.tmpAnnotation.lifeStages}
-                            autocompleteObj={this.props.autocompleteObj}
-                            entityType={entityTypes.LIFE_STAGE}
-                            multiSelect/>
-                    </Col>
-                    <Col>
-                        <h6 align="center">Phenotype Statement</h6>
-                        <FormControl as="textarea" rows="3" value={this.props.tmpAnnotation.phenotypeStatement} onChange={event => {
-                            this.props.setPhenotypeTmpAnnotationPhenotypeStatement(event.target.value);
-                        }}/>
-                    </Col>
-                    <Col align="left">
-                        <Button variant="success" onClick={() => {
-                            this.props.setPhenotypeTmpAnnotationEvidence(this.props.evidence);
-                            this.props.savePhenotypeTmpAnnotation();
-                        }}>{this.props.currentAction}  Annotation</Button><br/><br/>
-                        <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
-                    </Col>
-                </Row>
+            <div>
+                <Container fluid>
+                    <Row>
+                        <Col>
+                            &nbsp;
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <EntityPicker
+                                title="Variant"
+                                entities={this.props.variants}
+                                ref={instance => { this.variantPicker = instance; }}
+                                selectedItemsCallback={(object) => {
+                                    this.props.setPhenotypeTmpAnnotationObject(object);
+                                }}
+                                count={this.props.maxEntities}
+                                isLoading={this.props.isLoading}
+                                addEntity={this.props.addVariant}
+                                selectedEntities={this.props.tmpAnnotation.object}
+                                autocompleteObj={this.props.autocompleteObj}
+                                entityType={entityTypes.VARIANT}
+                            />
+                        </Col>
+                        <Col>
+                            <EntityPicker
+                                title="Phenotype terms"
+                                entities={this.props.phenotypeTerms}
+                                ref={instance => { this.phenoTermPicker = instance; }}
+                                selectedItemsCallback={(phenoTerms) => {
+                                    this.props.setPhenotypeTmpAnnotationPhenotypeTerms(phenoTerms);
+                                }}
+                                count={this.props.maxEntities}
+                                isLoading={this.props.isLoading}
+                                addEntity={this.props.addPhenotypeTerm}
+                                selectedEntities={this.props.tmpAnnotation.phenotypeTerms}
+                                autocompleteObj={this.props.autocompleteObj}
+                                entityType={entityTypes.PHENOTYPE}
+                                multiSelect/>
+                        </Col>
+                        <Col>
+                            <EntityPicker
+                                title="Anatomy terms"
+                                entities={this.props.anatomyTerms}
+                                ref={instance => { this.anatomyTermsPicker = instance; }}
+                                selectedItemsCallback={(anatomyTerms) => {
+                                    this.props.setPhenotypeTmpAnnotationAnatomyTerms(anatomyTerms);
+                                }}
+                                count={this.props.maxEntities}
+                                isLoading={this.props.isLoading}
+                                addEntity={this.props.addAnatomyTerm}
+                                selectedEntities={this.props.tmpAnnotation.anatomyTerms}
+                                autocompleteObj={this.props.autocompleteObj}
+                                entityType={entityTypes.ANATOMY_TERM}
+                                multiSelect/>
+                        </Col>
+                        <Col>
+                            <EntityPicker
+                                title="Life stages"
+                                entities={this.props.lifeStages}
+                                ref={instance => { this.lifeStagesPicker = instance; }}
+                                selectedItemsCallback={(lifeStages) => {
+                                    this.props.setPhenotypeTmpAnnotationLifeStages(lifeStages);
+                                }}
+                                count={this.props.maxEntities}
+                                isLoading={this.props.isLoading}
+                                addEntity={this.props.addLifeStage}
+                                selectedEntities={this.props.tmpAnnotation.lifeStages}
+                                autocompleteObj={this.props.autocompleteObj}
+                                entityType={entityTypes.LIFE_STAGE}
+                                multiSelect/>
+                        </Col>
+                        <Col>
+                            <h6 align="center">Phenotype Statement</h6>
+                            <FormControl as="textarea" rows="3" value={this.props.tmpAnnotation.phenotypeStatement} onChange={event => {
+                                this.props.setPhenotypeTmpAnnotationPhenotypeStatement(event.target.value);
+                            }}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm={12} align="right">
+                            <ButtonGroup>
+                                <Button variant="success" onClick={() => {
+                                    this.props.setPhenotypeTmpAnnotationEvidence(this.props.evidence);
+                                    this.props.savePhenotypeTmpAnnotation();
+                                }}>{this.props.currentAction}  Annotation</Button><br/><br/>
+                                <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
+                            </ButtonGroup>
+                        </Col>
+                    </Row>
+                </Container>
                 <AnnotationCreatedModal
                     show={this.props.savedStatus !== null}
                     onHide={() => this.props.dismissSavedStatus()}
@@ -150,7 +157,7 @@ class PhenotypeAnnotator extends Component{
                     show={this.props.wrongAnnotation === true}
                     onHide={() => this.props.dismissWrongAnnotation()}
                 />
-            </Container>
+            </div>
         );
     }
 }

@@ -7,7 +7,7 @@ module.exports = {
         'expression/table': './src/components/ExpressionAnnotationTable.js',
         'phenotype/table': './src/components/PhenotypeAnnotationTable.js',
         'anatomyFunction/table': './src/components/AnatomyFunctionAnnotationTable.js',
-        'entity-picker': './src/pages/EntityPicker.js',
+        'entity-picker': './src/components/EntityPicker.js',
         'autocomplete': './src/autocomplete.js'
     },
     output: {
@@ -21,6 +21,13 @@ module.exports = {
                 test: /\.jsx?$/,
                 exclude: /(node_modules)/,
                 use: 'babel-loader'
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader'
+                ]
             }
         ]
     },

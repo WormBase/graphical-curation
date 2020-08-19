@@ -17,6 +17,7 @@ import {
 } from "../redux/selectors/autocompleteEntitiesSelector";
 import {fetchAutocompleteEntities, resetAutocompleteEntities} from "../redux/actions/autocompleteEntitiesActions";
 import {isLoading} from "../redux/selectors/textMinedEntitiesSelector";
+import './EntityPicker.css';
 
 
 class EntityPicker extends Component {
@@ -34,7 +35,7 @@ class EntityPicker extends Component {
 
         this.reset = this.reset.bind(this);
     }
-    
+
     returnSelectedEntities(selectedEntities) {
         let returnEntities = '';
         if (selectedEntities.size > 0) {
@@ -117,7 +118,10 @@ class EntityPicker extends Component {
                 spinner
                 text='Loading data ...'>
                 <div align="center"><h6>{this.props.title}</h6></div>
-                {this.props.addEntity !== undefined ? <div align="center"><Button size="sm" variant="outline-primary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add from source</Button><br/><br/></div> : ''}
+                {this.props.addEntity !== undefined ?
+                    <div align="center"><Button size="sm" variant="outline-primary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add from source</Button>
+                        <div className="whiteSpace"/>
+                    </div> : ''}
                 <AddEntityModal
                     show={this.state.showAddEntity}
                     onHide={() => {
@@ -145,7 +149,7 @@ class EntityPicker extends Component {
                 />
                 {this.state.allEntities.length > 0 ? <div><FormControl size="sm" placeholder="filter" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
                     this.setState({filteredEntities: this.state.allEntities.filter(entity => entity.value.startsWith(event.target.value))})
-                }/><br/></div> : ''}
+                }/><div className="whiteSpace"/></div> : ''}
                 <ListGroup>
                     {this.state.filteredEntities.slice(this.state.offset, this.state.offset + this.state.count).map(entity => {
                         let mapEntry = new Map();
@@ -154,9 +158,9 @@ class EntityPicker extends Component {
                         } else if (this.props.checkboxes !== undefined) {
                             this.props.checkboxes.forEach(c => {mapEntry.set(c, false)});
                         }
-                        return <ListGroup.Item action variant="default"
-                            active={this.state.selectedEntities.has(JSON.stringify(entity))}>
-                            <Container>
+                        return <ListGroup.Item action variant="default" className="py-1"
+                                               active={this.state.selectedEntities.has(JSON.stringify(entity))}>
+                            <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                                 <Row>
                                     <Col onClick={() => {
                                         let selectedEntities = this.state.selectedEntities;
@@ -193,14 +197,13 @@ class EntityPicker extends Component {
                     })}
                 </ListGroup>
                 <div>
-                    <br/>
                     <Button variant="outline-primary" size="sm" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
                         prev
                     </Button>
                     <Button variant="outline-primary" size="sm" hidden={this.state.allEntities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
                         next
                     </Button>
-                </div>
+                </div><div className="whiteSpace"/><div className="whiteSpace"/>
             </LoadingOverlay>
         );
     }
