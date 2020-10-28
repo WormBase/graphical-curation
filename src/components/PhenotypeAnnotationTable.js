@@ -55,7 +55,7 @@ class PhenotypeAnnotationsViewer extends Component{
                                 <p dangerouslySetInnerHTML={{ __html: a.phenotypeStatement}}/>
                             </td>
                             <td>
-                                {((date)=>date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}
+                                {((date)=>date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + String(date.getHours()).padStart(2, "0") + ':' + String(date.getMinutes()).padStart(2, "0") + ':' + String(date.getSeconds()).padStart(2, "0"))(new Date(a.dateAssigned))}
                             </td>
                             <td align="right">
                                 <Button variant="light" onClick={() => {

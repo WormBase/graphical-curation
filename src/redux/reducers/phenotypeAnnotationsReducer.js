@@ -26,9 +26,9 @@ export const phenotypeAnnotations = createReducer(initialState, {
     },
     SAVE_PHENOTYPE_TMP_ANNOT: (state, action) => {
         if (phenotypeAnnotationIsValid(state.tmpAnnotation)) {
+            let modAnnotation = _.cloneDeep(state.tmpAnnotation);
+            modAnnotation.dateAssigned = Date.now();
             if (state.annotations.some(a => a.annotationId === state.tmpAnnotation.annotationId)) {
-                let modAnnotation = _.cloneDeep(state.tmpAnnotation);
-                modAnnotation.dateAssigned = Date.now();
                 state.annotations.forEach((annotation, idx, object) => {
                     if (annotation.annotationId === modAnnotation.annotationId) {
                         object[idx] = modAnnotation;
@@ -36,7 +36,7 @@ export const phenotypeAnnotations = createReducer(initialState, {
                 });
                 state.savedStatus = 'Modified';
             } else if (!annotationIsDuplicate(state.tmpAnnotation, state.annotations)) {
-                state.annotations.push(_.cloneDeep(state.tmpAnnotation));
+                state.annotations.push(modAnnotation);
                 state.savedStatus = 'Created';
             }
             state.currentAction = 'Create';
