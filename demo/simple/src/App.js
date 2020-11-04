@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import GraphicalCuration from "@wormbase/graphical-curation";
-import {WBAutocomplete} from '@wormbase/graphical-curation/lib/autocomplete.js'
+import {WBAutocomplete} from '@wormbase/graphical-curation/lib/autocomplete.js';
 
 class App extends Component{
 
@@ -47,7 +47,7 @@ class App extends Component{
                 { value: "L1-specific epitope", modId: "WBPhenotype:0001677" },
                 { value: "chemosensory", modId: "WBPhenotype:0001040" }
             ],
-            ASSAYS: [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistry'},
+            ASSAYS: [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistryblandngoerngnbos'},
                     {value: 'Reporter gene'}, {value: 'Western Blot'}, {value: 'Northern blot'}, {value: 'RT-PCR'}],
             ANATOMY_FUNCTION_ASSAYS: [{value: 'Expression_mosaic'}, {value: 'Genetic_mosaic'}, {value: 'Laser_ablation'},
                 {value: 'Optogenetic'}, {value: 'Blastomere_isolation'}, {value: 'Genetic_ablation'}]
@@ -91,7 +91,7 @@ class App extends Component{
 
 
         return(
-            <GraphicalCuration entities={entities} error={false} expressionAnnotations={exprAnnotations}
+            <GraphicalCuration entities={entities} error={false} expressionAnnotations={[]}
                                evidence={"WBPaper00000000"}
                                anatomyFunctionAnnotations={anatomyFuncAnnotations}
                                phenotypeAnnotations={phenotypeAnnotations}

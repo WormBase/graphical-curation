@@ -3,6 +3,7 @@ import GraphicalCuration from "@wormbase/graphical-curation";
 import queryString from 'query-string';
 import {withRouter} from "react-router-dom";
 import axios from 'axios';
+import {WBAutocomplete} from '@wormbase/graphical-curation/lib/autocomplete.js';
 
 class Main extends Component{
 
@@ -54,9 +55,15 @@ class Main extends Component{
 
     render() {
         return(
-            <GraphicalCuration entities={this.state.entities} loading={this.state.loading} error={this.state.error}
-                               expressionAnnotations={this.state.expressionAnnotations}
-                               expressionAnnotationsSaved={(annotations) => {console.log("Annotations received")}}/>
+            <GraphicalCuration entities={this.state.entities} error={false} expressionAnnotations={[]}
+                               evidence={"WBPaper00000000"}
+                               anatomyFunctionAnnotations={[]}
+                               phenotypeAnnotations={[]}
+                               autocompleteObj={new WBAutocomplete('http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/datatype_objects.cgi?action=autocompleteXHR&objectType=')}
+                               annotationsSaved={annotations => {console.log(annotations)}}
+                               loading={false}
+                               showAnnotationIds={true}
+            />
         );
     }
 }
