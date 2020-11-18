@@ -44,18 +44,23 @@ export class WBAutocomplete extends Autocomplete {
     searchEntities(entityType, matchString) {
         let apiEndpoint = `${this.baseEndpoint}${this.acType[entityType]}&userValue=${matchString}`;
         return new Promise((resolve, reject) => {
-            axios
-                .get(apiEndpoint)
-                .then(res => {
-                    if (res) {
-                        resolve(this.getEntities(res.data));
-                    } else {
-                        reject("Failed getting data from autocomplete endpoint");
-                    }
-                })
-                .catch(err => {
-                    reject(err);
-                });
+            if (matchString !== '') {
+                axios
+                    .get(apiEndpoint)
+                    .then(res => {
+                        if (res) {
+
+                            resolve(this.getEntities(res.data));
+                        } else {
+                            reject("Failed getting data from autocomplete endpoint");
+                        }
+                    })
+                    .catch(err => {
+                        reject(err);
+                    });
+            } else {
+                resolve([]);
+            }
         });
     }
 

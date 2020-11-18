@@ -103,8 +103,6 @@ class EntityPicker extends Component {
             filteredEntities.sort((a, b) => (a.value > b.value) ? 1 : -1);
             this.setState({
                 selectedEntities: selectedEntitiesMap,
-                offset: 0,
-                count: this.props.count !== undefined ? this.props.count : 3,
                 filteredEntities: filteredEntities,
                 allEntities: filteredEntities,
                 showAddEntity: false});
@@ -119,7 +117,7 @@ class EntityPicker extends Component {
                 text='Loading data ...'>
                 <div align="center"><h6>{this.props.title}</h6></div>
                 {this.props.addEntity !== undefined ?
-                    <div align="center"><Button size="sm" variant="outline-primary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add from source</Button>
+                    <div align="center"><Button size="sm" variant="outline-primary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add missing</Button>
                         <div className="whiteSpace"/>
                     </div> : ''}
                 <AddEntityModal
@@ -209,43 +207,85 @@ class EntityPicker extends Component {
     }
 }
 
-function AddEntityModal(props) {
-    return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Add entity
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Container fluid>
-                    <Row>
-                        <Col>
-                            <FormControl placeholder="search" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
-                                props.autocompleteFetchFnct(props.autocompleteObj, props.entityType, event.target.value)}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            &nbsp;
-                        </Col>
-                    </Row>
-                    {props.autocompleteEntities.map(e => <Row><Col onDoubleClick={() => {
-                        props.addEntity(e);
-                        props.onHide();
-                    }}>{e.value} ( {e.modId} )</Col></Row>)}
-                </Container>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    );
+class AddEntityModal extends Component{
+
+    constructor(props, context) {
+        super(props, context);
+        this.state = {
+            manualEntity: undefined
+        };
+    }
+
+    render() {
+        return (
+            <Modal
+                {...this.props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Add missing entity
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container fluid>
+                        <Row>
+                            <Col>
+                                Add from controlled vocabulary (double click to select)
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <FormControl placeholder="type to search with autocomplete" aria-label="Filter"
+                                             aria-describedby="basic-addon1" onChange={event =>
+                                    this.props.autocompleteFetchFnct(this.props.autocompleteObj, this.props.entityType, event.target.value)}/>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                &nbsp;
+                            </Col>
+                        </Row>
+                        {this.props.autocompleteEntities.map(e => <Row><Col onDoubleClick={() => {
+                            this.props.addEntity(e);
+                            this.props.onHide();
+                        }}>{e.value} ( {e.modId} )</Col></Row>)}
+                        <Row>
+                            <Col>
+                                &nbsp;
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                Add manual entry
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <FormControl placeholder="" aria-label="Filter" aria-describedby="basic-addon1"
+                                             onChange={(event) => {
+                                                 this.setState({manualEntity: {value: event.target.value, modId: ""}})
+                                             }}/>
+                            </Col>
+                            <Col>
+                                <Button onClick={() => {
+                                    if (this.state.manualEntity !== undefined) {
+                                        this.props.addEntity(this.state.manualEntity);
+                                        this.props.onHide()
+                                    }
+                                }}>Add</Button>
+                            </Col>
+                        </Row>
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={this.props.onHide}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
 }
 
 const mapStateToProps = state => ({
