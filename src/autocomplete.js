@@ -71,7 +71,7 @@ export class WBAutocomplete extends Autocomplete {
      * @returns a list of entity objects
      */
     getEntities(autocompleteRes) {
-        const addInfoRegex = / \( ([^ ]+) \)( \[[^ ]+\])? $/;
+        const addInfoRegex = / \( ([^ ]+) \)( \[[^ ]+\])? (\[.*\])?$/;
         let value;
         let modId;
         let results = [];
