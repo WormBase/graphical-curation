@@ -266,7 +266,7 @@ class AddEntityModal extends Component{
                             <Col>
                                 <FormControl placeholder="" aria-label="Filter" aria-describedby="basic-addon1"
                                              onChange={(event) => {
-                                                 this.setState({manualEntity: {value: event.target.value, modId: ""}})
+                                                 this.setState({manualEntity: {value: event.target.value, modId: "None"}})
                                              }}/>
                             </Col>
                             <Col>
