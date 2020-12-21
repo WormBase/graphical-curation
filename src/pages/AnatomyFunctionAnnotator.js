@@ -78,6 +78,8 @@ class AnatomyFunctionAnnotator extends Component{
                                     <Col sm={12}>
                                         <EntityPicker
                                             title={"Phenotype"}
+                                            cardinality="1"
+                                            tooltip="Observed phenotype."
                                             entities={this.props.phenotypeTerms}
                                             ref={instance => { this.phenoTermPicker = instance; }}
                                             selectedItemsCallback={(phenoTerm) => {
@@ -97,6 +99,8 @@ class AnatomyFunctionAnnotator extends Component{
                                     <Col sm={12}>
                                         <EntityPicker
                                             title={this.props.tmpAnnotation.involved === 'not_involved' ? 'Not involved tissues' : 'Involved tissues'}
+                                            cardinality="1+"
+                                            tooltip="The involved (or not involved) tissues."
                                             entities={this.props.anatomyTerms}
                                             ref={instance => { this.anatomyTermsPicker = instance; }}
                                             selectedItemsCallback={(anatomyTerms) => {
@@ -120,6 +124,8 @@ class AnatomyFunctionAnnotator extends Component{
                                     <Col>
                                         <EntityPicker
                                             title={"Gene"}
+                                            cardinality="0-1"
+                                            tooltip="The involved gene."
                                             entities={this.props.genes}
                                             ref={instance => { this.genePicker = instance; }}
                                             selectedItemsCallback={(gene) => {
@@ -138,6 +144,8 @@ class AnatomyFunctionAnnotator extends Component{
                                     <Col>
                                         <EntityPicker
                                             title={"Assay"}
+                                            cardinality="1"
+                                            tooltip="The method used for the experiment."
                                             entities={this.props.anatomyFunctionAssays}
                                             ref={instance => { this.assayPicker = instance; }}
                                             selectedItemsCallback={(assay) => {
@@ -205,11 +213,11 @@ class AnatomyFunctionAnnotator extends Component{
                     <Row>
                         <Col sm={12} align="right">
                             <ButtonGroup>
+                                <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
                                 <Button variant="success" onClick={() => {
                                     this.props.setAnatomyFunctionTmpAnnotationEvidence(this.props.evidence);
                                     this.props.saveAnatomyFunctionTmpAnnotation();
                                 }}>{this.props.currentAction} Annotation</Button><br/><br/>
-                                <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
                             </ButtonGroup>
                         </Col>
                     </Row>
@@ -220,7 +228,8 @@ class AnatomyFunctionAnnotator extends Component{
                     create_modify={this.props.savedStatus}
                 />
                 <WrongAnnotationModal
-                    show={this.props.wrongAnnotation === true}
+                    show={this.props.wrongAnnotation.length > 0}
+                    missingFields={this.props.wrongAnnotation}
                     onHide={() => this.props.dismissWrongAnnotation()}
                 />
             </div>

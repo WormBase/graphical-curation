@@ -7,7 +7,7 @@ export const getExpressionAnnotations = store => getExpressionState(store) ? get
 
 export const getExpressionTmpAnnotation = store => getExpressionState(store) ? getExpressionState(store).tmpAnnotation : createExpressionAnnotation();
 
-export const getWrongAnnotation = store => getExpressionState(store) ? getExpressionState(store).wrongAnnotation : null
+export const getWrongAnnotation = store => getExpressionState(store) ? getExpressionState(store).wrongAnnotation : []
 export const getExpressionSavedStatus = store => getExpressionState(store) ? getExpressionState(store).savedStatus : null
 export const getCurrentExpressionAction = store => getExpressionState(store) ? getExpressionState(store).currentAction : 'Create'
 

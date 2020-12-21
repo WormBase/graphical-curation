@@ -27,6 +27,8 @@ import {
     getWrongAnnotation
 } from "../redux/selectors/expressionAnnotationsSelector";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 class ExpressionAnnotator extends Component{
     constructor(props) {
@@ -67,6 +69,8 @@ class ExpressionAnnotator extends Component{
                         <Col>
                             <EntityPicker
                                 title="Gene"
+                                cardinality="1"
+                                tooltip="The gene that is expressed"
                                 entities={this.props.genes}
                                 ref={instance => { this.genePicker = instance; }}
                                 selectedItemsCallback={(gene) => {
@@ -83,6 +87,8 @@ class ExpressionAnnotator extends Component{
                         <Col>
                             <EntityPicker
                                 title="Anatomy terms"
+                                cardinality="0+"
+                                tooltip="Where the gene is expressed. Provide at least one anatomy term, life stage or cellular component."
                                 entities={this.props.anatomyTerms}
                                 ref={instance => { this.anatomyTermsPicker = instance; }}
                                 selectedItemsCallback={(anatomyTerms) => {
@@ -99,6 +105,8 @@ class ExpressionAnnotator extends Component{
                         <Col>
                             <EntityPicker
                                 title="Life stages"
+                                cardinality="0+"
+                                tooltip="When the gene is expressed. Provide at least one anatomy term, life stage or cellular component."
                                 entities={this.props.lifeStages}
                                 ref={instance => { this.lifeStagesPicker = instance; }}
                                 selectedItemsCallback={(lifeStages) => {
@@ -115,6 +123,8 @@ class ExpressionAnnotator extends Component{
                         <Col>
                             <EntityPicker
                                 title="Cellular components"
+                                cardinality="0+"
+                                tooltip="Where the gene is expressed. Provide at least one anatomy term, life stage or cellular component."
                                 entities={this.props.cellularComponents}
                                 ref={instance => { this.cellularComponentPicker = instance; }}
                                 selectedItemsCallback={(cellularComponents) => {
@@ -131,6 +141,8 @@ class ExpressionAnnotator extends Component{
                         <Col>
                             <EntityPicker
                                 title="Method"
+                                cardinality="1"
+                                tooltip="The method used for the experiment"
                                 entities={this.props.assays}
                                 ref={instance => { this.assayPicker = instance; }}
                                 selectedItemsCallback={(assay) => {
@@ -145,11 +157,11 @@ class ExpressionAnnotator extends Component{
                     <Row>
                         <Col sm={12} align="right">
                             <ButtonGroup>
+                                <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
                                 <Button variant="success" onClick={() => {
                                     this.props.setExpressionTmpAnnotationEvidence(this.props.evidence);
                                     this.props.saveExpressionTmpAnnotation();
                                 }}>{this.props.currentAction}  Annotation</Button><br/><br/>
-                                <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
                             </ButtonGroup>
                         </Col>
                     </Row>
@@ -160,7 +172,8 @@ class ExpressionAnnotator extends Component{
                     create_modify={this.props.savedStatus}
                 />
                 <WrongAnnotationModal
-                    show={this.props.wrongAnnotation === true}
+                    show={this.props.wrongAnnotation.length > 0}
+                    missingFields={this.props.wrongAnnotation}
                     onHide={() => this.props.dismissWrongAnnotation()}
                 />
             </div>

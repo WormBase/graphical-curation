@@ -7,7 +7,7 @@ export const getAnatomyFunctionAnnotations = store => getAnatomyFunctionState(st
 
 export const getAnatomyFunctionTmpAnnotation = store => getAnatomyFunctionState(store) ? getAnatomyFunctionState(store).tmpAnnotation : createAnatomyFunctionAnnotation();
 
-export const getWrongAnnotation = store => getAnatomyFunctionState(store) ? getAnatomyFunctionState(store).wrongAnnotation : null
+export const getWrongAnnotation = store => getAnatomyFunctionState(store) ? getAnatomyFunctionState(store).wrongAnnotation : []
 export const getAnatomyFunctionSavedStatus = store => getAnatomyFunctionState(store) ? getAnatomyFunctionState(store).savedStatus : null
 export const getCurrentAnatomyFunctionAction = store => getAnatomyFunctionState(store) ? getAnatomyFunctionState(store).currentAction : 'Create'
 

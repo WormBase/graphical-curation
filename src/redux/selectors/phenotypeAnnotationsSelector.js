@@ -7,7 +7,7 @@ export const getPhenotypeAnnotations = store => getPhenotypeState(store) ? getPh
 
 export const getPhenotypeTmpAnnotation = store => getPhenotypeState(store) ? getPhenotypeState(store).tmpAnnotation : createPhenotypeAnnotation();
 
-export const getWrongAnnotation = store => getPhenotypeState(store) ? getPhenotypeState(store).wrongAnnotation : null
+export const getWrongAnnotation = store => getPhenotypeState(store) ? getPhenotypeState(store).wrongAnnotation : []
 export const getPhenotypeSavedStatus = store => getPhenotypeState(store) ? getPhenotypeState(store).savedStatus : null
 export const getCurrentPhenotypeAction = store => getPhenotypeState(store) ? getPhenotypeState(store).currentAction : 'Create'
 

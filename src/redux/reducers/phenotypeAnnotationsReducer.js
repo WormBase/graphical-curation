@@ -1,12 +1,12 @@
 import {createReducer} from '@reduxjs/toolkit'
-import {phenotypeAnnotationIsValid} from "../constraints/phenotype";
+import {phenotypeAnnotationIsValid, phenotypeAnnotationMissingFields} from "../constraints/phenotype";
 import {createPhenotypeAnnotation} from "../../annotationUtils";
 
 const initialState = {
     annotations: [],
     tmpAnnotation: createPhenotypeAnnotation(),
     savedStatus: null,
-    wrongAnnotation: false,
+    wrongAnnotation: [],
     currentAction: 'Create',
 };
 
@@ -41,7 +41,8 @@ export const phenotypeAnnotations = createReducer(initialState, {
             }
             state.currentAction = 'Create';
         } else {
-            state.wrongAnnotation = true;
+            state.wrongAnnotation = phenotypeAnnotationMissingFields(state.tmpAnnotation);
+            console.log(state.wrongAnnotation);
         }
     },
     SET_PHENOTYPE_TMP_ANNOT: (state, action) => {
@@ -78,6 +79,6 @@ export const phenotypeAnnotations = createReducer(initialState, {
         state.savedStatus = null;
     },
     DISMISS_WRONG_ANNOTATION: (state, action) => {
-        state.wrongAnnotation = false;
+        state.wrongAnnotation = [];
     },
 });

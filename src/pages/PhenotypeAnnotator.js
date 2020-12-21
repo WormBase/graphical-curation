@@ -68,6 +68,8 @@ class PhenotypeAnnotator extends Component{
                         <Col>
                             <EntityPicker
                                 title="Variant"
+                                cardinality="1"
+                                tooltip="The involved variant."
                                 entities={this.props.variants}
                                 ref={instance => { this.variantPicker = instance; }}
                                 selectedItemsCallback={(object) => {
@@ -84,6 +86,8 @@ class PhenotypeAnnotator extends Component{
                         <Col>
                             <EntityPicker
                                 title="Phenotype terms"
+                                cardinality="1+"
+                                tooltip="The observed phenotype(s)."
                                 entities={this.props.phenotypeTerms}
                                 ref={instance => { this.phenoTermPicker = instance; }}
                                 selectedItemsCallback={(phenoTerms) => {
@@ -100,6 +104,8 @@ class PhenotypeAnnotator extends Component{
                         <Col>
                             <EntityPicker
                                 title="Anatomy terms"
+                                cardinality="0+"
+                                tooltip="Involved anatomy terms. At least one anatomy term or life stage must be provided."
                                 entities={this.props.anatomyTerms}
                                 ref={instance => { this.anatomyTermsPicker = instance; }}
                                 selectedItemsCallback={(anatomyTerms) => {
@@ -116,6 +122,8 @@ class PhenotypeAnnotator extends Component{
                         <Col>
                             <EntityPicker
                                 title="Life stages"
+                                cardinality="0+"
+                                tooltip="Involved life stages. At least one anatomy term or life stage must be provided."
                                 entities={this.props.lifeStages}
                                 ref={instance => { this.lifeStagesPicker = instance; }}
                                 selectedItemsCallback={(lifeStages) => {
@@ -139,11 +147,11 @@ class PhenotypeAnnotator extends Component{
                     <Row>
                         <Col sm={12} align="right">
                             <ButtonGroup>
+                                <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
                                 <Button variant="success" onClick={() => {
                                     this.props.setPhenotypeTmpAnnotationEvidence(this.props.evidence);
                                     this.props.savePhenotypeTmpAnnotation();
                                 }}>{this.props.currentAction}  Annotation</Button><br/><br/>
-                                <Button variant="danger" onClick={()=> this.resetPickers()}>{this.props.currentAction === 'Modify' ? 'Cancel' : 'Clear'}</Button>
                             </ButtonGroup>
                         </Col>
                     </Row>
@@ -154,7 +162,8 @@ class PhenotypeAnnotator extends Component{
                     create_modify={this.props.savedStatus}
                 />
                 <WrongAnnotationModal
-                    show={this.props.wrongAnnotation === true}
+                    show={this.props.wrongAnnotation.length > 0}
+                    missingFields={this.props.wrongAnnotation}
                     onHide={() => this.props.dismissWrongAnnotation()}
                 />
             </div>

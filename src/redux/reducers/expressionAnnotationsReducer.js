@@ -1,12 +1,12 @@
 import {createReducer} from '@reduxjs/toolkit'
 import {createExpressionAnnotation} from "../../annotationUtils";
-import {expressionAnnotationIsValid} from "../constraints/expression";
+import {expressionAnnotationIsValid, expressionAnnotationMissingFields} from "../constraints/expression";
 
 const initialState = {
     annotations: [],
     tmpAnnotation: createExpressionAnnotation(),
     savedStatus: null,
-    wrongAnnotation: false,
+    wrongAnnotation: [],
     currentAction: 'Create',
 };
 
@@ -43,7 +43,7 @@ export const expressionAnnotations = createReducer(initialState, {
             }
             state.currentAction = 'Create';
         } else {
-            state.wrongAnnotation = true;
+            state.wrongAnnotation = expressionAnnotationMissingFields(state.tmpAnnotation);
         }
     },
     SET_EXPR_TMP_ANNOT: (state, action) => {
@@ -80,6 +80,6 @@ export const expressionAnnotations = createReducer(initialState, {
         state.savedStatus = null;
     },
     DISMISS_WRONG_ANNOTATION: (state, action) => {
-        state.wrongAnnotation = false;
+        state.wrongAnnotation = [];
     },
 });

@@ -4,6 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import LoadingOverlay from 'react-loading-overlay';
 import Button from "react-bootstrap/Button";
 import { IoIosAddCircleOutline } from 'react-icons/io';
+import { BsQuestionOctagon } from 'react-icons/bs';
 import FormControl from "react-bootstrap/FormControl";
 import Modal from "react-bootstrap/Modal";
 import FormCheck from "react-bootstrap/FormCheck";
@@ -18,6 +19,9 @@ import {
 import {fetchAutocompleteEntities, resetAutocompleteEntities} from "../redux/actions/autocompleteEntitiesActions";
 import {isLoading} from "../redux/selectors/textMinedEntitiesSelector";
 import './EntityPicker.css';
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import Badge from "react-bootstrap/Badge";
 
 
 class EntityPicker extends Component {
@@ -30,7 +34,14 @@ class EntityPicker extends Component {
             count: props.count !== undefined ? props.count : 3,
             filteredEntities: [],
             allEntities: props.entities,
-            showAddEntity: false
+            showAddEntity: false,
+            cardinalityTooltipMap: {
+                "1": {text: "One entry is required", variant: "danger"},
+                "1+": {text: "One or more entries are required", variant: "danger"},
+                "0-1": {text: "Zero or one entity required", variant: "info"},
+                "0+": {text: "Zero or more entries are required", variant: "info"},
+                undefined: {text: "", variant: "info"}
+            }
         };
 
         this.reset = this.reset.bind(this);
@@ -115,7 +126,25 @@ class EntityPicker extends Component {
                 active={this.props.isLoading}
                 spinner
                 text='Loading data ...'>
-                <div align="center"><h6>{this.props.title}</h6></div>
+                <div align="center">
+                    <div style={{display: 'inline'}}>{this.props.title}&nbsp;</div>
+                    <div style={{display: 'inline'}}>
+                        <OverlayTrigger overlay={
+                            <Tooltip>
+                                {this.state.cardinalityTooltipMap[this.props.cardinality].text}
+                            </Tooltip>}>
+                            <span><Badge variant={this.state.cardinalityTooltipMap[this.props.cardinality].variant}>{this.props.cardinality}</Badge>&nbsp;&nbsp;</span>
+                        </OverlayTrigger>
+                    </div>
+                    <div style={{display: 'inline'}}>
+                        <OverlayTrigger overlay={
+                            <Tooltip>
+                                {this.props.tooltip}
+                            </Tooltip>}>
+                            <BsQuestionOctagon />
+                        </OverlayTrigger>
+                    </div>
+                </div>
                 {this.props.addEntity !== undefined ?
                     <div align="center"><Button size="sm" variant="outline-primary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add missing</Button>
                         <div className="whiteSpace"/>
@@ -233,12 +262,12 @@ class AddEntityModal extends Component{
                     <Container fluid>
                         <Row>
                             <Col>
-                                Add from controlled vocabulary (double click to select)
+                                Add from controlled vocabulary (type to autocomplete and double click to select)
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <FormControl placeholder="type to search with autocomplete" aria-label="Filter"
+                                <FormControl placeholder="start typing to search with autocomplete" aria-label="Filter"
                                              aria-describedby="basic-addon1" onChange={event =>
                                     this.props.autocompleteFetchFnct(this.props.autocompleteObj, this.props.entityType, event.target.value)}/>
                             </Col>
@@ -259,7 +288,7 @@ class AddEntityModal extends Component{
                         </Row>
                         <Row>
                             <Col>
-                                Add manual entry
+                                If you can't find you entity above, you can manually enter it here
                             </Col>
                         </Row>
                         <Row>

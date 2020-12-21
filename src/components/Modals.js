@@ -42,8 +42,11 @@ export class WrongAnnotationModal extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     <p>
-                        Annotation does not meet constraints.
+                        The following required fields are missing:
                     </p>
+                    <ul>
+                        {this.props.missingFields.map(missingField => <li>{missingField}</li>)}
+                    </ul>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={this.props.onHide}>Close</Button>
