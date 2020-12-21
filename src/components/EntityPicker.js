@@ -223,7 +223,7 @@ class EntityPicker extends Component {
                         </ListGroup.Item>
                     })}
                 </ListGroup>
-                <div>
+                <div align="right">
                     <Button variant="outline-primary" size="sm" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
                         prev
                     </Button>
