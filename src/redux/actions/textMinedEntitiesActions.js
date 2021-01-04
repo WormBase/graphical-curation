@@ -4,7 +4,9 @@ export const FETCH_ENTITIES_ERROR = "FETCH_ENTITIES_ERROR";
 export const ADD_GENE = "ADD_GENE";
 export const ADD_ANATOMY_TERM = "ADD_ANATOMY_TERM";
 export const ADD_LIFE_STAGE = "ADD_LIFE_STAGE";
-export const ADD_CELLULAR_COMPONENT = "ADD_CELLULAR_COMPONENT";
+export const ADD_GO_CELLULAR_COMPONENT = "ADD_GO_CELLULAR_COMPONENT";
+export const ADD_GO_MOLECULAR_FUNCTION = "ADD_GO_MOLECULAR_FUNCTION";
+export const ADD_GO_BIOLOGICAL_PROCESS = "ADD_GO_BIOLOGICAL_PROCESS";
 export const ADD_VARIANT = "ADD_VARIANT";
 export const ADD_PHENOTYPE_TERM = "ADD_PHENOTYPE_TERM";
 
@@ -42,9 +44,19 @@ export const addLifeStage = lifeStage => ({
   payload: { lifeStage }
 });
 
-export const addCellularComponent = cellularComponent => ({
-  type: ADD_CELLULAR_COMPONENT,
-  payload: { cellularComponent }
+export const addGOCellularComponent = GOCellularComponent => ({
+  type: ADD_GO_CELLULAR_COMPONENT,
+  payload: { GOCellularComponent }
+});
+
+export const addGOMolecularFunction = GOMolecularFunction => ({
+  type: ADD_GO_MOLECULAR_FUNCTION,
+  payload: { GOMolecularFunction }
+});
+
+export const addGOBiologicalProcess = GOBiologicalProcess => ({
+  type: ADD_GO_BIOLOGICAL_PROCESS,
+  payload: { GOBiologicalProcess }
 });
 
 export const addVariant = variant => ({

@@ -6,7 +6,7 @@ export const entityTypes = {
     VARIANT: 'VARIANT',
     ANATOMY_TERM: 'ANATOMY_TERM',
     LIFE_STAGE: 'LIFE_STAGE',
-    CELLULAR_COMPONENT: 'CELLULAR_COMPONENT'
+    GO_CELLULAR_COMPONENT: 'GO_CELLULAR_COMPONENT'
 };
 
 export class Autocomplete {
@@ -17,7 +17,7 @@ export class Autocomplete {
             [entityTypes.VARIANT]: 'variation',
             [entityTypes.ANATOMY_TERM]: 'wbbt',
             [entityTypes.LIFE_STAGE]: 'wbls',
-            [entityTypes.CELLULAR_COMPONENT]: 'gocc'
+            [entityTypes.GO_CELLULAR_COMPONENT]: 'gocc'
         };
     }
 

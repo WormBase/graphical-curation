@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {
-    isLoading, getAnatomyTerms, getAssays, getGenes, getLifeStages, getCellularComponents
+    isLoading, getAnatomyTerms, getAssays, getGenes, getLifeStages, getGOCellularComponents
 } from "../redux/selectors/textMinedEntitiesSelector";
 import EntityPicker from "../components/EntityPicker";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {addGene, addAnatomyTerm, addLifeStage, addCellularComponent} from "../redux/actions/textMinedEntitiesActions";
+import {addGene, addAnatomyTerm, addLifeStage, addGOCellularComponent} from "../redux/actions/textMinedEntitiesActions";
 import {entityTypes} from "../autocomplete";
 import {AnnotationCreatedModal, WrongAnnotationModal} from "../components/Modals";
 import {
@@ -27,8 +27,7 @@ import {
     getWrongAnnotation
 } from "../redux/selectors/expressionAnnotationsSelector";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+
 
 class ExpressionAnnotator extends Component{
     constructor(props) {
@@ -132,10 +131,10 @@ class ExpressionAnnotator extends Component{
                                 }}
                                 count={this.props.maxEntities}
                                 isLoading={this.props.isLoading}
-                                addEntity={this.props.addCellularComponent}
+                                addEntity={this.props.addGOCellularComponent}
                                 selectedEntities={this.props.tmpAnnotation.cellularComponent}
                                 autocompleteObj={this.props.autocompleteObj}
-                                entityType={entityTypes.CELLULAR_COMPONENT}
+                                entityType={entityTypes.GO_CELLULAR_COMPONENT}
                                 multiSelect/>
                         </Col>
                         <Col>
@@ -187,7 +186,7 @@ const mapStateToProps = state => ({
     anatomyTerms: getAnatomyTerms(state),
     lifeStages: getLifeStages(state),
     assays: getAssays(state),
-    cellularComponents: getCellularComponents(state),
+    cellularComponents: getGOCellularComponents(state),
     isLoading: isLoading(state),
     tmpAnnotation: getExpressionTmpAnnotation(state),
     savedStatus: getExpressionSavedStatus(state),
@@ -196,7 +195,7 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {addGene, addAnatomyTerm, addLifeStage,
-    addCellularComponent, saveExpressionTmpAnnotation, resetExpressionTmpAnnotation, setExpressionTmpAnnotationGene,
+    addGOCellularComponent, saveExpressionTmpAnnotation, resetExpressionTmpAnnotation, setExpressionTmpAnnotationGene,
     setExpressionTmpAnnotationWhenExpressed, setExpressionTmpAnnotationWhereExpressed,
     setExpressionTmpAnnotationCellularComponents, setExpressionTmpAnnotationAssay, setExpressionTmpAnnotationEvidence,
     dismissSavedStatus, dismissWrongAnnotation})(ExpressionAnnotator);

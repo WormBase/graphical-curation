@@ -38,7 +38,7 @@ class App extends Component{
                 { value: 'unc-61', modId: 'WBGene00006795' },
                 { value: 'unc-59', modId: 'WBGene00006793' },
             ],
-            GENEONTOLOGY: [
+            GOCC: [
                 { value: 'cell', modId: 'GO:0005623' },
                 { value: 'cleavage furrow', modId: 'GO:0032154' },
             ],
