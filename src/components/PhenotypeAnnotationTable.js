@@ -6,6 +6,7 @@ import {getPhenotypeAnnotations} from "../redux/selectors/phenotypeAnnotationsSe
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 import {deletePhenotypeAnnotation} from "../redux/actions/phenotypeAnnotationsActions";
 import {setActiveView} from "../redux/actions/internalStateActions";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -35,21 +36,49 @@ class PhenotypeAnnotationsViewer extends Component{
                         <tr>
                             {this.props.showAnnotationIds ? <td><p style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{a.annotationId}</p></td> : ''}
                             <td>
-                                <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.object.modId}</Tooltip>}>
-                                    <span>{a.object.value}</span>
+                                <span>{a.object.value}&nbsp;</span>
+                                <OverlayTrigger overlay={<Tooltip id="button-tooltip">ID: {a.object.modId}</Tooltip>}>
+                                    <AiOutlineInfoCircle/>
                                 </OverlayTrigger>
                             </td>
                             <td>
-                                {a.phenotypeTerms.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
-                                    <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
+                                {a.phenotypeTerms.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                    popperConfig={{
+                                        modifiers: {
+                                            preventOverflow: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }}
+                                    overlay={<Tooltip id="button-tooltip">ID: {e.modId} </Tooltip>}>
+                                    <AiOutlineInfoCircle/>
+                                </OverlayTrigger></Badge>&nbsp;</span>)}
                             </td>
                             <td>
-                                {a.anatomyTerms.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
-                                    <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
+                                {a.anatomyTerms.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                    popperConfig={{
+                                        modifiers: {
+                                            preventOverflow: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }}
+                                    overlay={<Tooltip id="button-tooltip">ID: {e.modId} </Tooltip>}>
+                                    <AiOutlineInfoCircle/>
+                                </OverlayTrigger></Badge>&nbsp;</span>)}
                             </td>
                             <td>
-                                {a.lifeStages.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
-                                    <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
+                                {a.lifeStages.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                    popperConfig={{
+                                        modifiers: {
+                                            preventOverflow: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }}
+                                    overlay={<Tooltip id="button-tooltip">ID: {e.modId}</Tooltip>}>
+                                    <AiOutlineInfoCircle/>
+                                </OverlayTrigger></Badge>&nbsp;</span>)}
                             </td>
                             <td style={a.phenotypeStatement.length > 10 ? {minWidth: "300px"} : {}}>
                                 <p dangerouslySetInnerHTML={{ __html: a.phenotypeStatement}}/>

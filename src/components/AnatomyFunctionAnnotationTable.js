@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import Table from "react-bootstrap/Table";
@@ -33,15 +34,35 @@ class AnatomyFunctionAnnotationTable extends Component{
                         <tr>
                             {this.props.showAnnotationIds ? <td><p style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{a.annotationId}</p></td> : ''}
                             <td>
-                                <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.phenotype.modId}</Tooltip>}>
-                                    <span>{a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</span>
+                                <span>{a.phenotype.value + ' ' + Object.entries(a.phenotype.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}
+                                <OverlayTrigger
+                                    popperConfig={{
+                                        modifiers: {
+                                            preventOverflow: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }}
+                                    overlay={<Tooltip id="button-tooltip">ID: {a.phenotype.modId}</Tooltip>}>
+                                    <AiOutlineInfoCircle/>
                                 </OverlayTrigger>
+                                </span>
                             </td>
                             <td style={{minWidth: "100px"}}>
                                 {a.gene !== '' ?
-                                    <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.gene.modId}</Tooltip>}>
-                                        <span>{a.gene.value}</span>
-                                    </OverlayTrigger>
+                                    <span>{a.gene.value}
+                                        <OverlayTrigger
+                                            popperConfig={{
+                                                modifiers: {
+                                                    preventOverflow: {
+                                                        enabled: false
+                                                    }
+                                                }
+                                            }}
+                                            overlay={<Tooltip id="button-tooltip">ID: {a.gene.modId}</Tooltip>}>
+                                            <AiOutlineInfoCircle/>
+                                        </OverlayTrigger>
+                                    </span>
                                     : ''}
                             </td>
                             <td>
@@ -49,9 +70,18 @@ class AnatomyFunctionAnnotationTable extends Component{
                             </td>
                             <td>
                                 {a.anatomyTerms.map(a =>
-                                    <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.modId}</Tooltip>}>
-                                        <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}</Badge>&nbsp;</span>
-                                    </OverlayTrigger>)}
+                                    <span><Badge variant="primary">{a.value + ' ' + Object.entries(a.options).map(([o, v]) => v ? '(' + o + ') ' : '').join('')}&nbsp;
+                                    <OverlayTrigger
+                                        popperConfig={{
+                                            modifiers: {
+                                                preventOverflow: {
+                                                    enabled: false
+                                                }
+                                            }
+                                        }}
+                                        overlay={<Tooltip id="button-tooltip">ID: {a.modId}</Tooltip>}>
+                                        <AiOutlineInfoCircle/>
+                                    </OverlayTrigger></Badge>&nbsp;</span>)}
                             </td>
                             <td style={a.remarks.some(r => r.length > 10) ? {minWidth: "300px"} : {}}>
                                 <p dangerouslySetInnerHTML={{ __html: a.remarks.join('<br/><br/>')}}/>

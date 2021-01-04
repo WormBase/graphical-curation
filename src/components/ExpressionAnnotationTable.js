@@ -3,6 +3,7 @@ import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import { IoIosWarning } from 'react-icons/io';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 import {expressionAnnotationNtoN} from "../redux/constraints/expression";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -31,8 +32,17 @@ class ExpressionAnnotationTable extends Component{
                     <tr>
                         {this.props.showAnnotationIds ? <td><p style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{a.annotationId}</p></td> : ''}
                         <td>
-                            <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{a.gene.modId}</Tooltip>}>
-                                <span>{a.gene.value}</span>
+                            <span>{a.gene.value}&nbsp;</span>
+                            <OverlayTrigger
+                                popperConfig={{
+                                    modifiers: {
+                                        preventOverflow: {
+                                            enabled: false
+                                        }
+                                    }
+                                }}
+                                overlay={<Tooltip id="button-tooltip">ID: {a.gene.modId}</Tooltip>}>
+                                <AiOutlineInfoCircle/>
                             </OverlayTrigger>
                             {expressionAnnotationNtoN(a) ?
                                 <span>
@@ -47,16 +57,43 @@ class ExpressionAnnotationTable extends Component{
                                 </span> : ''}
                         </td>
                         <td>
-                            {a.whereExpressed.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
-                                <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
+                            {a.whereExpressed.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                popperConfig={{
+                                        modifiers: {
+                                            preventOverflow: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }}
+                                overlay={<Tooltip id="button-tooltip">ID: {e.modId}</Tooltip>}>
+                                <AiOutlineInfoCircle/>
+                            </OverlayTrigger></Badge>&nbsp;</span>)}
                         </td>
                         <td>
-                            {a.cellularComponent.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
-                                <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
+                            {a.cellularComponent.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                popperConfig={{
+                                    modifiers: {
+                                        preventOverflow: {
+                                            enabled: false
+                                        }
+                                    }
+                                }}
+                                overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                                <AiOutlineInfoCircle/>
+                            </OverlayTrigger></Badge>&nbsp;</span>)}
                         </td>
                         <td>
-                            {a.whenExpressed.map(e => <OverlayTrigger trigger="click" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
-                                <span><Badge variant="primary">{e.value}</Badge>&nbsp;</span></OverlayTrigger>)}
+                            {a.whenExpressed.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                popperConfig={{
+                                    modifiers: {
+                                        preventOverflow: {
+                                            enabled: false
+                                        }
+                                    }
+                                }}
+                                overlay={<Tooltip id="button-tooltip">{e.modId}</Tooltip>}>
+                                <AiOutlineInfoCircle/>
+                            </OverlayTrigger></Badge>&nbsp;</span>)}
                         </td>
                         <td>
                             <Badge variant="primary">{a.assay.value}</Badge>
