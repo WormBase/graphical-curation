@@ -28,7 +28,11 @@ module.exports = {
                     'style-loader',
                     'css-loader'
                 ]
-            }
+            },
+            {
+                test: /\.(jpe?g)$/,
+                use: ['url-loader']
+            },
         ]
     },
     externals:

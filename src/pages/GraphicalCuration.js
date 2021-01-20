@@ -38,17 +38,26 @@ import {
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { IoIosWarning } from 'react-icons/io';
 import Tooltip from "react-bootstrap/Tooltip";
+import { instanceOf } from 'prop-types';
+import {withCookies, Cookies} from "react-cookie";
+import {TutorialModal} from "../components/Modals";
 
 class GraphicalCuration extends Component{
 
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+    };
+
     constructor(props) {
         super(props);
+        const { cookies } = props;
         this.state = {
             showExpressionCuration: true,
             showPhenotypeCuration: true,
             showAnatomyFunctionCuration: true,
             maxEntities: 5,
-            modified: false
+            modified: false,
+            showTutorial: cookies.get('showTutorial') || 'true'
         };
     }
 
@@ -76,7 +85,6 @@ class GraphicalCuration extends Component{
             showAnatomyFunctionCuration = this.props.showAnatomyFunctionCuration;
         }
         let activeViewArr = [['expression', showExpressionCuration], ['phenotype', showPhenotypeCuration], ['anatomyFunction', showAnatomyFunctionCuration]];
-        console.log(activeViewArr.filter(([viewType, shown]) => shown === true)[0][0]);
         this.props.setActiveAnnotationType(activeViewArr.filter(([viewType, shown]) => shown)[0][0]);
         this.setState({
             showExpressionCuration: showExpressionCuration,
@@ -219,6 +227,14 @@ class GraphicalCuration extends Component{
                         </Tab.Pane> : ''}
                     </Tab.Content>
                 </Tab.Container>
+                <TutorialModal
+                    show={this.state.showTutorial === 'true'}
+                    onHide={() => this.setState({showTutorial: false})}
+                    setShowTutorial={(show) => {
+                        const { cookies } = this.props;
+                        cookies.set('showTutorial', show, { path: '/' });
+                    }}
+                />
             </div>
         );
     }
@@ -240,4 +256,4 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
     fetchEntitiesRequest, fetchEntitiesSuccess, fetchEntitiesError, setExpressionAnnotations,
-    setPhenotypeAnnotations, setAnatomyFunctionAnnotations, setActiveAnnotationType, setActiveView})(GraphicalCuration);
+    setPhenotypeAnnotations, setAnatomyFunctionAnnotations, setActiveAnnotationType, setActiveView})(withCookies(GraphicalCuration));
