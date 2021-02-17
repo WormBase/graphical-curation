@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import ListGroup from 'react-bootstrap/ListGroup';
 import LoadingOverlay from 'react-loading-overlay';
 import Button from "react-bootstrap/Button";
-import { IoIosAddCircleOutline } from 'react-icons/io';
+import { IoIosAddCircleOutline, IoIosArrowDropupCircle, IoIosArrowDropdownCircle } from 'react-icons/io';
 import { BsQuestionOctagon } from 'react-icons/bs';
 import FormControl from "react-bootstrap/FormControl";
 import Modal from "react-bootstrap/Modal";
@@ -224,11 +224,11 @@ class EntityPicker extends Component {
                     })}
                 </ListGroup>
                 <div align="right">
-                    <Button variant="outline-primary" size="sm" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
-                        prev
+                    <Button variant="link" size="lg" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
+                        <IoIosArrowDropupCircle />
                     </Button>
-                    <Button variant="outline-primary" size="sm" hidden={this.state.allEntities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
-                        next
+                    <Button variant="link" size="lg" hidden={this.state.allEntities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
+                        <IoIosArrowDropdownCircle />
                     </Button>
                 </div><div className="whiteSpace"/><div className="whiteSpace"/>
             </LoadingOverlay>
