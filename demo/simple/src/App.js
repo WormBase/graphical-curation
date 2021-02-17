@@ -44,10 +44,10 @@ class App extends Component{
             ],
             VARIANT: [{ value: 'ttTi5605', modId: 'WBVar00254893' }],
             PHENOTERMS: [
-                { value: "L1-specific epitope", modId: "WBPhenotype:0001677" },
-                { value: "chemosensory", modId: "WBPhenotype:0001040" }
+                { value: "stage specific cuticle antigenicity variant", modId: "WBPhenotype:0001677" },
+                { value: "chemosensory response variant", modId: "WBPhenotype:0001040" }
             ],
-            ASSAYS: [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistryblandngoerngnbos'},
+            ASSAYS: [{value: 'In situ Hybridization'}, {value: 'Immunohistochemistry'},
                     {value: 'Reporter gene'}, {value: 'Western Blot'}, {value: 'Northern blot'}, {value: 'RT-PCR'}],
             ANATOMY_FUNCTION_ASSAYS: [{value: 'Expression_mosaic'}, {value: 'Genetic_mosaic'}, {value: 'Laser_ablation'},
                 {value: 'Optogenetic'}, {value: 'Blastomere_isolation'}, {value: 'Genetic_ablation'}]
