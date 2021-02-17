@@ -81,7 +81,7 @@ class App extends Component{
         const phenotypeAnnotations = [{
             annotationId: 1,
             object: { value: 'ttTi5605', modId: 'WBVar00254893' },
-            phenotypeTerms: [{ value: "L1-specific epitope", modId: "WBPhenotype:0001677" }],
+            phenotypeTerms: [{ value: "stage specific cuticle antigenicity variant", modId: "WBPhenotype:0001677" }],
             anatomyTerms: [{ value: 'pharynx', modId: 'WBbt:0003681'}],
             lifeStages: [{ value: 'L3', modId: 'WBls:0000035' }],
             evidence: 'WBPaper00001254',
