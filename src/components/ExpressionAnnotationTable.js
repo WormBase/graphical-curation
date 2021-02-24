@@ -19,8 +19,8 @@ class ExpressionAnnotationTable extends Component{
                         {this.props.showAnnotationIds ? <th>ID</th> : ''}
                         <th width="100px">Gene</th>
                         <th>Where Expressed</th>
-                        <th>Cellular Component</th>
                         <th>When Expressed</th>
+                        <th>Cellular Component</th>
                         <th>Method</th>
                         <th>Date Assigned</th>
                         <th>&nbsp;</th>
@@ -70,7 +70,7 @@ class ExpressionAnnotationTable extends Component{
                             </OverlayTrigger></Badge>&nbsp;</span>)}
                         </td>
                         <td>
-                            {a.cellularComponent.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                            {a.whenExpressed.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
                                 popperConfig={{
                                     modifiers: {
                                         preventOverflow: {
@@ -83,7 +83,7 @@ class ExpressionAnnotationTable extends Component{
                             </OverlayTrigger></Badge>&nbsp;</span>)}
                         </td>
                         <td>
-                            {a.whenExpressed.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                            {a.cellularComponent.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
                                 popperConfig={{
                                     modifiers: {
                                         preventOverflow: {
