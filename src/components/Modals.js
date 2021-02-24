@@ -79,6 +79,13 @@ export class TutorialModal extends React.Component{
             slides: [slide1, slide2, slide3, slide4, slide5, slide6]
         }
     }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.show === false && this.props.show === true) {
+            this.setState({index: 0});
+        }
+    }
+
     render() {
         return (
             <Modal
