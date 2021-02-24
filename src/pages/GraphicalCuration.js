@@ -41,6 +41,9 @@ import Tooltip from "react-bootstrap/Tooltip";
 import { instanceOf } from 'prop-types';
 import {withCookies, Cookies} from "react-cookie";
 import {TutorialModal} from "../components/Modals";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 class GraphicalCuration extends Component{
 
@@ -121,110 +124,121 @@ class GraphicalCuration extends Component{
         return (
             <div>
                 <Tab.Container activeKey={this.props.activeAnnotationType}>
-                     <Nav variant="pills">
-                         {this.state.showExpressionCuration ?
-                         <Nav.Item>
-                             <Nav.Link eventKey="expression" onClick={() => this.props.setActiveAnnotationType("expression")}>Expression</Nav.Link>
-                         </Nav.Item> : ''}
-                         {this.state.showPhenotypeCuration ?
-                         <Nav.Item>
-                             <Nav.Link eventKey="phenotype" onClick={() => this.props.setActiveAnnotationType("phenotype")}>Phenotype</Nav.Link>
-                         </Nav.Item> : ''}
-                         {this.state.showAnatomyFunctionCuration ?
-                         <Nav.Item>
-                             <Nav.Link eventKey="anatomyFunction" onClick={() => this.props.setActiveAnnotationType("anatomyFunction")}>Anatomy Function</Nav.Link>
-                         </Nav.Item> : ''}
-                         <Nav.Item>
-                             &nbsp;&nbsp;
-                             <OverlayTrigger placement="right" overlay={
-                                 <Tooltip>
-                                     Click here to save annotations to persistent storage
-                                 </Tooltip>}>
-                                 <Button variant={this.state.modified ? "outline-warning" : "outline-success"} onClick={
-                                     () => {
-                                         this.props.annotationsSaved({expression: this.props.storedExpressionAnnotations,
-                                             phenotype: this.props.storedPhenotypeAnnotations, anatomyFunction: this.props.storedAnatomyFunctionAnnotations });
-                                         this.setState({modified: false});
-                                     }}>
-                                     Save All Changes {this.state.modified ? <IoIosWarning /> : ''}
-                                 </Button>
-                             </OverlayTrigger>
-                         </Nav.Item>
-                     </Nav>
+                    <Container fluid>
+                        <Row>
+                            <Col sm={11}>
+                                <Nav variant="pills">
+                                    {this.state.showExpressionCuration ?
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="expression" onClick={() => this.props.setActiveAnnotationType("expression")}>Expression</Nav.Link>
+                                        </Nav.Item> : ''}
+                                    {this.state.showPhenotypeCuration ?
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="phenotype" onClick={() => this.props.setActiveAnnotationType("phenotype")}>Phenotype</Nav.Link>
+                                        </Nav.Item> : ''}
+                                    {this.state.showAnatomyFunctionCuration ?
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="anatomyFunction" onClick={() => this.props.setActiveAnnotationType("anatomyFunction")}>Anatomy Function</Nav.Link>
+                                        </Nav.Item> : ''}
+                                    <Nav.Item>
+                                        &nbsp;&nbsp;
+                                        <OverlayTrigger placement="right" overlay={
+                                            <Tooltip>
+                                                Click here to save annotations to persistent storage
+                                            </Tooltip>}>
+                                            <Button variant={this.state.modified ? "outline-warning" : "outline-success"} onClick={
+                                                () => {
+                                                    this.props.annotationsSaved({expression: this.props.storedExpressionAnnotations,
+                                                        phenotype: this.props.storedPhenotypeAnnotations, anatomyFunction: this.props.storedAnatomyFunctionAnnotations });
+                                                    this.setState({modified: false});
+                                                }}>
+                                                Save All Changes {this.state.modified ? <IoIosWarning /> : ''}
+                                            </Button>
+                                        </OverlayTrigger>
+                                    </Nav.Item>
+                                </Nav>
+                            </Col>
+                            <Col sm={1}>
+                                <Button variant={"link"} onClick={() => { this.setState({showTutorial: 'true'}) }}>
+                                    Show Tutorial
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Container>
                     <Tab.Content>
                         <br/>
                         {this.state.showExpressionCuration ?
-                        <Tab.Pane eventKey="expression">
-                            <Tab.Container activeKey={this.props.activeView}>
-                                <Nav variant="tabs" defaultActiveKey="references">
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.currentExpressionAction} Annotation</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
-                                    </Nav.Item>
-                                </Nav>
-                                <Tab.Content>
-                                    <Tab.Pane eventKey="annotator">
-                                        <ExpressionAnnotator maxEntities={this.state.maxEntities}
-                                                             evidence={this.props.evidence}
-                                                             autocompleteObj={this.props.autocompleteObj}
-                                        />
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="viewer">
-                                        <ExpressionAnnotationsViewer showAnnotationIds={this.props.showAnnotationIds}/>
-                                    </Tab.Pane>
-                                </Tab.Content>
-                            </Tab.Container>
-                        </Tab.Pane> : ''}
+                            <Tab.Pane eventKey="expression">
+                                <Tab.Container activeKey={this.props.activeView}>
+                                    <Nav variant="tabs" defaultActiveKey="references">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.currentExpressionAction} Annotation</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey="annotator">
+                                            <ExpressionAnnotator maxEntities={this.state.maxEntities}
+                                                                 evidence={this.props.evidence}
+                                                                 autocompleteObj={this.props.autocompleteObj}
+                                            />
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="viewer">
+                                            <ExpressionAnnotationsViewer showAnnotationIds={this.props.showAnnotationIds}/>
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Tab.Container>
+                            </Tab.Pane> : ''}
                         {this.state.showPhenotypeCuration ?
-                        <Tab.Pane eventKey="phenotype">
-                            <Tab.Container activeKey={this.props.activeView}>
-                                <Nav variant="tabs" defaultActiveKey="references">
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.currentPhenotypeAction} Annotation</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
-                                    </Nav.Item>
-                                </Nav>
-                                <Tab.Content>
-                                    <Tab.Pane eventKey="annotator">
-                                        <PhenotypeAnnotator maxEntities={this.state.maxEntities}
-                                                            evidence={this.props.evidence}
-                                                            autocompleteObj={this.props.autocompleteObj}
-                                        />
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="viewer">
-                                        <PhenotypeAnnotationsViewer showAnnotationIds={this.props.showAnnotationIds}/>
-                                    </Tab.Pane>
-                                </Tab.Content>
-                            </Tab.Container>
-                        </Tab.Pane> : ''}
+                            <Tab.Pane eventKey="phenotype">
+                                <Tab.Container activeKey={this.props.activeView}>
+                                    <Nav variant="tabs" defaultActiveKey="references">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.currentPhenotypeAction} Annotation</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey="annotator">
+                                            <PhenotypeAnnotator maxEntities={this.state.maxEntities}
+                                                                evidence={this.props.evidence}
+                                                                autocompleteObj={this.props.autocompleteObj}
+                                            />
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="viewer">
+                                            <PhenotypeAnnotationsViewer showAnnotationIds={this.props.showAnnotationIds}/>
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Tab.Container>
+                            </Tab.Pane> : ''}
                         {this.state.showAnatomyFunctionCuration ?
-                        <Tab.Pane eventKey="anatomyFunction">
-                            <Tab.Container activeKey={this.props.activeView}>
-                                <Nav variant="tabs" defaultActiveKey="references">
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.currentAnatomyFunctionAction} Annotation</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
-                                    </Nav.Item>
-                                </Nav>
-                                <Tab.Content>
-                                    <Tab.Pane eventKey="annotator">
-                                        <AnatomyFunctionAnnotator maxEntities={this.state.maxEntities}
-                                                                  evidence={this.props.evidence}
-                                                                  autocompleteObj={this.props.autocompleteObj}
-                                        />
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="viewer">
-                                        <AnatomyFunctionAnnotationsViewer showAnnotationIds={this.props.showAnnotationIds}/>
-                                    </Tab.Pane>
-                                </Tab.Content>
-                            </Tab.Container>
-                        </Tab.Pane> : ''}
+                            <Tab.Pane eventKey="anatomyFunction">
+                                <Tab.Container activeKey={this.props.activeView}>
+                                    <Nav variant="tabs" defaultActiveKey="references">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="annotator" onClick={() => this.props.setActiveView("annotator")}>{this.props.currentAnatomyFunctionAction} Annotation</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="viewer" onClick={() => this.props.setActiveView("viewer")}>View Annotations</Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey="annotator">
+                                            <AnatomyFunctionAnnotator maxEntities={this.state.maxEntities}
+                                                                      evidence={this.props.evidence}
+                                                                      autocompleteObj={this.props.autocompleteObj}
+                                            />
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="viewer">
+                                            <AnatomyFunctionAnnotationsViewer showAnnotationIds={this.props.showAnnotationIds}/>
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Tab.Container>
+                            </Tab.Pane> : ''}
                     </Tab.Content>
                 </Tab.Container>
                 <TutorialModal

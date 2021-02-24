@@ -4,12 +4,16 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Image from "react-bootstrap/Image";
 import Nav from "react-bootstrap/Nav";
-import slide1 from "../assets/images/1.jpg";
-import slide2 from "../assets/images/2.jpg";
-import slide3 from "../assets/images/3.jpg";
-import slide4 from "../assets/images/4.jpg";
-import slide5 from "../assets/images/5.jpg";
-import slide6 from "../assets/images/6.jpg";
+import slide1 from "../assets/images/1.jpeg";
+import slide2 from "../assets/images/2.jpeg";
+import slide3 from "../assets/images/3.jpeg";
+import slide4 from "../assets/images/4.jpeg";
+import slide5 from "../assets/images/5.jpeg";
+import slide6 from "../assets/images/6.jpeg";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 export class AnnotationCreatedModal extends React.Component{
     render() {
@@ -93,9 +97,14 @@ export class TutorialModal extends React.Component{
                         alt="First slide"
                         fluid
                     />
-                    {this.state.index < this.state.slides.length - 1 ? <Nav className="justify-content-center">
-                        <Button variant="outline-info" onClick={() => this.setState({index: this.state.index + 1})}>Next</Button>
-                    </Nav> : ""}
+                    <Nav className="justify-content-center">
+                        <ButtonGroup>
+                            {this.state.index > 0 ?
+                                <Button variant="primary" onClick={() => this.setState({index: this.state.index - 1})}>Previous</Button> : ""}
+                            {this.state.index < this.state.slides.length - 1 ?
+                                <Button variant="primary" onClick={() => this.setState({index: this.state.index + 1})}>Next</Button> : ""}
+                        </ButtonGroup>
+                    </Nav>
                     <Form.Group controlId="formBasicCheckbox">
                         <Form.Check type="checkbox" label="Don't show this tutorial again" checked={!this.state.showTutorial}
                                     onChange={() => {
