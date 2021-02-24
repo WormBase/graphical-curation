@@ -8,6 +8,8 @@ import slide1 from "../assets/images/1.jpg";
 import slide2 from "../assets/images/2.jpg";
 import slide3 from "../assets/images/3.jpg";
 import slide4 from "../assets/images/4.jpg";
+import slide5 from "../assets/images/5.jpg";
+import slide6 from "../assets/images/6.jpg";
 
 export class AnnotationCreatedModal extends React.Component{
     render() {
@@ -70,7 +72,7 @@ export class TutorialModal extends React.Component{
         this.state = {
             showTutorial: true,
             index: 0,
-            slides: [slide1, slide2, slide3, slide4]
+            slides: [slide1, slide2, slide3, slide4, slide5, slide6]
         }
     }
     render() {
