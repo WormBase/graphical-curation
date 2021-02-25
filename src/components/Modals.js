@@ -107,9 +107,9 @@ export class TutorialModal extends React.Component{
                     <Nav className="justify-content-center">
                         <ButtonGroup>
                             {this.state.index > 0 ?
-                                <Button variant="primary" onClick={() => this.setState({index: this.state.index - 1})}>Previous</Button> : ""}
+                                <Button variant="warning" onClick={() => this.setState({index: this.state.index - 1})}>Previous</Button> : ""}
                             {this.state.index < this.state.slides.length - 1 ?
-                                <Button variant="primary" onClick={() => this.setState({index: this.state.index + 1})}>Next</Button> : ""}
+                                <Button variant="warning" onClick={() => this.setState({index: this.state.index + 1})}>Next</Button> : ""}
                         </ButtonGroup>
                     </Nav>
                     <Form.Group controlId="formBasicCheckbox">
