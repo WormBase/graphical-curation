@@ -26,11 +26,11 @@ export const textMinedEntities = createReducer(initialState, {
     FETCH_ENTITIES_REQUEST: (state, action) => {state.loading = true},
     FETCH_ENTITIES_SUCCESS: (state, action) => {
         if (action.payload.entities !== undefined) {
-            state.genes = action.payload.entities.GENE !== undefined ? action.payload.entities.GENE.sort() : [];
-            state.lifeStages = action.payload.entities.LIFESTAGE !== undefined ? action.payload.entities.LIFESTAGE.sort() : [];
-            state.anatomyTerms = action.payload.entities.ANATOMY !== undefined ? action.payload.entities.ANATOMY.sort() : [];
-            state.assays = action.payload.entities.ASSAYS !== undefined ? action.payload.entities.ASSAYS.sort() : [];
-            state.anatomyFunctionAssays = action.payload.entities.ANATOMY_FUNCTION_ASSAYS !== undefined ? action.payload.entities.ANATOMY_FUNCTION_ASSAYS.sort() : [];
+            state.genes = action.payload.entities.GENE !== undefined ? action.payload.entities.GENE : [];
+            state.lifeStages = action.payload.entities.LIFESTAGE !== undefined ? action.payload.entities.LIFESTAGE : [];
+            state.anatomyTerms = action.payload.entities.ANATOMY !== undefined ? action.payload.entities.ANATOMY : [];
+            state.assays = action.payload.entities.ASSAY !== undefined ? action.payload.entities.ASSAY : [];
+            state.anatomyFunctionAssays = action.payload.entities.ANATOMY_FUNCTION_ASSAYS !== undefined ? action.payload.entities.ANATOMY_FUNCTION_ASSAYS : [];
             state.GOCellularComponents = action.payload.entities.GOCC !== undefined ? action.payload.entities.GOCC : [];
             state.GOMolecularFunctions = action.payload.entities.GOMF !== undefined ? action.payload.entities.GOMF : [];
             state.GOBiologicalProcesses = action.payload.entities.GOBP !== undefined ? action.payload.entities.GOBP : [];

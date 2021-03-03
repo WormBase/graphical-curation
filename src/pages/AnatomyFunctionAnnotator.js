@@ -92,6 +92,7 @@ class AnatomyFunctionAnnotator extends Component{
                                             autocompleteObj={this.props.autocompleteObj}
                                             entityType={entityTypes.PHENOTYPE}
                                             checkboxes={["Autonomous", "Nonautonomous"]}
+                                            sortElements={true}
                                         />
                                     </Col>
                                 </Row>
@@ -113,7 +114,9 @@ class AnatomyFunctionAnnotator extends Component{
                                             selectedEntities={this.props.tmpAnnotation.anatomyTerms}
                                             autocompleteObj={this.props.autocompleteObj}
                                             entityType={entityTypes.ANATOMY_TERM}
-                                            multiSelect/>
+                                            multiSelect
+                                            sortElements={true}
+                                        />
                                     </Col>
                                 </Row>
                             </Container>
@@ -137,6 +140,7 @@ class AnatomyFunctionAnnotator extends Component{
                                             selectedEntities={this.props.tmpAnnotation.gene}
                                             autocompleteObj={this.props.autocompleteObj}
                                             entityType={entityTypes.GENE}
+                                            sortElements={true}
                                         />
                                     </Col>
                                 </Row>
@@ -154,6 +158,7 @@ class AnatomyFunctionAnnotator extends Component{
                                             count={this.props.maxEntities}
                                             selectedEntities={this.props.tmpAnnotation.assay}
                                             isLoading={this.props.isLoading}
+                                            sortElements={false}
                                         />
                                     </Col>
                                 </Row>

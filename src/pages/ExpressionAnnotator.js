@@ -81,6 +81,7 @@ class ExpressionAnnotator extends Component{
                                 selectedEntities={this.props.tmpAnnotation.gene}
                                 autocompleteObj={this.props.autocompleteObj}
                                 entityType={entityTypes.GENE}
+                                sortElements={true}
                             />
                         </Col>
                         <Col>
@@ -99,7 +100,9 @@ class ExpressionAnnotator extends Component{
                                 selectedEntities={this.props.tmpAnnotation.whereExpressed}
                                 autocompleteObj={this.props.autocompleteObj}
                                 entityType={entityTypes.ANATOMY_TERM}
-                                multiSelect/>
+                                multiSelect
+                                sortElements={true}
+                            />
                         </Col>
                         <Col>
                             <EntityPicker
@@ -117,7 +120,9 @@ class ExpressionAnnotator extends Component{
                                 selectedEntities={this.props.tmpAnnotation.whenExpressed}
                                 autocompleteObj={this.props.autocompleteObj}
                                 entityType={entityTypes.LIFE_STAGE}
-                                multiSelect/>
+                                multiSelect
+                                sortElements={true}
+                            />
                         </Col>
                         <Col>
                             <EntityPicker
@@ -135,7 +140,9 @@ class ExpressionAnnotator extends Component{
                                 selectedEntities={this.props.tmpAnnotation.cellularComponent}
                                 autocompleteObj={this.props.autocompleteObj}
                                 entityType={entityTypes.GO_CELLULAR_COMPONENT}
-                                multiSelect/>
+                                multiSelect
+                                sortElements={true}
+                            />
                         </Col>
                         <Col>
                             <EntityPicker
@@ -147,9 +154,10 @@ class ExpressionAnnotator extends Component{
                                 selectedItemsCallback={(assay) => {
                                     this.props.setExpressionTmpAnnotationAssay(assay);
                                 }}
-                                count={this.props.maxEntities}
+                                count={10}
                                 selectedEntities={this.props.tmpAnnotation.assay}
                                 isLoading={this.props.isLoading}
+                                sortElements={false}
                             />
                         </Col>
                     </Row>

@@ -41,7 +41,8 @@ class EntityPicker extends Component {
                 "0-1": {text: "Zero or one entity required", variant: "info"},
                 "0+": {text: "Zero or more entries are required", variant: "info"},
                 undefined: {text: "", variant: "info"}
-            }
+            },
+            sortElements: props.sortElements !== undefined ? props.sortElements : true
         };
 
         this.reset = this.reset.bind(this);

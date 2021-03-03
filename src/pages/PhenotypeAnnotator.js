@@ -81,6 +81,7 @@ class PhenotypeAnnotator extends Component{
                                 selectedEntities={this.props.tmpAnnotation.object}
                                 autocompleteObj={this.props.autocompleteObj}
                                 entityType={entityTypes.VARIANT}
+                                sortElements={true}
                             />
                         </Col>
                         <Col>
@@ -99,7 +100,9 @@ class PhenotypeAnnotator extends Component{
                                 selectedEntities={this.props.tmpAnnotation.phenotypeTerms}
                                 autocompleteObj={this.props.autocompleteObj}
                                 entityType={entityTypes.PHENOTYPE}
-                                multiSelect/>
+                                multiSelect
+                                sortElements={true}
+                            />
                         </Col>
                         <Col>
                             <EntityPicker
@@ -117,7 +120,9 @@ class PhenotypeAnnotator extends Component{
                                 selectedEntities={this.props.tmpAnnotation.anatomyTerms}
                                 autocompleteObj={this.props.autocompleteObj}
                                 entityType={entityTypes.ANATOMY_TERM}
-                                multiSelect/>
+                                multiSelect
+                                sortElements={true}
+                            />
                         </Col>
                         <Col>
                             <EntityPicker
@@ -135,7 +140,9 @@ class PhenotypeAnnotator extends Component{
                                 selectedEntities={this.props.tmpAnnotation.lifeStages}
                                 autocompleteObj={this.props.autocompleteObj}
                                 entityType={entityTypes.LIFE_STAGE}
-                                multiSelect/>
+                                multiSelect
+                                sortElements={true}
+                            />
                         </Col>
                         <Col>
                             <h6 align="center">Phenotype Statement</h6>
