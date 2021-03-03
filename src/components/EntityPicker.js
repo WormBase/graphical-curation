@@ -28,6 +28,7 @@ class EntityPicker extends Component {
 
     constructor(props, context) {
         super(props, context);
+        let elementsOrder = {}
         this.state = {
             selectedEntities: new Map(),
             offset: 0,
@@ -42,7 +43,8 @@ class EntityPicker extends Component {
                 "0+": {text: "Zero or more entries are required", variant: "info"},
                 undefined: {text: "", variant: "info"}
             },
-            sortElements: props.sortElements !== undefined ? props.sortElements : true
+            sortElements: props.sortElements !== undefined ? props.sortElements : true,
+            elementsOrder: elementsOrder
         };
 
         this.reset = this.reset.bind(this);
@@ -76,6 +78,8 @@ class EntityPicker extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.entities !== prevProps.entities || this.props.selectedEntities !== prevProps.selectedEntities) {
+            let elementsOrder = {}
+            this.props.entities.forEach((e, idx) => {elementsOrder[e.value] = idx})
             let filteredEntities = [];
             let selectedEntitiesMap = this.state.selectedEntities;
             if (this.props.entities !== undefined) {
@@ -112,7 +116,11 @@ class EntityPicker extends Component {
                     filteredEntities.push(JSON.parse(k));
                 });
             }
-            filteredEntities.sort((a, b) => (a.value > b.value) ? 1 : -1);
+            if (this.state.sortElements) {
+                filteredEntities.sort((a, b) => (a.value > b.value) ? 1 : -1);
+            } else {
+                filteredEntities.sort((a, b) => (elementsOrder[a.value] > elementsOrder[b.value]) ? 1 : -1);
+            }
             this.setState({
                 selectedEntities: selectedEntitiesMap,
                 filteredEntities: filteredEntities,
