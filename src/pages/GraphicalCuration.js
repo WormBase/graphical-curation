@@ -126,7 +126,7 @@ class GraphicalCuration extends Component{
                 <Tab.Container activeKey={this.props.activeAnnotationType}>
                     <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                         <Row>
-                            <Col sm={11}>
+                            <Col sm={10}>
                                 <Nav variant="pills">
                                     {this.state.showExpressionCuration ?
                                         <Nav.Item>
@@ -158,8 +158,8 @@ class GraphicalCuration extends Component{
                                     </Nav.Item>
                                 </Nav>
                             </Col>
-                            <Col sm={1}>
-                                <Button variant={"link"} onClick={() => { this.setState({showTutorial: 'true'}) }}>
+                            <Col sm={2} align="right">
+                                <Button size="sm" variant={"link"} onClick={() => { this.setState({showTutorial: 'true'}) }}>
                                     Show Tutorial
                                 </Button>
                             </Col>
