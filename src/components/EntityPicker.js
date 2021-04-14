@@ -51,7 +51,12 @@ class EntityPicker extends Component {
     }
 
     returnSelectedEntities(selectedEntities) {
-        let returnEntities = '';
+        let returnEntities;
+        if  (this.props.multiSelect === undefined) {
+            returnEntities = '';
+        } else {
+            returnEntities = [];
+        }
         if (selectedEntities.size > 0) {
             returnEntities = Array.from(selectedEntities).map(([key, value]) => {
                 let entity = {
