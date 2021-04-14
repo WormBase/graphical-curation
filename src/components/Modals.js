@@ -10,9 +10,6 @@ import slide3 from "../assets/images/3.jpeg";
 import slide4 from "../assets/images/4.jpeg";
 import slide5 from "../assets/images/5.jpeg";
 import slide6 from "../assets/images/6.jpeg";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 export class AnnotationCreatedModal extends React.Component{
@@ -98,12 +95,12 @@ export class TutorialModal extends React.Component{
                     Graphical Annotation Tutorial
                 </Modal.Header>
                 <Modal.Body>
-                    <Image
-                        className="d-block w-100"
+                    <center><Image
+                        style={{width: 'auto', height: window.innerHeight * 0.6}}
                         src={this.state.slides[this.state.index]}
                         alt="First slide"
                         fluid
-                    />
+                    /></center>
                     <Nav className="justify-content-center">
                         <ButtonGroup>
                             {this.state.index > 0 ?
