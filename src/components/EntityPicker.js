@@ -186,7 +186,7 @@ class EntityPicker extends Component {
                 {this.state.allEntities.length > 0 ? <div><FormControl size="sm" placeholder="filter" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
                     this.setState({filteredEntities: this.state.allEntities.filter(entity => entity.value.startsWith(event.target.value))})
                 }/><div className="whiteSpace"/></div> : ''}
-                <ListGroup>
+                <ListGroup className="list-group-mine">
                     {this.state.filteredEntities.slice(this.state.offset, this.state.offset + this.state.count).map(entity => {
                         let mapEntry = new Map();
                         if (this.state.selectedEntities.has(JSON.stringify(entity))) {

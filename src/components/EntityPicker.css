@@ -1,3 +1,7 @@
 .whiteSpace {
     height: 10px;
 }
+
+.list-group-mine .list-group-item {
+    margin: 1px;
+}
