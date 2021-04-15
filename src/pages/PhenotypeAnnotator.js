@@ -117,7 +117,7 @@ class PhenotypeAnnotator extends Component{
                             <div>
                                 <FormCheck type="checkbox" checked={this.props.tmpAnnotation.notObserved} label="Not Observed"
                                            onChange={(e) => {
-                                               this.props.setPhenotypeTmpAnnotationNotObserved(e.target.value);
+                                               this.props.setPhenotypeTmpAnnotationNotObserved(!this.props.tmpAnnotation.notObserved);
                                            }}/>
                             </div>
                         </Col>
