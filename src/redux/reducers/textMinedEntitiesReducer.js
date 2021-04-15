@@ -11,6 +11,7 @@ const initialState = {
     GOBiologicalProcesses: [],
     variants: [],
     phenotypeTerms: [],
+    transgenes: [],
     loading: false,
     error: null
 };
@@ -36,6 +37,7 @@ export const textMinedEntities = createReducer(initialState, {
             state.GOBiologicalProcesses = action.payload.entities.GOBP !== undefined ? action.payload.entities.GOBP : [];
             state.phenotypeTerms = action.payload.entities.PHENOTERMS !== undefined ? action.payload.entities.PHENOTERMS : [];
             state.variants = action.payload.entities.VARIANT !== undefined ? action.payload.entities.VARIANT : [];
+            state.transgenes = action.payload.entities.TRANSGENES !== undefined ? action.payload.entities.TRANSGENES : [];
         }
         state.loading = false;
         state.error = null;
@@ -52,4 +54,5 @@ export const textMinedEntities = createReducer(initialState, {
     ADD_GO_BIOLOGICAL_PROCESS: (state, action) => {state.GOBiologicalProcesses = concatEntities(state.GOBiologicalProcesses, action.payload.GOBiologicalProcesses)},
     ADD_PHENOTYPE_TERM: (state, action) => {state.phenotypeTerms = concatEntities(state.phenotypeTerms, action.payload.phenotypeTerm)},
     ADD_VARIANT: (state, action) => {state.variants = concatEntities(state.variants, action.payload.variant)},
+    ADD_TRANSGENE: (state, action) => {state.transgenes = concatEntities(state.transgenes, action.payload.transgenes)},
 });

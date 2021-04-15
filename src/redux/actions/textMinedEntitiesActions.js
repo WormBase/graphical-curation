@@ -9,6 +9,7 @@ export const ADD_GO_MOLECULAR_FUNCTION = "ADD_GO_MOLECULAR_FUNCTION";
 export const ADD_GO_BIOLOGICAL_PROCESS = "ADD_GO_BIOLOGICAL_PROCESS";
 export const ADD_VARIANT = "ADD_VARIANT";
 export const ADD_PHENOTYPE_TERM = "ADD_PHENOTYPE_TERM";
+export const ADD_TRANSGENE = "ADD_TRANSGENE";
 
 
 export const fetchEntitiesSuccess = entities => ({
@@ -69,3 +70,7 @@ export const addPhenotypeTerm = phenotypeTerm => ({
   payload: { phenotypeTerm }
 });
 
+export const addTransgene = transgene => ({
+  type: ADD_TRANSGENE,
+  payload: { transgene }
+});

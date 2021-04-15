@@ -21,8 +21,12 @@ class PhenotypeAnnotationsViewer extends Component{
                 <thead>
                     <tr style={{backgroundColor: 'lightgray'}}>
                     {this.props.showAnnotationIds ? <th>ID</th> : ''}
-                        <th>Object</th>
-                        <th>Phenotype Terms</th>
+                        <th>Phenotype</th>
+                        <th>Assayed via</th>
+                        <th>Not Observed</th>
+                        <th>Alleles</th>
+                        <th>Genes</th>
+                        <th>Transgenes</th>
                         <th>Anatomy Terms</th>
                         <th>Life Stages</th>
                         <th>Phenotype Statement</th>
@@ -36,13 +40,43 @@ class PhenotypeAnnotationsViewer extends Component{
                         <tr>
                             {this.props.showAnnotationIds ? <td><p style={{width: "100px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{a.annotationId}</p></td> : ''}
                             <td>
-                                <span>{a.object.value}&nbsp;</span>
-                                <OverlayTrigger overlay={<Tooltip id="button-tooltip">ID: {a.object.modId}</Tooltip>}>
+                                <span>{a.phenotype.value}&nbsp;</span>
+                                <OverlayTrigger overlay={<Tooltip id="button-tooltip">ID: {a.phenotype.modId}</Tooltip>}>
                                     <AiOutlineInfoCircle/>
                                 </OverlayTrigger>
                             </td>
                             <td>
-                                {a.phenotypeTerms.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                {a.assay}
+                            </td>
+                            <th>{a.notObserved ? "Not Observed" : ""}</th>
+                            <td>
+                                {a.alleles.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                    popperConfig={{
+                                        modifiers: {
+                                            preventOverflow: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }}
+                                    overlay={<Tooltip id="button-tooltip">ID: {e.modId} </Tooltip>}>
+                                    <AiOutlineInfoCircle/>
+                                </OverlayTrigger></Badge>&nbsp;</span>)}
+                            </td>
+                            <td>
+                                {a.genes.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                    popperConfig={{
+                                        modifiers: {
+                                            preventOverflow: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }}
+                                    overlay={<Tooltip id="button-tooltip">ID: {e.modId} </Tooltip>}>
+                                    <AiOutlineInfoCircle/>
+                                </OverlayTrigger></Badge>&nbsp;</span>)}
+                            </td>
+                            <td>
+                                {a.transgenes.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
                                     popperConfig={{
                                         modifiers: {
                                             preventOverflow: {
@@ -63,7 +97,7 @@ class PhenotypeAnnotationsViewer extends Component{
                                             }
                                         }
                                     }}
-                                    overlay={<Tooltip id="button-tooltip">ID: {e.modId} </Tooltip>}>
+                                    overlay={<Tooltip id="button-tooltip">ID: {e.modId}</Tooltip>}>
                                     <AiOutlineInfoCircle/>
                                 </OverlayTrigger></Badge>&nbsp;</span>)}
                             </td>

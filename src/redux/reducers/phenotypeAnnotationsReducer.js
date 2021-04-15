@@ -12,7 +12,7 @@ const initialState = {
 
 function annotationIsDuplicate(annotation, storedAnnotations) {
     return storedAnnotations.some(a => {
-        return annotation.object === a.object && arraysContainSameElements(annotation.phenoTerms, a.phenoTerms)
+        return annotation.phenotype === a.phenotype && annotation.assay === a.assay && arraysContainSameElements(annotation.alleles, a.alleles) && arraysContainSameElements(annotation.genes, a.genes) && arraysContainSameElements(annotation.transgenes, a.transgenes) && arraysContainSameElements(annotation.anatomyTerms, a.anatomyTerms) && arraysContainSameElements(annotation.lifeStages, a.lifeStages) && annotation.phenotypeStatement === a.phenotypeStatement
     })
 }
 
@@ -38,6 +38,7 @@ export const phenotypeAnnotations = createReducer(initialState, {
             } else if (!annotationIsDuplicate(state.tmpAnnotation, state.annotations)) {
                 state.annotations.push(modAnnotation);
                 state.savedStatus = 'Created';
+                console.log(modAnnotation);
             }
             state.currentAction = 'Create';
         } else {
@@ -57,11 +58,23 @@ export const phenotypeAnnotations = createReducer(initialState, {
         state.annotations = state.annotations.filter(a => a.annotationId !== action.payload.annotationId);
         state.savedStatus = 'Deleted';
     },
-    SET_PHENOTYPE_TMP_ANNOT_OBJECT: (state, action) => {
-        state.tmpAnnotation.object = _.cloneDeep(action.payload.object);
+    SET_PHENOTYPE_TMP_ANNOT_PHENOTYPE: (state, action) => {
+        state.tmpAnnotation.phenotype = _.cloneDeep(action.payload.phenotype);
     },
-    SET_PHENOTYPE_TMP_ANNOT_PHENOTYPE_TERMS: (state, action) => {
-        state.tmpAnnotation.phenotypeTerms = _.cloneDeep(action.payload.phenotypeTerms);
+    SET_PHENOTYPE_TMP_ANNOT_ASSAY: (state, action) => {
+        state.tmpAnnotation.assay = _.cloneDeep(action.payload.assay);
+    },
+    SET_PHENOTYPE_TMP_ANNOT_NOT_OBSERVED: (state, action) => {
+        state.tmpAnnotation.notObserved = _.cloneDeep(action.payload.notObserved);
+    },
+    SET_PHENOTYPE_TMP_ANNOT_ALLELES: (state, action) => {
+        state.tmpAnnotation.alleles = _.cloneDeep(action.payload.alleles);
+    },
+    SET_PHENOTYPE_TMP_ANNOT_GENES: (state, action) => {
+        state.tmpAnnotation.genes = _.cloneDeep(action.payload.genes);
+    },
+    SET_PHENOTYPE_TMP_ANNOT_TRANSGENES: (state, action) => {
+        state.tmpAnnotation.transgenes = _.cloneDeep(action.payload.transgenes);
     },
     SET_PHENOTYPE_TMP_ANNOT_ANATOMY_TERMS: (state, action) => {
         state.tmpAnnotation.anatomyTerms = _.cloneDeep(action.payload.anatomyTerms);

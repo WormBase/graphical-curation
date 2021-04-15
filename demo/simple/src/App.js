@@ -52,7 +52,11 @@ class App extends Component{
                     {value: 'Other'}],
 
             ANATOMY_FUNCTION_ASSAYS: [{value: 'Expression_mosaic'}, {value: 'Genetic_mosaic'}, {value: 'Laser_ablation'},
-                {value: 'Optogenetic'}, {value: 'Blastomere_isolation'}, {value: 'Genetic_ablation'}]
+                {value: 'Optogenetic'}, {value: 'Blastomere_isolation'}, {value: 'Genetic_ablation'}],
+            TRANSGENES: [
+                { value: 'grEx157', modId: 'WBTransgene00008530' },
+                { value: 'geEx1', modId: 'WBTransgene00016395' },
+            ]
         }
 
         const exprAnnotations = [{
@@ -82,9 +86,12 @@ class App extends Component{
         }]
         const phenotypeAnnotations = [{
             annotationId: 1,
-            object: { value: 'ttTi5605', modId: 'WBVar00254893' },
-            phenotypeTerms: [{ value: "stage specific cuticle antigenicity variant", modId: "WBPhenotype:0001677" }],
-            anatomyTerms: [{ value: 'pharynx', modId: 'WBbt:0003681'}],
+            phenotype: { value: "stage specific cuticle antigenicity variant", modId: "WBPhenotype:0001677" },
+            assay: 'RNAi',
+            alleles: [{ value: 'ttTi5605', modId: 'WBVar00254893' }],
+            genes: [{ value: 'unc-61', modId: 'WBGene00006795' }],
+            transgenes: [{ value: 'grEx157', modId: 'WBTransgene00008530' }],
+            anatomyTerms: [],
             lifeStages: [{ value: 'L3', modId: 'WBls:0000035' }],
             evidence: 'WBPaper00001254',
             phenotypeStatement: 'test',

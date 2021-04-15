@@ -35,15 +35,20 @@ export const createExpressionAnnotation = (gene = '', whenExpressed = [], whereE
     }
 }
 
-export const createPhenotypeAnnotation = (object = '', phenotypeTerms = [], anatomyTerms = [],
-                                          lifeStages = [], phenotypeStatement = '',
+export const createPhenotypeAnnotation = (phenotype = '', assay = 'RNAi', alleles = [],
+                                          genes = [], transgenes = [], anatomyTerms = [],
+                                          lifeStages = [], notObserved = false, phenotypeStatement = '',
                                           evidence = '') => {
     return {
         annotationId: uuid.v4(),
-        object: object,
-        phenotypeTerms: phenotypeTerms,
+        phenotype: phenotype,
+        assay: assay,
+        alleles: alleles,
+        genes: genes,
+        transgenes: transgenes,
         anatomyTerms: anatomyTerms,
         lifeStages: lifeStages,
+        notObserved: notObserved,
         phenotypeStatement: phenotypeStatement,
         evidence: evidence,
         dateAssigned: Date.now(),

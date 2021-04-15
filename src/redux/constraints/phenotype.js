@@ -1,25 +1,56 @@
-export const phenotypeAnnotationHasObject = annotation => annotation.object !== undefined && annotation.object !== '';
+export const phenotypeAnnotationHasPhenotype = annotation => annotation.phenotype !== undefined && annotation.phenotype !== '';
 
-export const phenotypeAnnotationHasPhenoTerms = annotation => annotation.phenotypeTerms.length > 0
+export const phenotypeAnnotationHasAssay = annotation => annotation.assay !== undefined && annotation.assay !== '';
 
-export const phenotypeAnnotationHasAnatomyTerms = annotation => annotation.anatomyTerms.length > 0
+export const phenotypeAnnotationHasAlleles = annotation => annotation.alleles.length > 0;
 
-export const phenotypeAnnotationHasLifeStages = annotation => annotation.lifeStages.length > 0
+export const phenotypeAnnotationHasGenes = annotation => annotation.genes.length > 0;
 
-export const phenotypeAnnotationIsValid = annotation => phenotypeAnnotationHasObject(annotation) &&
-    phenotypeAnnotationHasPhenoTerms(annotation) && (phenotypeAnnotationHasAnatomyTerms(annotation) ||
-    phenotypeAnnotationHasLifeStages(annotation)) && annotation.evidence !== undefined
+export const phenotypeAnnotationHasTransgenes = annotation => annotation.transgenes.length > 0;
+
+export const phenotypeAnnotationHasAnatomyTerms = annotation => annotation.anatomyTerms.length > 0;
+
+export const phenotypeAnnotationHasLifeStages = annotation => annotation.lifeStages.length > 0;
+
+export const phenotypeAnnotationHasValidAssayOptions = annotation => {
+    if (annotation.assay === 'RNAi' || annotation.assay === 'Other' || annotation.assay === 'Overexpression') {
+        if (!phenotypeAnnotationHasGenes(annotation)) {
+            return false;
+        }
+    }
+    if (annotation.assay === 'Overexpression') {
+        if (!phenotypeAnnotationHasTransgenes(annotation)) {
+            return false;
+        }
+    }
+    if (!phenotypeAnnotationHasAlleles(annotation) && !phenotypeAnnotationHasGenes(annotation)) {
+        return false;
+    }
+    return true;
+}
+
+export const phenotypeAnnotationIsValid = annotation => phenotypeAnnotationHasPhenotype(annotation) &&
+    phenotypeAnnotationHasAssay(annotation) && phenotypeAnnotationHasValidAssayOptions(annotation) &&
+    annotation.evidence !== undefined
 
 export function phenotypeAnnotationMissingFields(annotation) {
     let missingFields = [];
-    if (!phenotypeAnnotationHasObject(annotation)) {
-        missingFields.push("Variant");
+    if (!phenotypeAnnotationHasPhenotype(annotation)) {
+        missingFields.push("Phenotype");
     }
-    if (!phenotypeAnnotationHasPhenoTerms(annotation)) {
-        missingFields.push("At least one phenotype term");
+    if (annotation.assay === 'RNAi' || annotation.assay === 'Other' || annotation.assay === 'Overexpression') {
+        if (!phenotypeAnnotationHasGenes(annotation)) {
+            missingFields.push("One or more genes, required by the selected assay")
+        }
+    } else {
+        if (!phenotypeAnnotationHasGenes(annotation) && !phenotypeAnnotationHasAlleles(annotation)) {
+            missingFields.push("At least an allele or a gene");
+        }
     }
-    if (!(phenotypeAnnotationHasAnatomyTerms(annotation) || phenotypeAnnotationHasLifeStages(annotation))) {
-        missingFields.push("One or more anatomy term or life stage");
+    if (annotation.assay === 'Overexpression') {
+        if (!phenotypeAnnotationHasTransgenes(annotation)) {
+            missingFields.push("One or more transgenes, required by the selected assay")
+        }
     }
     return missingFields;
 }
