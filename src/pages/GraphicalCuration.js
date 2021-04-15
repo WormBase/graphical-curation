@@ -124,7 +124,7 @@ class GraphicalCuration extends Component{
         return (
             <div>
                 <Tab.Container activeKey={this.props.activeAnnotationType}>
-                    <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+                    <Container fluid>
                         <Row>
                             <Col sm={10}>
                                 <Nav variant="pills">
