@@ -46,7 +46,7 @@ export function phenotypeAnnotationMissingFields(annotation) {
         }
     } else if (annotation.assay === 'Allele') {
         if (!phenotypeAnnotationHasAlleles(annotation)) {
-            missingFields.push("At least an allele or a gene");
+            missingFields.push("One or more alleles, required by the selected assay");
         }
     }
     if (annotation.assay === 'Overexpression') {
