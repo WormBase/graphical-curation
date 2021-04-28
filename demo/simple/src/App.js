@@ -56,6 +56,9 @@ class App extends Component{
             TRANSGENES: [
                 { value: 'grEx157', modId: 'WBTransgene00008530' },
                 { value: 'geEx1', modId: 'WBTransgene00016395' },
+            ],
+            STRAIN: [
+                { value: 'N2', modId: 'WBStrain00000001' },
             ]
         }
 
@@ -93,6 +96,7 @@ class App extends Component{
             transgenes: [{ value: 'grEx157', modId: 'WBTransgene00008530' }],
             anatomyTerms: [],
             lifeStages: [{ value: 'L3', modId: 'WBls:0000035' }],
+            strains: [],
             evidence: 'WBPaper00001254',
             phenotypeStatement: 'test',
             dateAssigned: Date.now()

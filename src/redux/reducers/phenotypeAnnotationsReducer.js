@@ -82,6 +82,9 @@ export const phenotypeAnnotations = createReducer(initialState, {
     SET_PHENOTYPE_TMP_ANNOT_LIFE_STAGES: (state, action) => {
         state.tmpAnnotation.lifeStages = _.cloneDeep(action.payload.lifeStages);
     },
+    SET_PHENOTYPE_TMP_ANNOT_STRAINS: (state, action) => {
+        state.tmpAnnotation.strains = _.cloneDeep(action.payload.strains);
+    },
     SET_PHENOTYPE_TMP_ANNOT_PHENOTYPE_STATEMENT: (state, action) => {
         state.tmpAnnotation.phenotypeStatement = _.cloneDeep(action.payload.phenotypeStatement);
     },

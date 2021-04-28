@@ -12,6 +12,7 @@ const initialState = {
     variants: [],
     phenotypeTerms: [],
     transgenes: [],
+    strains : [],
     loading: false,
     error: null
 };
@@ -38,6 +39,7 @@ export const textMinedEntities = createReducer(initialState, {
             state.phenotypeTerms = action.payload.entities.PHENOTERMS !== undefined ? action.payload.entities.PHENOTERMS : [];
             state.variants = action.payload.entities.VARIANT !== undefined ? action.payload.entities.VARIANT : [];
             state.transgenes = action.payload.entities.TRANSGENES !== undefined ? action.payload.entities.TRANSGENES : [];
+            state.strains = action.payload.entities.STRAIN !== undefined ? action.payload.entities.STRAIN : [];
         }
         state.loading = false;
         state.error = null;
@@ -55,4 +57,5 @@ export const textMinedEntities = createReducer(initialState, {
     ADD_PHENOTYPE_TERM: (state, action) => {state.phenotypeTerms = concatEntities(state.phenotypeTerms, action.payload.phenotypeTerm)},
     ADD_VARIANT: (state, action) => {state.variants = concatEntities(state.variants, action.payload.variant)},
     ADD_TRANSGENE: (state, action) => {state.transgenes = concatEntities(state.transgenes, action.payload.transgenes)},
+    ADD_STRAIN: (state, action) => {state.strains = concatEntities(state.strains, action.payload.strain)},
 });

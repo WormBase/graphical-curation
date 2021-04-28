@@ -7,7 +7,8 @@ export const entityTypes = {
     TRANSGENE: 'TRANSGENE',
     ANATOMY_TERM: 'ANATOMY_TERM',
     LIFE_STAGE: 'LIFE_STAGE',
-    GO_CELLULAR_COMPONENT: 'GO_CELLULAR_COMPONENT'
+    GO_CELLULAR_COMPONENT: 'GO_CELLULAR_COMPONENT',
+    STRAIN: 'STRAIN'
 };
 
 export class Autocomplete {
@@ -20,6 +21,7 @@ export class Autocomplete {
             [entityTypes.LIFE_STAGE]: 'wbls',
             [entityTypes.GO_CELLULAR_COMPONENT]: 'gocc',
             [entityTypes.TRANSGENE]: 'transgene',
+            [entityTypes.STRAIN]: 'strain',
         };
     }
 

@@ -29,6 +29,7 @@ class PhenotypeAnnotationsViewer extends Component{
                         <th>Transgenes</th>
                         <th>Anatomy Terms</th>
                         <th>Life Stages</th>
+                        <th>Strains</th>
                         <th>Phenotype Statement</th>
                         <th>Date Assigned</th>
                         <th>&nbsp;</th>
@@ -103,6 +104,19 @@ class PhenotypeAnnotationsViewer extends Component{
                             </td>
                             <td>
                                 {a.lifeStages.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
+                                    popperConfig={{
+                                        modifiers: {
+                                            preventOverflow: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }}
+                                    overlay={<Tooltip id="button-tooltip">ID: {e.modId}</Tooltip>}>
+                                    <AiOutlineInfoCircle/>
+                                </OverlayTrigger></Badge>&nbsp;</span>)}
+                            </td>
+                            <td>
+                                {a.strains.map(e => <span><Badge variant="primary">{e.value} <OverlayTrigger
                                     popperConfig={{
                                         modifiers: {
                                             preventOverflow: {

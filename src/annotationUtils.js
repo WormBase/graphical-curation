@@ -37,8 +37,8 @@ export const createExpressionAnnotation = (gene = '', whenExpressed = [], whereE
 
 export const createPhenotypeAnnotation = (phenotype = '', assay = 'RNAi', alleles = [],
                                           genes = [], transgenes = [], anatomyTerms = [],
-                                          lifeStages = [], notObserved = false, phenotypeStatement = '',
-                                          evidence = '') => {
+                                          lifeStages = [], strains = [], notObserved = false,
+                                          phenotypeStatement = '', evidence = '') => {
     return {
         annotationId: uuid.v4(),
         phenotype: phenotype,
@@ -48,6 +48,7 @@ export const createPhenotypeAnnotation = (phenotype = '', assay = 'RNAi', allele
         transgenes: transgenes,
         anatomyTerms: anatomyTerms,
         lifeStages: lifeStages,
+        strains: strains,
         notObserved: notObserved,
         phenotypeStatement: phenotypeStatement,
         evidence: evidence,

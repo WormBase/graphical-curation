@@ -9,5 +9,6 @@ export const getGOCellularComponents = store => getTextMinedEntitiesState(store)
 export const getVariants = store => getTextMinedEntitiesState(store) ? getTextMinedEntitiesState(store).variants : [];
 export const getPhenotypeTerms = store => getTextMinedEntitiesState(store) ? getTextMinedEntitiesState(store).phenotypeTerms : [];
 export const getTransgenes = store => getTextMinedEntitiesState(store) ? getTextMinedEntitiesState(store).transgenes : [];
+export const getStrains = store => getTextMinedEntitiesState(store) ? getTextMinedEntitiesState(store).strains : [];
 
 export const isLoading = store => getTextMinedEntitiesState(store) ? getTextMinedEntitiesState(store).loading : false;

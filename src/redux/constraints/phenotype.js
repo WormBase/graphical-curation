@@ -23,8 +23,10 @@ export const phenotypeAnnotationHasValidAssayOptions = annotation => {
             return false;
         }
     }
-    if (!phenotypeAnnotationHasAlleles(annotation) && !phenotypeAnnotationHasGenes(annotation)) {
-        return false;
+    if (annotation.assay === 'Allele') {
+        if (!phenotypeAnnotationHasAlleles(annotation)) {
+            return false;
+        }
     }
     return true;
 }
@@ -42,8 +44,8 @@ export function phenotypeAnnotationMissingFields(annotation) {
         if (!phenotypeAnnotationHasGenes(annotation)) {
             missingFields.push("One or more genes, required by the selected assay")
         }
-    } else {
-        if (!phenotypeAnnotationHasGenes(annotation) && !phenotypeAnnotationHasAlleles(annotation)) {
+    } else if (annotation.assay === 'Allele') {
+        if (!phenotypeAnnotationHasAlleles(annotation)) {
             missingFields.push("At least an allele or a gene");
         }
     }

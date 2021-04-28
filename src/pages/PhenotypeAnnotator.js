@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {
     isLoading,
     getPhenotypeTerms,
-    getVariants, getAnatomyTerms, getLifeStages, getGenes, getTransgenes
+    getVariants, getAnatomyTerms, getLifeStages, getGenes, getTransgenes, getStrains
 } from "../redux/selectors/textMinedEntitiesSelector";
 import EntityPicker from "../components/EntityPicker";
 import Container from "react-bootstrap/Container";
@@ -21,7 +21,7 @@ import {
     setPhenotypeTmpAnnotationGenes,
     setPhenotypeTmpAnnotationLifeStages, setPhenotypeTmpAnnotationNotObserved,
     setPhenotypeTmpAnnotationPhenotype,
-    setPhenotypeTmpAnnotationPhenotypeStatement,
+    setPhenotypeTmpAnnotationPhenotypeStatement, setPhenotypeTmpAnnotationStrains,
     setPhenotypeTmpAnnotationTransgenes
 } from "../redux/actions/phenotypeAnnotationsActions";
 import {
@@ -29,7 +29,7 @@ import {
     addPhenotypeTerm,
     addLifeStage,
     addAnatomyTerm,
-    addGene, addTransgene
+    addGene, addTransgene, addStrain
 } from "../redux/actions/textMinedEntitiesActions";
 import FormControl from "react-bootstrap/FormControl";
 import {entityTypes} from "../autocomplete";
@@ -42,6 +42,9 @@ import {
 } from "../redux/selectors/phenotypeAnnotationsSelector";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import FormCheck from "react-bootstrap/FormCheck";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import {BsQuestionOctagon} from "react-icons/bs";
 
 
 class PhenotypeAnnotator extends Component{
@@ -53,6 +56,7 @@ class PhenotypeAnnotator extends Component{
         this.transgenesPicker = React.createRef();
         this.anatomyTermsPicker = React.createRef();
         this.lifeStagesPicker = React.createRef();
+        this.strainsPicker = React.createRef();
     }
 
     resetPickers() {
@@ -62,6 +66,7 @@ class PhenotypeAnnotator extends Component{
         this.transgenesPicker.reset();
         this.anatomyTermsPicker.reset();
         this.lifeStagesPicker.reset();
+        this.strainsPicker.reset();
         this.props.resetPhenotypeTmpAnnotation();
     }
 
@@ -103,15 +108,23 @@ class PhenotypeAnnotator extends Component{
                         </Col>
                         <Col>
                             <div>
-                                <h6 align="center">Assayed via</h6>
-                                <FormControl as="select" value={this.props.tmpAnnotation.assay} onChange={(e) => {
-                                    this.props.setPhenotypeTmpAnnotationAssay(e.target.value);
-                                }}>
-                                    <option value="RNAi" selected>RNAi</option>
-                                    <option value="Allele">Allele</option>
-                                    <option value="Overexpression">Overexpression</option>
-                                    <option value="Other">Other</option>
-                                </FormControl>
+                                <div align="center">
+                                    <div style={{display: 'inline'}}>Assayed via&nbsp;</div>
+                                    <div style={{display: 'inline'}}>
+                                        <OverlayTrigger overlay={
+                                            <Tooltip>Choose how phenotype was achieved, for CRISPR or other gene engineering, choose Allele</Tooltip>}>
+                                            <BsQuestionOctagon />
+                                        </OverlayTrigger>
+                                    </div>
+                                    <FormControl as="select" value={this.props.tmpAnnotation.assay} onChange={(e) => {
+                                        this.props.setPhenotypeTmpAnnotationAssay(e.target.value);
+                                    }}>
+                                        <option value="RNAi" selected>RNAi</option>
+                                        <option value="Allele">Allele</option>
+                                        <option value="Overexpression">Overexpression</option>
+                                        <option value="Other">Other</option>
+                                    </FormControl>
+                                </div>
                             </div>
                             <br/>
                             <div>
@@ -121,10 +134,10 @@ class PhenotypeAnnotator extends Component{
                                            }}/>
                             </div>
                         </Col>
-                        <Col>
+                        <Col className={this.props.tmpAnnotation.assay !== "Allele" ? "d-none" : ''}>
                             <EntityPicker
                                 title="Allele"
-                                cardinality="0+"
+                                cardinality="1+"
                                 tooltip="The involved allele(s)."
                                 entities={this.props.variants}
                                 ref={instance => { this.allelesPicker = instance; }}
@@ -141,10 +154,10 @@ class PhenotypeAnnotator extends Component{
                                 multiSelect
                             />
                         </Col>
-                        <Col>
+                        <Col className={this.props.tmpAnnotation.assay === "Allele" ? "d-none" : ''}>
                             <EntityPicker
                                 title="Gene"
-                                cardinality="0+"
+                                cardinality="1+"
                                 tooltip="The involved gene(s)."
                                 entities={this.props.genes}
                                 ref={instance => { this.genesPicker = instance; }}
@@ -161,10 +174,10 @@ class PhenotypeAnnotator extends Component{
                                 multiSelect
                             />
                         </Col>
-                        <Col>
+                        <Col className={this.props.tmpAnnotation.assay !== "Overexpression" ? 'd-none' : ''}>
                             <EntityPicker
                                 title="Transgene"
-                                cardinality="0+"
+                                cardinality="1+"
                                 tooltip="The involved transgene(s)."
                                 entities={this.props.transgenes}
                                 ref={instance => { this.transgenesPicker = instance; }}
@@ -185,7 +198,7 @@ class PhenotypeAnnotator extends Component{
                             <EntityPicker
                                 title="Anatomy terms"
                                 cardinality="0+"
-                                tooltip="Involved anatomy terms. At least one anatomy term or life stage must be provided."
+                                tooltip="Involved anatomy terms."
                                 entities={this.props.anatomyTerms}
                                 ref={instance => { this.anatomyTermsPicker = instance; }}
                                 selectedItemsCallback={(anatomyTerms) => {
@@ -205,7 +218,7 @@ class PhenotypeAnnotator extends Component{
                             <EntityPicker
                                 title="Life stages"
                                 cardinality="0+"
-                                tooltip="Involved life stages. At least one anatomy term or life stage must be provided."
+                                tooltip="Involved life stages."
                                 entities={this.props.lifeStages}
                                 ref={instance => { this.lifeStagesPicker = instance; }}
                                 selectedItemsCallback={(lifeStages) => {
@@ -217,6 +230,26 @@ class PhenotypeAnnotator extends Component{
                                 selectedEntities={this.props.tmpAnnotation.lifeStages}
                                 autocompleteObj={this.props.autocompleteObj}
                                 entityType={entityTypes.LIFE_STAGE}
+                                multiSelect
+                                sortElements={true}
+                            />
+                        </Col>
+                        <Col>
+                            <EntityPicker
+                                title="Strains"
+                                cardinality="0+"
+                                tooltip="Strain used in assay."
+                                entities={this.props.strains}
+                                ref={instance => { this.strainsPicker = instance; }}
+                                selectedItemsCallback={(strain) => {
+                                    this.props.setPhenotypeTmpAnnotationStrains(strain);
+                                }}
+                                count={this.props.maxEntities}
+                                isLoading={this.props.isLoading}
+                                addEntity={this.props.addStrain}
+                                selectedEntities={this.props.tmpAnnotation.strains}
+                                autocompleteObj={this.props.autocompleteObj}
+                                entityType={entityTypes.STRAIN}
                                 multiSelect
                                 sortElements={true}
                             />
@@ -263,6 +296,7 @@ const mapStateToProps = state => ({
     anatomyTerms: getAnatomyTerms(state),
     lifeStages: getLifeStages(state),
     genes: getGenes(state),
+    strains: getStrains(state),
     transgenes: getTransgenes(state),
     tmpAnnotation: getPhenotypeTmpAnnotation(state),
     savedStatus: getPhenotypeSavedStatus(state),
@@ -275,4 +309,4 @@ export default connect(mapStateToProps, {addVariant, addPhenotypeTerm, addAnatom
     setPhenotypeTmpAnnotationAlleles, setPhenotypeTmpAnnotationAnatomyTerms, setPhenotypeTmpAnnotationLifeStages,
     setPhenotypeTmpAnnotationPhenotypeStatement, setPhenotypeTmpAnnotationEvidence, dismissSavedStatus,
     setPhenotypeTmpAnnotationGenes, setPhenotypeTmpAnnotationTransgenes, dismissWrongAnnotation,
-    setPhenotypeTmpAnnotationNotObserved, setPhenotypeTmpAnnotationAssay})(PhenotypeAnnotator);
+    setPhenotypeTmpAnnotationNotObserved, setPhenotypeTmpAnnotationAssay, setPhenotypeTmpAnnotationStrains, addStrain})(PhenotypeAnnotator);
