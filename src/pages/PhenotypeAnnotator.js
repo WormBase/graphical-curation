@@ -255,7 +255,7 @@ class PhenotypeAnnotator extends Component{
                             />
                         </Col>
                         <Col>
-                            <h6 align="center">Phenotype Statement</h6>
+                            <h6 align="center">Author Statement</h6>
                             <FormControl as="textarea" rows="3" value={this.props.tmpAnnotation.phenotypeStatement} onChange={event => {
                                 this.props.setPhenotypeTmpAnnotationPhenotypeStatement(event.target.value);
                             }}/>
