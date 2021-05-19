@@ -188,7 +188,7 @@ class EntityPicker extends Component {
                     autocompleteFetchFnct={this.props.fetchAutocompleteEntities}
                     entityType={this.props.entityType}
                 />
-                {this.state.allEntities.length > 0 ? <div><FormControl size="sm" placeholder="filter" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
+                {this.state.allEntities.length > 0 ? <div><FormControl size="sm" placeholder="filter list" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
                     this.setState({filteredEntities: this.state.allEntities.filter(entity => entity.value.startsWith(event.target.value))})
                 }/><div className="whiteSpace"/></div> : ''}
                 <ListGroup className="list-group-mine">
