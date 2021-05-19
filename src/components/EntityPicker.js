@@ -160,7 +160,7 @@ class EntityPicker extends Component {
                     </div>
                 </div>
                 {this.props.addEntity !== undefined ?
-                    <div align="center"><Button size="sm" variant="outline-primary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add missing</Button>
+                    <div align="center" style={{width: '100%'}}><Button style={{width: '100%'}} size="sm" variant="outline-secondary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add missing term</Button>
                         <div className="whiteSpace"/>
                     </div> : ''}
                 <AddEntityModal
