@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import ListGroup from 'react-bootstrap/ListGroup';
-import LoadingOverlay from 'react-loading-overlay';
 import Button from "react-bootstrap/Button";
 import { IoIosAddCircleOutline, IoIosArrowDropupCircle, IoIosArrowDropdownCircle } from 'react-icons/io';
 import { BsQuestionOctagon } from 'react-icons/bs';
@@ -22,6 +21,7 @@ import './EntityPicker.css';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import Badge from "react-bootstrap/Badge";
+import {Spinner} from "react-bootstrap";
 
 
 class EntityPicker extends Component {
@@ -136,116 +136,116 @@ class EntityPicker extends Component {
 
     render() {
         return (
-            <LoadingOverlay
-                active={this.props.isLoading}
-                spinner
-                text='Loading data ...'>
-                <div align="center">
-                    <div style={{display: 'inline'}}>{this.props.title}&nbsp;</div>
-                    <div style={{display: 'inline'}}>
-                        <OverlayTrigger overlay={
-                            <Tooltip>
-                                {this.state.cardinalityTooltipMap[this.props.cardinality].text}
-                            </Tooltip>}>
-                            <span><Badge variant={this.state.cardinalityTooltipMap[this.props.cardinality].variant}>{this.props.cardinality}</Badge>&nbsp;&nbsp;</span>
-                        </OverlayTrigger>
-                    </div>
-                    <div style={{display: 'inline'}}>
-                        <OverlayTrigger overlay={
-                            <Tooltip>
-                                {this.props.tooltip}
-                            </Tooltip>}>
-                            <BsQuestionOctagon />
-                        </OverlayTrigger>
-                    </div>
-                </div>
-                {this.props.addEntity !== undefined ?
-                    <div align="center" style={{width: '100%'}}><Button style={{width: '100%'}} size="sm" variant="outline-secondary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add missing term</Button>
-                        <div className="whiteSpace"/>
-                    </div> : ''}
-                <AddEntityModal
-                    show={this.state.showAddEntity}
-                    onHide={() => {
-                        this.setState({showAddEntity: false});
-                        this.props.resetAutocompleteEntities();
-                    }}
-                    addEntity={(e) => {
-                        this.props.addEntity(e);
-                        let mapEntry = new Map();
-                        if (this.props.checkboxes !== undefined) {
-                            this.props.checkboxes.forEach(c => {mapEntry.set(c, false)});
-                        }
-                        let selectedEntities = this.state.selectedEntities;
-                        if (this.props.multiSelect === undefined) {
-                            selectedEntities = new Map();
-                        }
-                        selectedEntities.set(JSON.stringify(e), mapEntry);
-                        this.returnSelectedEntities(selectedEntities);
-                        this.setState({selectedEntities: selectedEntities});
-                    }}
-                    autocompleteObj={this.props.autocompleteObj}
-                    autocompleteEntities={this.props.autocompleteEntities}
-                    autocompleteFetchFnct={this.props.fetchAutocompleteEntities}
-                    entityType={this.props.entityType}
-                />
-                {this.state.allEntities.length > 0 ? <div><FormControl size="sm" placeholder="filter list" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
-                    this.setState({filteredEntities: this.state.allEntities.filter(entity => entity.value.startsWith(event.target.value))})
-                }/><div className="whiteSpace"/></div> : ''}
-                <ListGroup className="list-group-mine">
-                    {this.state.filteredEntities.slice(this.state.offset, this.state.offset + this.state.count).map(entity => {
-                        let mapEntry = new Map();
-                        if (this.state.selectedEntities.has(JSON.stringify(entity))) {
-                            mapEntry = this.state.selectedEntities.get(JSON.stringify(entity));
-                        } else if (this.props.checkboxes !== undefined) {
-                            this.props.checkboxes.forEach(c => {mapEntry.set(c, false)});
-                        }
-                        return <ListGroup.Item action variant="default" className="py-1"
-                                               active={this.state.selectedEntities.has(JSON.stringify(entity))}>
-                            <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                <Row>
-                                    <Col onClick={() => {
-                                        let selectedEntities = this.state.selectedEntities;
-                                        if (selectedEntities.has(JSON.stringify(entity))) {
-                                            selectedEntities.delete(JSON.stringify(entity));
-                                        } else {
-                                            if (this.props.multiSelect === undefined) {
-                                                selectedEntities = new Map();
-                                            }
-                                            selectedEntities.set(JSON.stringify(entity), mapEntry);
-                                        }
-                                        this.returnSelectedEntities(selectedEntities);
-                                        this.setState({selectedEntities: selectedEntities});
-                                    }}>
-                                        {entity.value}
-                                    </Col>
-                                    {this.props.checkboxes !== undefined ? this.props.checkboxes.map(c => {
-                                        return <Col><FormCheck inline type="checkbox" label={c}
-                                                               onClick={() => {
-                                                                   if (this.state.selectedEntities.has(JSON.stringify(entity))) {
-                                                                       let selectedEntities = this.state.selectedEntities;
-                                                                       let mapEntry = selectedEntities.get(JSON.stringify(entity));
-                                                                       mapEntry.set(c, !mapEntry.get(c))
-                                                                       selectedEntities.set(JSON.stringify(entity), mapEntry);
-                                                                       this.returnSelectedEntities(selectedEntities);
-                                                                       this.setState({selectedEntities: selectedEntities});
-                                                                   }
-                                                               }}
-                                                               checked={this.state.selectedEntities.has(JSON.stringify(entity)) && this.state.selectedEntities.get(JSON.stringify(entity)).get(c)}
-                                        /></Col>}) : ''}
-                                </Row>
-                            </Container>
-                        </ListGroup.Item>
-                    })}
-                </ListGroup>
-                <div align="right">
-                    <Button variant="link" size="lg" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
-                        <IoIosArrowDropupCircle />
-                    </Button>
-                    <Button variant="link" size="lg" hidden={this.state.allEntities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
-                        <IoIosArrowDropdownCircle />
-                    </Button>
-                </div><div className="whiteSpace"/><div className="whiteSpace"/>
-            </LoadingOverlay>
+            <div>
+                {this.props.isLoading ? <Spinner animation="border"/> :
+                    <div>
+                        <div align="center">
+                            <div style={{display: 'inline'}}>{this.props.title}&nbsp;</div>
+                            <div style={{display: 'inline'}}>
+                                <OverlayTrigger overlay={
+                                    <Tooltip>
+                                        {this.state.cardinalityTooltipMap[this.props.cardinality].text}
+                                    </Tooltip>}>
+                                    <span><Badge variant={this.state.cardinalityTooltipMap[this.props.cardinality].variant}>{this.props.cardinality}</Badge>&nbsp;&nbsp;</span>
+                                </OverlayTrigger>
+                            </div>
+                            <div style={{display: 'inline'}}>
+                                <OverlayTrigger overlay={
+                                    <Tooltip>
+                                        {this.props.tooltip}
+                                    </Tooltip>}>
+                                    <BsQuestionOctagon />
+                                </OverlayTrigger>
+                            </div>
+                        </div>
+                        {this.props.addEntity !== undefined ?
+                            <div align="center" style={{width: '100%'}}><Button style={{width: '100%'}} size="sm" variant="outline-secondary" onClick={() => {this.setState({showAddEntity: true})}}><IoIosAddCircleOutline /> Add missing term</Button>
+                                <div className="whiteSpace"/>
+                            </div> : ''}
+                        <AddEntityModal
+                            show={this.state.showAddEntity}
+                            onHide={() => {
+                                this.setState({showAddEntity: false});
+                                this.props.resetAutocompleteEntities();
+                            }}
+                            addEntity={(e) => {
+                                this.props.addEntity(e);
+                                let mapEntry = new Map();
+                                if (this.props.checkboxes !== undefined) {
+                                    this.props.checkboxes.forEach(c => {mapEntry.set(c, false)});
+                                }
+                                let selectedEntities = this.state.selectedEntities;
+                                if (this.props.multiSelect === undefined) {
+                                    selectedEntities = new Map();
+                                }
+                                selectedEntities.set(JSON.stringify(e), mapEntry);
+                                this.returnSelectedEntities(selectedEntities);
+                                this.setState({selectedEntities: selectedEntities});
+                            }}
+                            autocompleteObj={this.props.autocompleteObj}
+                            autocompleteEntities={this.props.autocompleteEntities}
+                            autocompleteFetchFnct={this.props.fetchAutocompleteEntities}
+                            entityType={this.props.entityType}
+                        />
+                        {this.state.allEntities.length > 0 ? <div><FormControl size="sm" placeholder="filter list" aria-label="Filter" aria-describedby="basic-addon1" onChange={event =>
+                            this.setState({filteredEntities: this.state.allEntities.filter(entity => entity.value.startsWith(event.target.value))})
+                        }/><div className="whiteSpace"/></div> : ''}
+                        <ListGroup className="list-group-mine">
+                            {this.state.filteredEntities.slice(this.state.offset, this.state.offset + this.state.count).map(entity => {
+                                let mapEntry = new Map();
+                                if (this.state.selectedEntities.has(JSON.stringify(entity))) {
+                                    mapEntry = this.state.selectedEntities.get(JSON.stringify(entity));
+                                } else if (this.props.checkboxes !== undefined) {
+                                    this.props.checkboxes.forEach(c => {mapEntry.set(c, false)});
+                                }
+                                return <ListGroup.Item action variant="default" className="py-1"
+                                                       active={this.state.selectedEntities.has(JSON.stringify(entity))}>
+                                    <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+                                        <Row>
+                                            <Col onClick={() => {
+                                                let selectedEntities = this.state.selectedEntities;
+                                                if (selectedEntities.has(JSON.stringify(entity))) {
+                                                    selectedEntities.delete(JSON.stringify(entity));
+                                                } else {
+                                                    if (this.props.multiSelect === undefined) {
+                                                        selectedEntities = new Map();
+                                                    }
+                                                    selectedEntities.set(JSON.stringify(entity), mapEntry);
+                                                }
+                                                this.returnSelectedEntities(selectedEntities);
+                                                this.setState({selectedEntities: selectedEntities});
+                                            }}>
+                                                {entity.value}
+                                            </Col>
+                                            {this.props.checkboxes !== undefined ? this.props.checkboxes.map(c => {
+                                                return <Col><FormCheck inline type="checkbox" label={c}
+                                                                       onClick={() => {
+                                                                           if (this.state.selectedEntities.has(JSON.stringify(entity))) {
+                                                                               let selectedEntities = this.state.selectedEntities;
+                                                                               let mapEntry = selectedEntities.get(JSON.stringify(entity));
+                                                                               mapEntry.set(c, !mapEntry.get(c))
+                                                                               selectedEntities.set(JSON.stringify(entity), mapEntry);
+                                                                               this.returnSelectedEntities(selectedEntities);
+                                                                               this.setState({selectedEntities: selectedEntities});
+                                                                           }
+                                                                       }}
+                                                                       checked={this.state.selectedEntities.has(JSON.stringify(entity)) && this.state.selectedEntities.get(JSON.stringify(entity)).get(c)}
+                                                /></Col>}) : ''}
+                                        </Row>
+                                    </Container>
+                                </ListGroup.Item>
+                            })}
+                        </ListGroup>
+                        <div align="right">
+                            <Button variant="link" size="lg" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
+                                <IoIosArrowDropupCircle />
+                            </Button>
+                            <Button variant="link" size="lg" hidden={this.state.allEntities.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
+                                <IoIosArrowDropdownCircle />
+                            </Button>
+                        </div><div className="whiteSpace"/><div className="whiteSpace"/>
+                    </div>}
+            </div>
         );
     }
 }

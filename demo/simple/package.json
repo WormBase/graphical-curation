@@ -6,8 +6,10 @@
   "private": true,
   "dependencies": {
     "@wormbase/graphical-curation": "file:../..",
-    "prop-types": "^15.6.2",
-    "react-scripts": "3.4.0"
+    "prop-types": "^15.7.2",
+    "react-scripts": "4.0.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
